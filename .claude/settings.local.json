@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(findstr /n \"featuredLessons\\\\|section-link\\\\|לכל\\\\|lessons.html\" \"C:\\\\Users\\\\HP\\\\OneDrive\\\\Shmili\\\\Mechon Or Leyiroel\\\\Website\\\\js\\\\app.js\")",
+      "Bash(findstr /n \"featuredLesson\\\\|לכל\\\\|section-link\\\\|Home\\\\|home\")",
+      "Bash(PowerShell -Command \"Select-String -Path 'C:\\\\Users\\\\HP\\\\OneDrive\\\\Shmili\\\\Mechon Or Leyiroel\\\\Website\\\\js\\\\app.js' -Pattern 'featured|section.link|Home|arrow' | Select-Object LineNumber, Line | Format-Table -AutoSize\")",
+      "Bash(PowerShell -Command \"Select-String -Path 'C:\\\\Users\\\\HP\\\\OneDrive\\\\Shmili\\\\Mechon Or Leyiroel\\\\Website\\\\js\\\\data.js' -Encoding UTF8 -Pattern 'featured|section.link' | Select-Object LineNumber, Line | Format-Table -AutoSize\")"
+    ]
+  }
+}

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מכון תהלות ישראל — Tehillot Israel Institute</title>
+  <meta name="description" content="מכון תהלות ישראל — מאגר אלפי שיעורים ועשרות אלפי ספרים ועלונים. Torah lessons, books and pamphlets.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ===== NEW HERO ===== */
+    .hero-grand {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #040a1c 0%, #0a1628 35%, #0d1f3c 65%, #060f1d 100%);
+      position: relative; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; padding-top: var(--nav-h);
+    }
+    /* dot grid */
+    .hero-grand::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image: radial-gradient(rgba(255,255,255,.035) 1.5px, transparent 1.5px);
+      background-size: 38px 38px;
+    }
+    /* golden glow center */
+    .hero-grand::after {
+      content: ''; position: absolute; pointer-events: none;
+      width: 800px; height: 800px; border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(201,168,76,.1) 0%, transparent 68%);
+      top: 50%; left: 50%; transform: translate(-50%, -58%);
+    }
+    .hero-grand-content { position: relative; z-index: 2; text-align: center; padding: 48px 20px 96px; }
+    /* emblem */
+    .hero-emblem {
+      width: 96px; height: 96px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      border-radius: 26px; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 36px;
+      font-size: 2.4rem; font-weight: 900; color: var(--primary); letter-spacing: -2px;
+      box-shadow: 0 0 0 14px rgba(201,168,76,.1), 0 24px 64px rgba(201,168,76,.3);
+      animation: emblem-pulse 3s ease-in-out infinite;
+    }
+    @keyframes emblem-pulse {
+      0%, 100% { box-shadow: 0 0 0 14px rgba(201,168,76,.1), 0 24px 64px rgba(201,168,76,.25); }
+      50%       { box-shadow: 0 0 0 22px rgba(201,168,76,.06), 0 24px 64px rgba(201,168,76,.4); }
+    }
+    .hero-supertitle {
+      font-size: .68rem; letter-spacing: 5px; color: var(--gold-light);
+      text-transform: uppercase; margin-bottom: 22px; font-weight: 600; opacity: .8;
+    }
+    .hero-main-title {
+      font-family: var(--font-he); font-size: clamp(3rem, 9vw, 6.8rem);
+      color: #fff; margin: 0 0 18px; font-weight: 900; line-height: 1.08;
+      text-shadow: 0 6px 48px rgba(0,0,0,.55); letter-spacing: -1px;
+    }
+    .hero-main-title .gold { color: var(--gold); text-shadow: 0 4px 40px rgba(201,168,76,.45); }
+    /* ornamental divider */
+    .hero-ornament {
+      display: flex; align-items: center; justify-content: center;
+      gap: 18px; margin: 26px auto 30px;
+    }
+    .hero-ornament-line {
+      height: 1px; width: 100px;
+      background: linear-gradient(to var(--dir-end, left), transparent, rgba(201,168,76,.55));
+    }
+    .hero-ornament-diamond {
+      width: 9px; height: 9px; background: var(--gold);
+      transform: rotate(45deg); border-radius: 2px;
+      box-shadow: 0 0 16px rgba(201,168,76,.7);
+    }
+    .hero-tagline {
+      font-size: clamp(.95rem, 2vw, 1.2rem); color: rgba(255,255,255,.65);
+      margin: 0 auto 44px; max-width: 600px; line-height: 1.9; font-weight: 400;
+    }
+    /* inline stats */
+    .hero-mini-stats {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-bottom: 52px; flex-wrap: wrap;
+    }
+    .hero-mini-stat { text-align: center; padding: 0 28px; }
+    .hero-mini-stat + .hero-mini-stat { border-right: 1px solid rgba(255,255,255,.1); }
+    .hero-mini-num { font-size: 1.7rem; font-weight: 800; color: var(--gold); line-height: 1; }
+    .hero-mini-lbl { font-size: .72rem; color: rgba(255,255,255,.45); margin-top: 4px; letter-spacing: .5px; }
+    /* CTA buttons */
+    .hero-cta-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .hero-btn-gold {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: var(--primary); font-weight: 700; font-size: 1rem;
+      padding: 15px 36px; border-radius: 50px; text-decoration: none;
+      box-shadow: 0 8px 32px rgba(201,168,76,.4);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .hero-btn-gold:hover { transform: translateY(-3px); box-shadow: 0 14px 44px rgba(201,168,76,.5); }
+    .hero-btn-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,.07); color: #fff; font-weight: 600; font-size: 1rem;
+      padding: 15px 36px; border-radius: 50px; text-decoration: none;
+      border: 1.5px solid rgba(255,255,255,.2);
+      backdrop-filter: blur(12px); transition: background .2s, transform .2s;
+    }
+    .hero-btn-ghost:hover { background: rgba(255,255,255,.13); transform: translateY(-3px); }
+    /* scroll hint */
+    .hero-scroll-hint {
+      margin-top: 60px; color: rgba(255,255,255,.25);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      font-size: .68rem; letter-spacing: 2px;
+    }
+    .hero-scroll-hint i { animation: hint-bounce .9s ease-in-out infinite alternate; }
+    @keyframes hint-bounce {
+      from { transform: translateY(0); opacity: .3; }
+      to   { transform: translateY(7px); opacity: .7; }
+    }
+    .p-0 { padding: 0 !important; }
+    /* ===== Featured section toppers ===== */
+    .feat-section-topper {
+      padding: 58px 0 46px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .lessons-topper {
+      background: linear-gradient(160deg,#04091a 0%,#0a1628 55%,#060d1e 100%);
+    }
+    .lessons-topper::before {
+      content:''; position:absolute; inset:0; pointer-events:none;
+      background-image: radial-gradient(rgba(255,255,255,.022) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .lessons-topper::after {
+      content:''; position:absolute; pointer-events:none;
+      width:650px; height:320px; border-radius:50%;
+      background: radial-gradient(ellipse, rgba(201,168,76,.09) 0%, transparent 68%);
+      top:50%; left:50%; transform:translate(-50%,-50%);
+    }
+    .books-topper {
+      background: linear-gradient(160deg,#f4eedf 0%,#faf6ee 55%,#ede5d2 100%);
+      border-bottom: 1px solid rgba(201,168,76,.2);
+    }
+    .feat-topper-inner { position:relative; z-index:2; max-width:680px; margin:0 auto; }
+    .lessons-topper .section-tag {
+      background: rgba(201,168,76,.13); color: var(--gold-light);
+      border: 1px solid rgba(201,168,76,.22);
+    }
+    .feat-title {
+      font-family: var(--font-he);
+      font-size: clamp(1.9rem,4vw,2.9rem);
+      font-weight: 800; line-height: 1.15; margin: 0 0 22px;
+    }
+    .lessons-topper .feat-title { color:#fff; }
+    .books-topper   .feat-title { color:var(--primary); }
+    .feat-ornament {
+      display:flex; align-items:center; justify-content:center;
+      gap:16px; margin-bottom:22px;
+    }
+    .feat-line {
+      display:block; height:1px; width:72px;
+      background: linear-gradient(to left, transparent, rgba(201,168,76,.6));
+    }
+    .feat-line-r { background: linear-gradient(to right, transparent, rgba(201,168,76,.6)); }
+    .feat-icon { color:var(--gold); font-size:1rem; }
+    .feat-desc { font-size:.98rem; line-height:1.9; max-width:620px; margin:0 auto; }
+    .lessons-topper .feat-desc { color:rgba(255,255,255,.62); }
+    .books-topper   .feat-desc { color:var(--text-light); }
+    .feat-cards-wrap { padding-top:44px; padding-bottom:52px; }
+    .feat-cta-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--gold-light); font-weight: 700; font-size: .95rem;
+      border: 1.5px solid rgba(201,168,76,.45); border-radius: 50px;
+      padding: 10px 28px; transition: background .2s, gap .2s;
+      text-decoration: none;
+    }
+    .feat-cta-link:hover { background: rgba(201,168,76,.1); gap: 14px; }
+    .feat-cta-link--dark { color: var(--primary); border-color: rgba(10,22,40,.25); }
+    .feat-cta-link--dark:hover { background: rgba(10,22,40,.06); }
+
+    /* ===== Homepage polish ===== */
+    .stats-section { background: linear-gradient(180deg,#fff 0%,var(--cream) 100%); }
+    .stats-grid { gap: 24px; }
+    .stat-card { border-top: 4px solid transparent; position: relative; overflow: hidden; }
+    .stat-card::before { content:''; position:absolute; inset:0; opacity:0; transition: opacity .3s;
+      background: linear-gradient(135deg, rgba(201,168,76,.04), transparent); }
+    .stat-card:hover::before { opacity:1; }
+    .stat-card:nth-child(1) { border-top-color: var(--primary); }
+    .stat-card:nth-child(2) { border-top-color: var(--gold); }
+    .stat-card:nth-child(3) { border-top-color: var(--success); }
+    .stat-card:nth-child(4) { border-top-color: #6366f1; }
+    .stat-num { font-size: 2.2rem; }
+    .section-header { position: relative; }
+    .section-header::after {
+      content:''; display:block; width:56px; height:3px;
+      background: linear-gradient(to right, var(--gold), var(--gold-light));
+      margin: 14px auto 0; border-radius:2px;
+    }
+    .card { transition: transform .22s ease, box-shadow .22s ease; }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 12px 36px rgba(12,31,61,.12); }
+    .section { position: relative; }
+    .section-tag { box-shadow: 0 2px 8px rgba(201,168,76,.15); }
+    .subscribe-section { position: relative; overflow: hidden; }
+    #subscribeSection { scroll-margin-top: var(--nav-h, 80px); }
+    .subscribe-section::before {
+      content:''; position:absolute; top:-40%; left:-10%;
+      width:70%; height:180%;
+      background: radial-gradient(ellipse, rgba(201,168,76,.07), transparent 70%);
+      pointer-events:none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 30 22" width="26" height="19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2,16 L5,10 L8,4 L11,10 L15,0 L19,10 L22,4 L25,10 L28,16 Z" fill="#0c1f3d"/>
+          <rect x="2" y="16" width="26" height="5.5" rx="1.5" fill="#0c1f3d"/>
+          <circle cx="8"  cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+          <circle cx="15" cy="0.8" r="1.9" fill="rgba(255,215,60,1)"/>
+          <circle cx="22" cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+        </svg>
+      </div>
+      <div>
+        <div class="nav-logo-title" data-he="מכון תהלות ישראל" data-en="Tehillot Israel Institute">מכון תהלות ישראל</div>
+        <div class="nav-logo-sub" data-he="תורה | שיעורים | ספרים" data-en="Torah | Lessons | Books">תורה | שיעורים | ספרים</div>
+      </div>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="active" data-he="דף הבית" data-en="Home">דף הבית</a>
+      <a href="lessons.html" data-he="שיעורים" data-en="Lessons">שיעורים</a>
+      <a href="books.html" data-he="ספרים" data-en="Books">ספרים</a>
+      <a href="updates.html" data-he="עדכונים" data-en="Updates">עדכונים</a>
+      <a href="contact.html" data-he="צור קשר" data-en="Contact">צור קשר</a>
+      <a href="donate.html" data-he="תרומות" data-en="Donate">תרומות</a>
+    </div>
+    <div class="nav-actions">
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="he">עב</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <a href="donate.html" class="btn-donate-nav" data-he="תרמו עכשיו" data-en="Donate Now">תרמו עכשיו</a>
+      <div class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-grand">
+  <div class="container hero-grand-content">
+
+    <!-- Main title -->
+    <h1 class="hero-main-title">
+      <span data-he="מכון" data-en="Tehillot">מכון</span>
+      <br>
+      <span class="gold" data-he="תהלות ישראל" data-en="Israel Institute">תהלות ישראל</span>
+    </h1>
+
+    <!-- Ornamental divider -->
+    <div class="hero-ornament">
+      <div class="hero-ornament-line" style="--dir-end:left"></div>
+      <div class="hero-ornament-diamond"></div>
+      <div class="hero-ornament-line" style="--dir-end:right"></div>
+    </div>
+
+    <!-- Tagline -->
+    <p class="hero-tagline" data-he="פנינים מדברי הגה״צ זצוקללה״ה — שיעורים, ספרים ועלונים לשמיעה, לקריאה ולהורדה חינם" data-en="Torah wisdom — thousands of lessons, books and pamphlets to listen, read and download for free">
+      פנינים מדברי הגה״צ זצוקללה״ה — שיעורים, ספרים ועלונים לשמיעה, לקריאה ולהורדה חינם
+    </p>
+
+    <!-- Mini stats -->
+    <div class="hero-mini-stats">
+      <div class="hero-mini-stat">
+        <div class="hero-mini-num">3,200+</div>
+        <div class="hero-mini-lbl" data-he="שיעורים" data-en="Lessons">שיעורים</div>
+      </div>
+      <div class="hero-mini-stat">
+        <div class="hero-mini-num">42,000+</div>
+        <div class="hero-mini-lbl" data-he="ספרים ועלונים" data-en="Books & Pamphlets">ספרים ועלונים</div>
+      </div>
+      <div class="hero-mini-stat">
+        <div class="hero-mini-num">180K+</div>
+        <div class="hero-mini-lbl" data-he="הורדות" data-en="Downloads">הורדות</div>
+      </div>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="hero-cta-row">
+      <a href="lessons.html" class="hero-btn-gold">
+        <i class="fas fa-headphones"></i>
+        <span data-he="ספריית השיעורים" data-en="Lessons Library">ספריית השיעורים</span>
+      </a>
+      <a href="books.html" class="hero-btn-ghost">
+        <i class="fas fa-book-open"></i>
+        <span data-he="ספריית הספרים" data-en="Books Library">ספריית הספרים</span>
+      </a>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="hero-scroll-hint">
+      <i class="fas fa-chevron-down"></i>
+    </div>
+
+  </div>
+
+  <!-- Wave -->
+  <div class="hero-wave" style="position:absolute;bottom:0;left:0;right:0;line-height:0">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+      <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#faf6ee"/>
+    </svg>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-headphones"></i></div>
+        <div class="stat-num count-animate" data-target="3200">0</div>
+        <div class="stat-lbl" data-he="שיעורים בשמיעה" data-en="Audio Lessons">שיעורים בשמיעה</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-book"></i></div>
+        <div class="stat-num count-animate" data-target="42000">0</div>
+        <div class="stat-lbl" data-he="ספרים ועלונים" data-en="Books & Pamphlets">ספרים ועלונים</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-num count-animate" data-target="28000">0</div>
+        <div class="stat-lbl" data-he="חברי קהילה" data-en="Community Members">חברי קהילה</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-globe"></i></div>
+        <div class="stat-num count-animate" data-target="75">0</div>
+        <div class="stat-lbl" data-he="ארצות בעולם" data-en="Countries Worldwide">ארצות בעולם</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED LESSONS -->
+<section class="section p-0" style="background:var(--cream);">
+  <!-- Dark header strip -->
+  <div class="feat-section-topper lessons-topper">
+    <div class="container">
+      <div class="feat-topper-inner">
+        <div class="section-tag" style="margin-bottom:20px">
+          <i class="fas fa-microphone-alt"></i>
+          <span data-he="שיעורים נבחרים" data-en="Featured Lessons">שיעורים נבחרים</span>
+        </div>
+        <h2 class="feat-title" data-he="קול התורה — לשמוע וללמוד" data-en="The Voice of Torah — Listen & Learn">
+          קול התורה — לשמוע וללמוד
+        </h2>
+        <div class="feat-ornament">
+          <span class="feat-line"></span>
+          <i class="fas fa-headphones feat-icon"></i>
+          <span class="feat-line feat-line-r"></span>
+        </div>
+        <p class="feat-desc" data-he="שמע את דברי הגה״צ זצוקללה״ה — אלפי שיעורים מרתקים בנושאי אמונה, מוסר, פרשת השבוע ועוד. לשמיעה ולהורדה חינם, בכל עת ובכל מקום." data-en="Listen to the words of the Gaon — thousands of fascinating lessons on faith, ethics, Torah portion and more. Free to listen and download, anytime, anywhere.">
+          שמע את דברי הגה״צ זצוקללה״ה — אלפי שיעורים מרתקים בנושאי אמונה, מוסר, פרשת השבוע ועוד.<br>
+          לשמיעה ולהורדה חינם, בכל עת ובכל מקום.
+        </p>
+        <div style="margin-top:32px">
+          <a href="lessons.html" class="feat-cta-link">
+            <span data-he="לכל השיעורים" data-en="All Lessons">לכל השיעורים</span>
+            <i class="fas fa-arrow-left"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Cards area -->
+  <div class="container feat-cards-wrap">
+    <div class="grid-3" id="featuredLessons"></div>
+  </div>
+</section>
+
+<!-- FEATURED BOOKS -->
+<section class="section p-0" style="background:white;">
+  <!-- Warm header strip -->
+  <div class="feat-section-topper books-topper">
+    <div class="container">
+      <div class="feat-topper-inner">
+        <div class="section-tag" style="margin-bottom:20px">
+          <i class="fas fa-book-open"></i>
+          <span data-he="ספרייה" data-en="Library">ספרייה</span>
+        </div>
+        <h2 class="feat-title" data-he="אוצר הספרים והעלונים" data-en="Treasury of Books & Pamphlets">
+          אוצר הספרים והעלונים
+        </h2>
+        <div class="feat-ornament">
+          <span class="feat-line"></span>
+          <i class="fas fa-book feat-icon"></i>
+          <span class="feat-line feat-line-r"></span>
+        </div>
+        <p class="feat-desc" data-he="עשרות אלפי ספרים, חוברות ועלונים — פרי עטו של הגה״צ זצוקללה״ה — על כל מקצועות התורה. לקריאה ולהורדה חינם." data-en="Tens of thousands of books, pamphlets and bulletins — by the Gaon — on all fields of Torah. Free to read and download.">
+          עשרות אלפי ספרים, חוברות ועלונים — פרי עטו של הגה״צ זצוקללה״ה — על כל מקצועות התורה.<br>
+          לקריאה ולהורדה חינם.
+        </p>
+        <!-- Category chips -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:28px">
+          <span style="background:rgba(201,168,76,.12);color:var(--primary);border:1px solid rgba(201,168,76,.3);padding:5px 16px;border-radius:50px;font-size:.78rem;font-weight:600">אמונה ובטחון</span>
+          <span style="background:rgba(201,168,76,.12);color:var(--primary);border:1px solid rgba(201,168,76,.3);padding:5px 16px;border-radius:50px;font-size:.78rem;font-weight:600">מוסר ומידות</span>
+          <span style="background:rgba(201,168,76,.12);color:var(--primary);border:1px solid rgba(201,168,76,.3);padding:5px 16px;border-radius:50px;font-size:.78rem;font-weight:600">הלכה</span>
+          <span style="background:rgba(201,168,76,.12);color:var(--primary);border:1px solid rgba(201,168,76,.3);padding:5px 16px;border-radius:50px;font-size:.78rem;font-weight:600">פרשת השבוע</span>
+          <span style="background:rgba(201,168,76,.12);color:var(--primary);border:1px solid rgba(201,168,76,.3);padding:5px 16px;border-radius:50px;font-size:.78rem;font-weight:600">מועדים וזמנים</span>
+          <span style="background:rgba(201,168,76,.12);color:var(--primary);border:1px solid rgba(201,168,76,.3);padding:5px 16px;border-radius:50px;font-size:.78rem;font-weight:600">ועוד...</span>
+        </div>
+        <div style="margin-top:32px">
+          <a href="books.html" class="feat-cta-link feat-cta-link--dark">
+            <span data-he="לכל הספרים" data-en="All Books">לכל הספרים</span>
+            <i class="fas fa-arrow-left"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Cards area -->
+  <div class="container feat-cards-wrap">
+    <div class="grid-4" id="featuredBooks"></div>
+  </div>
+</section>
+
+<!-- LATEST UPDATES -->
+<section class="section" style="background: var(--cream);">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag"><i class="fas fa-newspaper"></i> <span data-he="עדכונים" data-en="Updates">עדכונים</span></div>
+      <h2 class="section-title" data-he="חדשות ועדכונים" data-en="News & Updates">חדשות ועדכונים</h2>
+      <p class="section-desc" data-he="עקבו אחר חדשות המכון, אירועים קרובים, ספרים חדשים ושיעורים מיוחדים." data-en="Follow institute news, upcoming events, new publications and special lessons.">
+        עקבו אחר חדשות המכון, אירועים קרובים, ספרים חדשים ושיעורים מיוחדים.
+      </p>
+    </div>
+    <div class="grid-2" id="featuredUpdates"></div>
+    <div class="text-center" style="margin-top:24px">
+      <a href="updates.html" class="section-link">
+        <span data-he="לכל העדכונים" data-en="All Updates">לכל העדכונים</span>
+        <i class="fas fa-arrow-left"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section class="section" style="background: white;">
+  <div class="container">
+    <div class="grid-2" style="align-items:center;gap:60px">
+      <div>
+        <div class="section-tag"><i class="fas fa-synagogue"></i> <span data-he="אודות המכון" data-en="About the Institute">אודות המכון</span></div>
+        <h2 class="section-title" data-he="מי אנחנו?" data-en="Who Are We?">מי אנחנו?</h2>
+        <p style="margin-bottom:16px" data-he="מכון תהלות ישראל הוקם במטרה להנגיש את עולם התורה לכל יהודי בכל מקום בעולם. אנו עוסקים בהפצת תורה, הוצאת ספרים, עריכת שיעורים ואירועים." data-en="Tehillot Israel Institute was founded to make the world of Torah accessible to every Jew everywhere. We engage in spreading Torah, publishing books, and organizing lessons and events.">
+          מכון תהלות ישראל הוקם במטרה להנגיש את עולם התורה לכל יהודי בכל מקום בעולם. אנו עוסקים בהפצת תורה, הוצאת ספרים, עריכת שיעורים ואירועים.
+        </p>
+        <p data-he="המכון מונה צוות של רבנים, חוקרים ועורכים המוקדשים לשמירה על רמה גבוהה של תוכן תורני איכותי ומדויק." data-en="The Institute has a team of rabbis, researchers and editors dedicated to maintaining a high standard of quality and accurate Torah content.">
+          המכון מונה צוות של רבנים, חוקרים ועורכים המוקדשים לשמירה על רמה גבוהה של תוכן תורני איכותי ומדויק.
+        </p>
+        <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap">
+          <a href="contact.html" class="btn btn-dark">
+            <i class="fas fa-envelope"></i>
+            <span data-he="צור קשר" data-en="Contact Us">צור קשר</span>
+          </a>
+          <a href="donate.html" class="btn btn-outline-dark">
+            <i class="fas fa-heart"></i>
+            <span data-he="תמוך בנו" data-en="Support Us">תמוך בנו</span>
+          </a>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="background:var(--cream);border-radius:var(--r-lg);padding:28px;text-align:center;border:1px solid var(--border-light)">
+          <div style="font-size:36px;margin-bottom:10px">📖</div>
+          <div style="font-size:.95rem;font-weight:700;color:var(--primary)" data-he="הפצת תורה" data-en="Torah Outreach">הפצת תורה</div>
+        </div>
+        <div style="background:var(--cream);border-radius:var(--r-lg);padding:28px;text-align:center;border:1px solid var(--border-light)">
+          <div style="font-size:36px;margin-bottom:10px">🎧</div>
+          <div style="font-size:.95rem;font-weight:700;color:var(--primary)" data-he="שיעורים מוקלטים" data-en="Recorded Lessons">שיעורים מוקלטים</div>
+        </div>
+        <div style="background:var(--cream);border-radius:var(--r-lg);padding:28px;text-align:center;border:1px solid var(--border-light)">
+          <div style="font-size:36px;margin-bottom:10px">📚</div>
+          <div style="font-size:.95rem;font-weight:700;color:var(--primary)" data-he="הוצאת ספרים" data-en="Book Publishing">הוצאת ספרים</div>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:var(--r-lg);padding:28px;text-align:center">
+          <div style="font-size:36px;margin-bottom:10px">🕍</div>
+          <div style="font-size:.95rem;font-weight:700;color:var(--gold-light)" data-he="בית כנסת ומכון" data-en="Synagogue & Institute">בית כנסת ומכון</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OTZAR TEHILLOT YISRAEL -->
+<section class="section" style="background:var(--cream);">
+  <div class="container">
+    <div style="max-width:760px;margin:0 auto">
+      <div style="background:#fff;border-radius:var(--r-xl);box-shadow:var(--shadow-md);overflow:hidden;border:1px solid var(--border-light)">
+
+        <!-- Header -->
+        <div style="background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);padding:36px 40px;text-align:center">
+          <h2 style="font-family:var(--font-he);font-size:clamp(1.8rem,4vw,2.6rem);color:#fff;margin:0 0 10px;font-weight:800;line-height:1.2">
+            אוצר ״תהלות ישראל״
+          </h2>
+          <p style="color:var(--gold-light);font-size:1rem;margin:0 0 4px;font-weight:600">
+            פנינים שנלקטו מתוך דברי הגה״צ דתהלות ישראל זצוקללה״ה
+          </p>
+          <p style="color:rgba(255,255,255,.7);font-size:.85rem;margin:0">
+            (מתוך מה שכבר נדפס בספרים וקונטרסים, וגם מתוך שאר השיחות)
+          </p>
+        </div>
+
+        <!-- Body -->
+        <div style="padding:36px 40px" dir="rtl">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--border-light)">
+            <div style="width:4px;height:28px;background:var(--gold);border-radius:2px;flex-shrink:0"></div>
+            <h3 style="font-size:1.1rem;font-weight:700;color:var(--primary);margin:0">הערה כללית בנוגע לכל המאמרים</h3>
+          </div>
+          <p style="line-height:2;color:var(--text-med);font-size:.97rem;margin:0 0 18px;text-align:justify">
+            כדאי לקרוא כל המאמרים יותר מפעם א׳ כי בכדי שיהיו נקלטים ונספגים יתר לתוך הלב בכדי שזה ישפיע ויפעול את המטרה לא די בקריאת הדברים פעם א׳ לבד ואם כי בפעם השנית מרגישים הרבה דברים שלא הרגישים בפעם הראשונה.
+          </p>
+          <p style="line-height:2;color:var(--text-med);font-size:.97rem;margin:0;text-align:justify">
+            וזאת למודעי שבגליוניות שנה החדשה נמצאים גם דברים שכבר היו בגליוניות הישנים וגם דברים חדשים. אמנם גם הדברים הישנים הרבה מהם נעברו מחדש וקבלו פנים חדשות ולכן כדאי לקרוא עוד פעם גם את המאמרים הישנים, כי באלה הדברים מתקיים מה שאמרו חז״ל שדברי תורה כל זמן שאדם חוזר עליהם מוצא בהם טעם חדש, כפי שמעיד הנסיון בס״ד.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUBSCRIBE -->
+<section class="subscribe-section" id="subscribeSection">
+  <div class="container">
+    <div class="section-tag" style="background:rgba(255,255,255,.12);color:var(--gold-light)">
+      <i class="fas fa-envelope"></i> <span data-he="ניוזלטר" data-en="Newsletter">ניוזלטר</span>
+    </div>
+    <h2 data-he="הישארו מעודכנים" data-en="Stay Updated">הישארו מעודכנים</h2>
+    <p data-he="הצטרפו לרשימת התפוצה שלנו וקבלו עדכונים על שיעורים חדשים, ספרים ואירועים ישירות לתיבת הדואר שלכם." data-en="Join our mailing list and receive updates on new lessons, books and events directly to your inbox.">
+      הצטרפו לרשימת התפוצה שלנו וקבלו עדכונים על שיעורים חדשים, ספרים ואירועים ישירות לתיבת הדואר שלכם.
+    </p>
+    <form id="subscribeForm" class="subscribe-form">
+      <input type="email" name="email" class="subscribe-input" required
+        data-he="כתובת הדואר האלקטרוני שלכם" data-en="Your email address"
+        placeholder="כתובת הדואר האלקטרוני שלכם">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-paper-plane"></i>
+        <span data-he="הרשמה" data-en="Subscribe">הרשמה</span>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="nav-logo" style="display:inline-flex">
+          <div class="nav-logo-icon">
+        <svg viewBox="0 0 30 22" width="26" height="19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2,16 L5,10 L8,4 L11,10 L15,0 L19,10 L22,4 L25,10 L28,16 Z" fill="#0c1f3d"/>
+          <rect x="2" y="16" width="26" height="5.5" rx="1.5" fill="#0c1f3d"/>
+          <circle cx="8"  cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+          <circle cx="15" cy="0.8" r="1.9" fill="rgba(255,215,60,1)"/>
+          <circle cx="22" cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+        </svg>
+      </div>
+          <div>
+            <div class="nav-logo-title" data-he="מכון תהלות ישראל" data-en="Tehillot Israel Institute">מכון תהלות ישראל</div>
+            <div class="nav-logo-sub" data-he="תורה | שיעורים | ספרים" data-en="Torah | Lessons | Books">תורה | שיעורים | ספרים</div>
+          </div>
+        </a>
+        <p class="footer-desc" data-he="מכון תורה המוקדש להפצת תורה ויהדות לכל יהודי בכל מקום בעולם, בחינם ובאהבה." data-en="A Torah institute dedicated to spreading Torah and Judaism to every Jew everywhere, freely and with love.">
+          מכון תורה המוקדש להפצת תורה ויהדות לכל יהודי בכל מקום בעולם, בחינם ובאהבה.
+        </p>
+      </div>
+      <div>
+        <div class="footer-col-title" data-he="ניווט" data-en="Navigation">ניווט</div>
+        <div class="footer-links">
+          <a href="index.html" data-he="דף הבית" data-en="Home">דף הבית</a>
+          <a href="lessons.html" data-he="שיעורים" data-en="Lessons">שיעורים</a>
+          <a href="books.html" data-he="ספרים ועלונים" data-en="Books & Pamphlets">ספרים ועלונים</a>
+          <a href="updates.html" data-he="עדכונים ואירועים" data-en="Updates & Events">עדכונים ואירועים</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title" data-he="מידע" data-en="Info">מידע</div>
+        <div class="footer-links">
+          <a href="contact.html" data-he="צור קשר" data-en="Contact Us">צור קשר</a>
+          <a href="donate.html" data-he="תרומות" data-en="Donations">תרומות</a>
+          <a href="#subscribeSection" data-he="הרשמה לניוזלטר" data-en="Newsletter Signup">הרשמה לניוזלטר</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title" data-he="צור קשר" data-en="Contact">צור קשר</div>
+        <div class="footer-links">
+          <a href="tel:0253757504"><i class="fas fa-phone" style="margin-left:6px;margin-right:6px"></i>02-537-5704</a>
+          <a href="tel:025440544"><i class="fas fa-headphones" style="margin-left:6px;margin-right:6px"></i>02-544-0-544</a>
+          <a href="tel:+17189253202"><i class="fas fa-globe" style="margin-left:6px;margin-right:6px"></i>718-925-3202 <span style="font-size:.7em;opacity:.7">(US)</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-he="© 2024 מכון תהלות ישראל. כל הזכויות שמורות." data-en="© 2024 Tehillot Israel Institute. All rights reserved.">© 2024 מכון תהלות ישראל. כל הזכויות שמורות.</p>
+      <p data-he="עוצב ופותח באהבה לתורה" data-en="Designed with love for Torah">עוצב ופותח באהבה לתורה</p>
+    </div>
+  </div>
+</footer>
+
+<!-- AUDIO PLAYER -->
+<div class="audio-player" id="audioPlayer">
+  <div class="player-track">
+    <div class="player-thumb"><i class="fas fa-headphones"></i></div>
+    <div>
+      <div class="player-title" data-he="בחר שיעור להשמעה" data-en="Select a lesson">בחר שיעור להשמעה</div>
+      <div class="player-speaker"></div>
+    </div>
+  </div>
+  <div class="player-controls">
+    <button class="player-btn player-prev" title="Previous"><i class="fas fa-step-backward"></i></button>
+    <button class="player-btn player-play"><i class="fas fa-play"></i></button>
+    <button class="player-btn player-next" title="Next"><i class="fas fa-step-forward"></i></button>
+  </div>
+  <div class="player-progress">
+    <div class="player-timeline"><div class="player-fill"></div></div>
+    <div class="player-time"><span class="player-cur">0:00</span><span class="player-dur">0:00</span></div>
+  </div>
+  <div class="player-extras">
+    <button class="speed-btn">1x</button>
+    <div class="vol-wrap">
+      <span class="vol-icon"><i class="fas fa-volume-up"></i></span>
+      <input type="range" class="vol-slider" min="0" max="1" step="0.05" value="1">
+    </div>
+  </div>
+  <span class="player-close" onclick="Player.close()"><i class="fas fa-times"></i></span>
+</div>
+
+<!-- LESSON MODAL -->
+<div class="modal-overlay" id="lessonModal">
+  <div class="modal"><div id="lessonModalBody"></div></div>
+</div>
+<!-- BOOK MODAL -->
+<div class="modal-overlay" id="bookModal">
+  <div class="modal"><div id="bookModalBody"></div></div>
+</div>
+<div class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+function initPage() {
+  const lang = Lang.current;
+  // Featured Lessons (featured=true)
+  const lessons = getData('lessons').filter(l => l.featured).slice(0, 6);
+  const lessonContainer = document.getElementById('featuredLessons');
+  if (lessonContainer) {
+    lessonContainer.innerHTML = lessons.map(l => renderLessonCard(l)).join('');
+  }
+  // Featured Books
+  const books = getData('books').filter(b => b.featured).slice(0, 4);
+  const bookContainer = document.getElementById('featuredBooks');
+  if (bookContainer) {
+    bookContainer.innerHTML = books.map(b => renderBookCard(b)).join('');
+  }
+  // Latest Updates
+  const updates = getData('updates').slice(0, 4);
+  const updContainer = document.getElementById('featuredUpdates');
+  if (updContainer) {
+    updContainer.innerHTML = updates.map(u => {
+      const title = lang === 'he' ? u.titleHe : (u.titleEn||u.titleHe);
+      const content = lang === 'he' ? u.contentHe : (u.contentEn||u.contentHe);
+      const d = new Date(u.date);
+      const day = d.getDate();
+      const mon = d.toLocaleString(lang === 'he' ? 'he-IL' : 'en-US', { month: 'short' });
+      return `<div class="card card-update">
+        <div class="update-datebox"><div class="upd-day">${day}</div><div class="upd-mon">${mon}</div></div>
+        <div class="update-body">
+          <div class="update-title">${title}</div>
+          <div class="update-excerpt">${content}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function onLangChange(lang) {
+  initPage();
+}
+</script>
+</body>
+</html>

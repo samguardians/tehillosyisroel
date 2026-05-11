@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ספרים ועלונים — מכון תהלות ישראל</title>
+  <meta name="description" content="ספריית ספרים ועלונים — עשרות אלפי ספרים בכל נושאי התורה לקריאה והורדה חינם">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 30 22" width="26" height="19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2,16 L5,10 L8,4 L11,10 L15,0 L19,10 L22,4 L25,10 L28,16 Z" fill="#0c1f3d"/>
+          <rect x="2" y="16" width="26" height="5.5" rx="1.5" fill="#0c1f3d"/>
+          <circle cx="8"  cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+          <circle cx="15" cy="0.8" r="1.9" fill="rgba(255,215,60,1)"/>
+          <circle cx="22" cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+        </svg>
+      </div>
+      <div>
+        <div class="nav-logo-title" data-he="מכון תהלות ישראל" data-en="Tehillot Israel Institute">מכון תהלות ישראל</div>
+        <div class="nav-logo-sub" data-he="תורה | שיעורים | ספרים" data-en="Torah | Lessons | Books">תורה | שיעורים | ספרים</div>
+      </div>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" data-he="דף הבית" data-en="Home">דף הבית</a>
+      <a href="lessons.html" data-he="שיעורים" data-en="Lessons">שיעורים</a>
+      <a href="books.html" class="active" data-he="ספרים" data-en="Books">ספרים</a>
+      <a href="updates.html" data-he="עדכונים" data-en="Updates">עדכונים</a>
+      <a href="contact.html" data-he="צור קשר" data-en="Contact">צור קשר</a>
+      <a href="donate.html" data-he="תרומות" data-en="Donate">תרומות</a>
+    </div>
+    <div class="nav-actions">
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="he">עב</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <a href="donate.html" class="btn-donate-nav" data-he="תרמו עכשיו" data-en="Donate Now">תרמו עכשיו</a>
+      <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="main-content">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container page-header-inner">
+      <div class="breadcrumb">
+        <a href="index.html" data-he="דף הבית" data-en="Home">דף הבית</a>
+        <i class="fas fa-chevron-left"></i>
+        <span data-he="ספרים ועלונים" data-en="Books & Pamphlets">ספרים ועלונים</span>
+      </div>
+      <h1 data-he="ספריית הספרים והעלונים" data-en="Books & Pamphlets Library">ספריית הספרים והעלונים</h1>
+      <p data-he="עשרות ספרים ועלונים לקריאה והורדה חינם — בכל נושאי התורה והיהדות" data-en="Dozens of books and pamphlets to read and download for free">
+        עשרות ספרים ועלונים לקריאה והורדה חינם — בכל נושאי התורה והיהדות
+      </p>
+    </div>
+  </div>
+
+  <section class="section-sm">
+    <div class="container">
+
+      <!-- NOTE BOX -->
+      <div style="background:linear-gradient(135deg,#fffdf5,#fff9ea);border:1px solid rgba(201,168,76,.28);border-right:4px solid var(--gold);border-radius:var(--r-lg);margin-bottom:28px;overflow:hidden">
+        <button onclick="(function(btn){var body=document.getElementById('booksNoteBody');var icon=btn.querySelector('i.chevron');var open=body.style.maxHeight!=='0px'&&body.style.maxHeight!=='';if(open){body.style.maxHeight='0px';body.style.paddingBottom='0';icon.style.transform='rotate(0deg)';}else{body.style.maxHeight='400px';body.style.paddingBottom='18px';icon.style.transform='rotate(180deg)';};})(this)"
+          style="width:100%;background:none;border:none;padding:16px 22px;display:flex;align-items:center;gap:12px;cursor:pointer;text-align:right">
+          <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="fas fa-scroll" style="color:var(--primary);font-size:.82rem"></i>
+          </div>
+          <span style="flex:1;font-weight:700;color:var(--primary);font-size:.92rem" data-he="הערה כללית בנוגע לכל המאמרים" data-en="General Note on All Articles">הערה כללית בנוגע לכל המאמרים</span>
+          <i class="fas fa-chevron-down chevron" style="color:var(--text-muted);font-size:.8rem;transition:transform .25s;transform:rotate(180deg)"></i>
+        </button>
+        <div id="booksNoteBody" style="max-height:400px;overflow:hidden;transition:max-height .3s ease,padding-bottom .3s ease;padding:0 22px 18px">
+          <div style="border-top:1px solid rgba(201,168,76,.2);padding-top:16px">
+            <p style="line-height:2.2;color:var(--text-med);font-size:.88rem;margin:0 0 14px;text-align:justify">
+              כדאי לקרוא כל המאמרים יותר מפעם א׳ כי בכדי שיהיו נקלטים ונספגים יתר לתוך הלב בכדי שזה ישפיע ויפעול את המטרה לא די בקריאת הדברים פעם א׳ לבד ואם כי בפעם השנית מרגישים הרבה דברים שלא הרגישים בפעם הראשונה.
+            </p>
+            <p style="line-height:2.2;color:var(--text-med);font-size:.88rem;margin:0;text-align:justify">
+              וזאת למודעי שבגליוניות שנה החדשה נמצאים גם דברים שכבר היו בגליוניות הישנים וגם דברים חדשים. אמנם גם הדברים הישנים הרבה מהם נעברו מחדש וקבלו פנים חדשות ולכן כדאי לקרוא עוד פעם גם את המאמרים הישנים, כי באלה הדברים מתקיים מה שאמרו חז״ל שדברי תורה כל זמן שאדם חוזר עליהם מוצא בהם טעם חדש, כפי שמעיד הנסיון בס״ד.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEARCH -->
+      <div style="max-width:640px;margin:0 auto 28px" class="search-wrapper">
+        <input type="text" class="search-input" id="searchInput"
+          data-he="חיפוש ספרים, מחברים, נושאים..." data-en="Search books, authors, topics..."
+          placeholder="חיפוש ספרים, מחברים, נושאים...">
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="filters-bar">
+        <div class="filter-group" style="flex:2;min-width:180px">
+          <label class="filter-label" data-he="קטגוריה" data-en="Category">קטגוריה</label>
+          <select class="filter-select" id="filterCat">
+            <option value="all" data-he="כל הקטגוריות" data-en="All Categories">כל הקטגוריות</option>
+          </select>
+        </div>
+        <div class="filter-group" style="flex:2;min-width:160px" id="subCatBooksGroup" style="display:none">
+          <label class="filter-label" data-he="תת-קטגוריה" data-en="Sub-topic">תת-קטגוריה</label>
+          <select class="filter-select" id="filterSubCatBooks">
+            <option value="all" data-he="כל הנושאים" data-en="All Topics">כל הנושאים</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" data-he="שנת הוצאה" data-en="Year">שנת הוצאה</label>
+          <select class="filter-select" id="filterYear">
+            <option value="" data-he="כל השנים" data-en="All Years">כל השנים</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" data-he="מיון" data-en="Sort By">מיון</label>
+          <select class="filter-select" id="filterSort">
+            <option value="popular" data-he="הכי פופולרי" data-en="Most Popular">הכי פופולרי</option>
+            <option value="newest" data-he="חדש לישן" data-en="Newest First">חדש לישן</option>
+            <option value="oldest" data-he="ישן לחדש" data-en="Oldest First">ישן לחדש</option>
+            <option value="alpha" data-he="א-ב" data-en="A-Z">א-ב</option>
+          </select>
+        </div>
+        <div class="filter-group" style="min-width:auto">
+          <label class="filter-label">&nbsp;</label>
+          <button class="btn btn-outline-dark btn-sm" onclick="clearFilters()">
+            <i class="fas fa-times"></i> <span data-he="איפוס" data-en="Clear">איפוס</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CATEGORY TABS -->
+      <div class="tags" id="categoryTags" style="margin-bottom:20px"></div>
+
+      <!-- RESULTS INFO -->
+      <div class="flex-between" style="margin-bottom:16px;flex-wrap:wrap;gap:8px">
+        <span class="results-count" id="resultsCount"></span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:.8rem;color:var(--text-muted)" data-he="כל הספרים חינמיים לחלוטין" data-en="All books are completely free">כל הספרים חינמיים לחלוטין</span>
+          <div class="view-toggle">
+            <button class="view-btn active" id="viewGrid"><i class="fas fa-th"></i></button>
+            <button class="view-btn" id="viewList"><i class="fas fa-list"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKS GRID -->
+      <div class="grid-4" id="booksGrid"></div>
+      <div id="booksList" class="hidden"></div>
+      <div id="pagination"></div>
+
+      <!-- EMPTY STATE -->
+      <div id="booksEmpty" style="display:none;text-align:center;padding:60px 20px">
+        <div style="font-size:52px;margin-bottom:16px;opacity:.4">📚</div>
+        <h3 style="color:var(--text-muted);font-weight:600;margin-bottom:8px" data-he="אין ספרים להצגה" data-en="No books to display">אין ספרים להצגה</h3>
+        <p style="color:var(--text-muted);font-size:.88rem" data-he="לא נמצאו ספרים לפי הסינון שנבחר" data-en="No books found for the selected filters">לא נמצאו ספרים לפי הסינון שנבחר</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="nav-logo" style="display:inline-flex">
+          <div class="nav-logo-icon">
+        <svg viewBox="0 0 30 22" width="26" height="19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2,16 L5,10 L8,4 L11,10 L15,0 L19,10 L22,4 L25,10 L28,16 Z" fill="#0c1f3d"/>
+          <rect x="2" y="16" width="26" height="5.5" rx="1.5" fill="#0c1f3d"/>
+          <circle cx="8"  cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+          <circle cx="15" cy="0.8" r="1.9" fill="rgba(255,215,60,1)"/>
+          <circle cx="22" cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+        </svg>
+      </div>
+          <div>
+            <div class="nav-logo-title" data-he="מכון תהלות ישראל" data-en="Tehillot Israel Institute">מכון תהלות ישראל</div>
+            <div class="nav-logo-sub">Torah | Lessons | Books</div>
+          </div>
+        </a>
+        <p class="footer-desc" data-he="מכון תורה המוקדש להפצת תורה ויהדות לכל יהודי בכל מקום בעולם." data-en="A Torah institute dedicated to spreading Torah and Judaism to every Jew everywhere.">מכון תורה המוקדש להפצת תורה ויהדות לכל יהודי בכל מקום בעולם.</p>
+      </div>
+      <div>
+        <div class="footer-col-title" data-he="ניווט" data-en="Navigation">ניווט</div>
+        <div class="footer-links">
+          <a href="index.html" data-he="דף הבית" data-en="Home">דף הבית</a>
+          <a href="lessons.html" data-he="שיעורים" data-en="Lessons">שיעורים</a>
+          <a href="books.html" data-he="ספרים" data-en="Books">ספרים</a>
+          <a href="updates.html" data-he="עדכונים" data-en="Updates">עדכונים</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title" data-he="מידע" data-en="Info">מידע</div>
+        <div class="footer-links">
+          <a href="contact.html" data-he="צור קשר" data-en="Contact">צור קשר</a>
+          <a href="donate.html" data-he="תרומות" data-en="Donate">תרומות</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title" data-he="צור קשר" data-en="Contact">צור קשר</div>
+        <div class="footer-links">
+          <a href="tel:0253757504"><i class="fas fa-phone" style="margin-left:6px;margin-right:6px"></i>02-537-5704</a>
+          <a href="tel:025440544"><i class="fas fa-headphones" style="margin-left:6px;margin-right:6px"></i>02-544-0-544</a>
+          <a href="tel:+17189253202"><i class="fas fa-globe" style="margin-left:6px;margin-right:6px"></i>718-925-3202 <span style="font-size:.7em;opacity:.7">(US)</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-he="© 2024 מכון תהלות ישראל." data-en="© 2024 Tehillot Israel Institute.">© 2024 מכון תהלות ישראל.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- AUDIO PLAYER (Floating Draggable Window) -->
+<div class="audio-player" id="audioPlayer">
+  <div class="player-handle" id="playerHandle">
+    <i class="fas fa-grip-vertical" style="color:rgba(255,255,255,.35);font-size:13px"></i>
+    <span class="player-handle-title">מנגן שיעורים</span>
+    <button class="player-close-btn" onclick="Player.close()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="player-track">
+    <div class="player-thumb"><i class="fas fa-headphones"></i></div>
+    <div style="flex:1;min-width:0">
+      <div class="player-title">—</div>
+      <div class="player-speaker"></div>
+    </div>
+  </div>
+  <div class="player-controls">
+    <button class="player-btn player-prev" title="אחורה 10 שניות" style="display:flex;flex-direction:column;align-items:center;gap:1px">
+      <i class="fas fa-rotate-left" style="font-size:14px"></i>
+      <span style="font-size:9px;font-weight:700;line-height:1">10</span>
+    </button>
+    <button class="player-btn player-play"><i class="fas fa-play"></i></button>
+    <button class="player-btn player-next" title="קדימה 10 שניות" style="display:flex;flex-direction:column;align-items:center;gap:1px">
+      <i class="fas fa-rotate-right" style="font-size:14px"></i>
+      <span style="font-size:9px;font-weight:700;line-height:1">10</span>
+    </button>
+  </div>
+  <div class="player-progress">
+    <div class="player-timeline"><div class="player-fill"></div></div>
+    <div class="player-time"><span class="player-cur">0:00</span><span class="player-dur">0:00</span></div>
+  </div>
+  <div class="player-extras">
+    <button class="speed-btn">1x</button>
+    <div class="vol-wrap">
+      <span class="vol-icon"><i class="fas fa-volume-up"></i></span>
+      <input type="range" class="vol-slider" min="0" max="1" step="0.05" value="1">
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="bookModal">
+  <div class="modal"><div id="bookModalBody"></div></div>
+</div>
+<div class="modal-overlay" id="lessonModal">
+  <div class="modal"><div id="lessonModalBody"></div></div>
+</div>
+
+<!-- BOOK READER — draggable + resizable floating window -->
+<div id="bookReaderOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:2998" onclick="BookReader.close()"></div>
+<div id="bookReaderWindow" style="display:none;position:fixed;z-index:2999;background:#fff;border-radius:14px;flex-direction:column;overflow:hidden;box-shadow:0 28px 70px rgba(0,0,0,.32);resize:both;min-width:360px;min-height:260px">
+
+  <!-- Title bar / drag handle -->
+  <div id="bookReaderHandle" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border-light);background:var(--cream);flex-shrink:0;cursor:move;user-select:none;-webkit-user-select:none">
+    <div style="display:flex;align-items:center;gap:10px;min-width:0">
+      <div style="width:28px;height:28px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.78rem;flex-shrink:0"><i class="fas fa-book-open"></i></div>
+      <span id="readerTitle" style="font-weight:700;color:var(--primary);font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:min(400px,50vw)"></span>
+    </div>
+    <!-- Window controls -->
+    <div style="display:flex;gap:5px;flex-shrink:0;margin-right:8px">
+      <button id="readerMinBtn" onclick="BookReader.minimize()" title="מזער"
+        style="width:26px;height:26px;border:none;border-radius:6px;background:rgba(12,31,61,.08);color:var(--primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.72rem;transition:background .15s"
+        onmouseover="this.style.background='rgba(12,31,61,.16)'" onmouseout="this.style.background='rgba(12,31,61,.08)'">
+        <i class="fas fa-window-minimize"></i>
+      </button>
+      <button id="readerMaxBtn" onclick="BookReader.maximize()" title="הגדל / מלא מסך"
+        style="width:26px;height:26px;border:none;border-radius:6px;background:rgba(12,31,61,.08);color:var(--primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.72rem;transition:background .15s"
+        onmouseover="this.style.background='rgba(12,31,61,.16)'" onmouseout="this.style.background='rgba(12,31,61,.08)'">
+        <i class="fas fa-expand"></i>
+      </button>
+      <button onclick="BookReader.close()" title="סגור"
+        style="width:26px;height:26px;border:none;border-radius:6px;background:rgba(220,38,38,.1);color:#dc2626;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.72rem;transition:background .15s"
+        onmouseover="this.style.background='rgba(220,38,38,.22)'" onmouseout="this.style.background='rgba(220,38,38,.1)'">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div style="flex:1;position:relative;overflow:hidden;min-height:0">
+    <iframe id="readerFrame" style="width:100%;height:100%;border:none;display:none"></iframe>
+    <div id="readerNoFile" style="display:none;height:100%;flex-direction:column;align-items:center;justify-content:center;color:var(--text-muted)">
+      <div style="font-size:48px;margin-bottom:16px">📄</div>
+      <p style="font-size:.95rem;font-weight:600">הקובץ אינו זמין לקריאה מקוונת</p>
+      <p style="font-size:.82rem;margin-top:6px">ניתן להוריד את הספר לקריאה במחשב</p>
+    </div>
+  </div>
+</div>
+<div class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+let isListView = false;
+
+function getFilters() {
+  return {
+    q: document.getElementById('searchInput')?.value || '',
+    category: document.getElementById('filterCat')?.value || 'all',
+    subcategory: document.getElementById('filterSubCatBooks')?.value || 'all',
+    year: document.getElementById('filterYear')?.value || '',
+    sort: document.getElementById('filterSort')?.value || 'popular',
+  };
+}
+
+function filterBooks(books, opts) {
+  let res = [...books];
+  if (opts.q) {
+    const ql = opts.q.toLowerCase();
+    res = res.filter(b => [b.titleHe, b.titleEn, b.descHe, b.descEn, ...(b.tags||[])].some(f => f && f.toLowerCase().includes(ql)));
+  }
+  if (opts.category && opts.category !== 'all') {
+    // Include all books whose category matches at any sub-level
+    const catNode = findCatNode(opts.category, getCategories('books'));
+    if (catNode) {
+      const ids = flatCatIds(catNode);
+      res = res.filter(b => ids.includes(b.category) || b.category === opts.category);
+    } else {
+      res = res.filter(b => b.category === opts.category);
+    }
+  }
+  if (opts.subcategory && opts.subcategory !== 'all') {
+    res = res.filter(b => b.subcategory === opts.subcategory);
+  }
+  if (opts.year) res = res.filter(b => String(b.year) === String(opts.year));
+  if (opts.sort === 'popular')  res.sort((a,b) => (b.downloads||0) - (a.downloads||0));
+  if (opts.sort === 'newest')   res.sort((a,b) => (b.year||0) - (a.year||0));
+  if (opts.sort === 'oldest')   res.sort((a,b) => (a.year||0) - (b.year||0));
+  if (opts.sort === 'alpha')    res.sort((a,b) => (a.titleHe||'').localeCompare(b.titleHe||'', 'he'));
+  return res;
+}
+
+function buildSubCatBooksUI(catId) {
+  const grp = document.getElementById('subCatBooksGroup');
+  const sel = document.getElementById('filterSubCatBooks');
+  if (!grp || !sel) return;
+  const catNode = findCatNode(catId, getCategories('books'));
+  if (catNode && catNode.subs?.length) {
+    sel.innerHTML = `<option value="all">כל הנושאים</option>` +
+      catNode.subs.map(s => `<option value="${s.id}">${s.he}</option>`).join('');
+    grp.style.display = '';
+  } else {
+    sel.innerHTML = '<option value="all">כל הנושאים</option>';
+    grp.style.display = 'none';
+  }
+}
+
+function renderPage() {
+  const lang = Lang.current;
+  const opts = getFilters();
+  const allBooks = getData('books');
+  const filtered = filterBooks(allBooks, opts);
+  const countEl = document.getElementById('resultsCount');
+  if (countEl) countEl.textContent = `${filtered.length} ${lang === 'he' ? 'ספרים' : 'books'}`;
+
+  const emptyEl = document.getElementById('booksEmpty');
+
+  if (filtered.length === 0) {
+    document.getElementById('booksGrid').innerHTML = '';
+    document.getElementById('booksList').innerHTML = '';
+    if (emptyEl) emptyEl.style.display = '';
+    return;
+  }
+  if (emptyEl) emptyEl.style.display = 'none';
+
+  if (isListView) {
+    document.getElementById('booksGrid').classList.add('hidden');
+    document.getElementById('booksList').classList.remove('hidden');
+    Paginator.render('booksList', filtered, b => renderBookListItem(b, opts.q));
+  } else {
+    document.getElementById('booksGrid').classList.remove('hidden');
+    document.getElementById('booksList').classList.add('hidden');
+    Paginator.render('booksGrid', filtered, b => renderBookCard(b, opts.q));
+  }
+}
+
+function renderBookListItem(book, q = '') {
+  const lang = Lang.current;
+  const title = lang === 'he' ? book.titleHe : (book.titleEn||book.titleHe);
+  const desc  = lang === 'he' ? book.descHe : (book.descEn||book.descHe);
+  const catObj = getCategories('books').find(c => c.id === book.category);
+  const catLabel = catObj ? (lang === 'he' ? catObj.he : catObj.en) : book.category;
+  const hyear = book.year ? toHebrewYear(book.year) : '';
+  return `
+    <div class="card" style="padding:18px;margin-bottom:12px;display:flex;gap:16px;align-items:flex-start;cursor:pointer;transition:var(--tr)" onclick="openBook(${book.id})">
+      <div style="font-size:44px;min-width:56px;text-align:center;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.15))">${book.cover||'📖'}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+          <div style="font-size:.97rem;font-weight:700;color:var(--primary)">${Search.highlight(title, q)}</div>
+          ${book.featured ? '<span class="badge badge-green"><i class="fas fa-star"></i></span>' : ''}
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <span class="badge badge-gold">${catLabel}</span>
+          ${book.pages ? `<span class="badge badge-blue">${book.pages} ${lang==='he'?'עמ׳':'pp'}</span>` : ''}
+          ${hyear ? `<span class="badge badge-blue">${hyear}</span>` : ''}
+          <span style="font-size:.73rem;color:var(--text-muted)"><i class="fas fa-download" style="margin:0 3px"></i>${(book.downloads||0).toLocaleString()}</span>
+          ${getLangBadge(book.language, lang)}
+        </div>
+        <p style="font-size:.83rem;color:var(--text-light);margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${Search.highlight(desc, q)}</p>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;flex-direction:column" onclick="event.stopPropagation()">
+        <button class="btn btn-dark btn-sm" onclick="openBookReader(${book.id})">
+          <i class="fas fa-book-open"></i> ${lang==='he'?'קרא':'Read'}
+        </button>
+        <button class="btn btn-outline-dark btn-sm" onclick="downloadBook(${book.id})">
+          <i class="fas fa-download"></i> ${lang==='he'?'הורד':'Download'}
+        </button>
+      </div>
+    </div>`;
+}
+
+function clearFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filterCat').value = 'all';
+  const subEl = document.getElementById('filterSubCatBooks');
+  if (subEl) subEl.value = 'all';
+  const subGrp = document.getElementById('subCatBooksGroup');
+  if (subGrp) subGrp.style.display = 'none';
+  document.getElementById('filterYear').value = '';
+  document.getElementById('filterSort').value = 'popular';
+  document.querySelectorAll('#categoryTags .tag').forEach(t => t.classList.remove('active'));
+  Paginator.page = 1;
+  renderPage();
+}
+
+// ===== DRAGGABLE + RESIZABLE BOOK READER =====
+const BookReader = {
+  _drag: false, _sx:0, _sy:0, _sl:0, _st:0,
+  _minimized: false, _maximized: false, _saved: {},
+
+  get win()     { return document.getElementById('bookReaderWindow'); },
+  get overlay() { return document.getElementById('bookReaderOverlay'); },
+
+  open(title, fileUrl) {
+    const win = this.win, ov = this.overlay;
+    if (!win) return;
+    win.style.display = 'flex';
+    if (ov) ov.style.display = 'block';
+    this._minimized = false;
+    this._maximized = false;
+    this._center();
+    this._updateBtns();
+  },
+
+  close() {
+    const win = this.win, ov = this.overlay;
+    if (win) win.style.display = 'none';
+    if (ov)  ov.style.display  = 'none';
+    const fr = document.getElementById('readerFrame');
+    if (fr) { fr.src = ''; fr.style.display = 'none'; }
+  },
+
+  _center() {
+    const win = this.win;
+    const W = window.innerWidth, H = window.innerHeight;
+    const w = Math.min(1100, Math.round(W * 0.93));
+    const h = Math.round(Math.min(H * 0.88, H - 50));
+    win.style.width  = w + 'px';
+    win.style.height = h + 'px';
+    win.style.left   = Math.round((W - w) / 2) + 'px';
+    win.style.top    = Math.round((H - h) / 2) + 'px';
+    win.style.borderRadius = '14px';
+    win.style.resize = 'both';
+    win.style.overflow = 'hidden';
+    document.querySelector('#bookReaderWindow > div:last-child').style.display = '';
+  },
+
+  minimize() {
+    const win = this.win;
+    if (this._minimized) { this._restore(); return; }
+    this._saved = { w: win.style.width, h: win.style.height, t: win.style.top, l: win.style.left };
+    win.style.height   = '48px';
+    win.style.resize   = 'none';
+    win.style.overflow = 'hidden';
+    win.style.top      = (window.innerHeight - 58) + 'px';
+    win.style.left     = Math.max(10, Math.min(parseInt(win.style.left)||0, window.innerWidth - 200)) + 'px';
+    this._minimized = true;
+    this._maximized = false;
+    this._updateBtns();
+  },
+
+  maximize() {
+    const win = this.win;
+    if (this._maximized) { this._restore(); return; }
+    if (!this._minimized)
+      this._saved = { w: win.style.width, h: win.style.height, t: win.style.top, l: win.style.left };
+    win.style.width        = '100vw';
+    win.style.height       = '100vh';
+    win.style.top          = '0';
+    win.style.left         = '0';
+    win.style.borderRadius = '0';
+    win.style.resize       = 'none';
+    win.style.overflow     = 'hidden';
+    this._maximized = true;
+    this._minimized = false;
+    this._updateBtns();
+  },
+
+  _restore() {
+    const win = this.win;
+    win.style.width        = this._saved.w || '';
+    win.style.height       = this._saved.h || '';
+    win.style.top          = this._saved.t || '';
+    win.style.left         = this._saved.l || '';
+    win.style.borderRadius = '14px';
+    win.style.resize       = 'both';
+    win.style.overflow     = 'hidden';
+    this._minimized = false;
+    this._maximized = false;
+    this._updateBtns();
+  },
+
+  _updateBtns() {
+    const m = document.getElementById('readerMinBtn');
+    const x = document.getElementById('readerMaxBtn');
+    if (m) m.querySelector('i').className = this._minimized ? 'fas fa-window-restore' : 'fas fa-window-minimize';
+    if (x) x.querySelector('i').className = this._maximized ? 'fas fa-compress'       : 'fas fa-expand';
+  },
+
+  initDrag() {
+    const handle = document.getElementById('bookReaderHandle');
+    if (!handle) return;
+    const self = this;
+
+    const start = (cx, cy) => {
+      if (self._maximized) return;
+      self._drag = true;
+      self._sx = cx; self._sy = cy;
+      self._sl = parseInt(self.win.style.left) || 0;
+      self._st = parseInt(self.win.style.top)  || 0;
+    };
+    const move = (cx, cy) => {
+      if (!self._drag) return;
+      const W = window.innerWidth, H = window.innerHeight;
+      const winW = parseInt(self.win.style.width)  || 600;
+      const winH = parseInt(self.win.style.height) || 400;
+      let l = Math.max(-winW + 80, Math.min(self._sl + cx - self._sx, W - 80));
+      let t = Math.max(0,          Math.min(self._st + cy - self._sy, H - 40));
+      self.win.style.left = l + 'px';
+      self.win.style.top  = t + 'px';
+    };
+    const stop = () => { self._drag = false; };
+
+    handle.addEventListener('mousedown',  e => { e.preventDefault(); start(e.clientX, e.clientY); });
+    document.addEventListener('mousemove', e => move(e.clientX, e.clientY));
+    document.addEventListener('mouseup',   stop);
+
+    handle.addEventListener('touchstart', e => start(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+    document.addEventListener('touchmove', e => {
+      if (self._drag) { e.preventDefault(); move(e.touches[0].clientX, e.touches[0].clientY); }
+    }, { passive: false });
+    document.addEventListener('touchend', stop);
+
+    // ESC key closes
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && self.win && self.win.style.display !== 'none') self.close();
+    });
+  }
+};
+
+// Override openBookReader on this page to use the floating window
+function openBookReader(id) {
+  const book = getData('books').find(b => b.id === id);
+  if (!book) return;
+  const lang = Lang.current;
+  const title = lang === 'he' ? book.titleHe : (book.titleEn || book.titleHe);
+  const titleEl = document.getElementById('readerTitle');
+  const frameEl = document.getElementById('readerFrame');
+  const noFileEl = document.getElementById('readerNoFile');
+  if (titleEl) titleEl.textContent = title;
+  const fileUrl = book.file && book.file !== '#' ? book.file : null;
+  if (frameEl) { frameEl.src = fileUrl || ''; frameEl.style.display = fileUrl ? 'block' : 'none'; }
+  if (noFileEl) noFileEl.style.display = fileUrl ? 'none' : 'flex';
+  Modal.close('bookModal');
+  BookReader.open();
+}
+
+function initPage() {
+  const lang = Lang.current;
+  const catSel = document.getElementById('filterCat');
+  getCategories('books').forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = lang === 'he' ? c.he : c.en;
+    catSel.appendChild(opt);
+  });
+
+  // Category tags
+  const tagsEl = document.getElementById('categoryTags');
+  const buildTags = () => {
+    tagsEl.innerHTML = '';
+    const allTag = document.createElement('span');
+    allTag.className = 'tag active';
+    allTag.textContent = lang === 'he' ? 'הכל' : 'All';
+    allTag.onclick = () => {
+      catSel.value='all';
+      document.querySelectorAll('#categoryTags .tag').forEach(t=>t.classList.remove('active'));
+      allTag.classList.add('active');
+      buildSubCatBooksUI('all');
+      Paginator.page=1; renderPage();
+    };
+    tagsEl.appendChild(allTag);
+    getCategories('books').forEach(c => {
+      const t = document.createElement('span');
+      t.className = 'tag';
+      t.textContent = lang === 'he' ? c.he : c.en;
+      t.onclick = () => {
+        catSel.value=c.id;
+        document.querySelectorAll('#categoryTags .tag').forEach(x=>x.classList.remove('active'));
+        t.classList.add('active');
+        buildSubCatBooksUI(c.id);
+        Paginator.page=1; renderPage();
+      };
+      tagsEl.appendChild(t);
+    });
+  };
+  buildTags();
+
+  // Populate year selector — collect years from books data, sort descending
+  const yearSel = document.getElementById('filterYear');
+  if (yearSel) {
+    const allBooks = getData('books');
+    const years = [...new Set(allBooks.map(b => b.year).filter(Boolean))].sort((a, b) => b - a);
+    years.forEach(y => {
+      const opt = document.createElement('option');
+      opt.value = y;
+      const heY = toHebrewYear(Number(y));
+      opt.textContent = heY ? `${heY}  (${y})` : y;
+      yearSel.appendChild(opt);
+    });
+  }
+
+  let debounce;
+  document.getElementById('searchInput').addEventListener('input', () => {
+    clearTimeout(debounce); debounce = setTimeout(() => { Paginator.page=1; renderPage(); }, 300);
+  });
+  document.getElementById('filterCat').addEventListener('change', e => {
+    buildSubCatBooksUI(e.target.value);
+    Paginator.page=1; renderPage();
+  });
+  ['filterSubCatBooks','filterYear','filterSort'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', () => { Paginator.page=1; renderPage(); });
+  });
+  document.getElementById('viewGrid').addEventListener('click', () => {
+    isListView=false;
+    document.getElementById('viewGrid').classList.add('active');
+    document.getElementById('viewList').classList.remove('active');
+    Paginator.perPage=12;
+    document.getElementById('booksGrid').className='grid-4';
+    renderPage();
+  });
+  document.getElementById('viewList').addEventListener('click', () => {
+    isListView=true;
+    document.getElementById('viewList').classList.add('active');
+    document.getElementById('viewGrid').classList.remove('active');
+    renderPage();
+  });
+  renderPage();
+  BookReader.initDrag();
+}
+
+function onLangChange() { Paginator.page=1; renderPage(); }
+</script>
+</body>
+</html>

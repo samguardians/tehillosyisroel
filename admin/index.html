@@ -1,0 +1,2965 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal — Tehillot Israel Institute</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    body { font-family: 'Heebo', var(--font-he); direction: rtl; background: #f0f2f5; margin:0; }
+  body.admin-ltr { font-family: var(--font-en); direction: ltr; }
+  /* Sidebar RTL */
+  body.admin-ltr .sidebar-link { flex-direction: row; }
+  body.admin-ltr .admin-logo-wrap { flex-direction: row; }
+  body.admin-ltr .admin-user { flex-direction: row; }
+  body.admin-ltr .admin-topbar { flex-direction: row; }
+  body.admin-ltr .acard-head { flex-direction: row; }
+  body.admin-ltr .form-section-title { flex-direction: row; }
+  /* RTL sidebar icon spacing */
+  .sidebar-link i { margin-left: 0; margin-right: 0; }
+  body.admin-ltr .sidebar-link i { margin-right: 10px; }
+  /* Language toggle button */
+  .lang-toggle {
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+    color: #fff; padding: 3px 11px; border-radius: 20px; cursor: pointer;
+    font-size: .75rem; font-weight: 700; letter-spacing: .5px;
+    transition: var(--tr); font-family: var(--font-en); flex-shrink: 0;
+  }
+  .lang-toggle:hover { background: rgba(255,255,255,.25); }
+  /* Storage provider cards */
+  .storage-providers { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .storage-card {
+    border: 2px solid var(--border); border-radius: var(--r-lg); padding: 18px 14px;
+    cursor: pointer; transition: var(--tr); background: #fff; text-align: center;
+    position: relative;
+  }
+  .storage-card:hover { border-color: var(--gold-dark); box-shadow: var(--shadow-sm); }
+  .storage-card.active { border-color: var(--gold); background: var(--gold-lighter); box-shadow: 0 0 0 3px rgba(201,168,76,.18); }
+  .storage-card .check-badge {
+    position: absolute; top: 10px; right: 10px; width: 20px; height: 20px;
+    background: var(--gold); border-radius: 50%; display: none;
+    align-items: center; justify-content: center; color: #fff; font-size: 11px;
+  }
+  .storage-card.active .check-badge { display: flex; }
+  .storage-logo { font-size: 2.2rem; margin-bottom: 8px; }
+  .storage-name { font-weight: 700; color: var(--primary); font-size: .9rem; }
+  .storage-desc { font-size: .72rem; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+  .storage-panel { display: none; }
+  .storage-panel.active { display: block; animation: fadeIn .2s ease; }
+  .conn-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 14px; border-radius: var(--r-full); font-size: .75rem; font-weight: 600;
+  }
+  .conn-status.connected { background: #d1fae5; color: #065f46; }
+  .conn-status.disconnected { background: #fee2e2; color: #7f1d1d; }
+  .conn-status.testing { background: #fef3c7; color: #92400e; }
+  .conn-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .hosting-card {
+    border: 1.5px solid var(--border); border-radius: var(--r-md); padding: 14px 16px;
+    display: flex; align-items: center; gap: 14px; cursor: pointer; transition: var(--tr); background: #fff;
+  }
+  .hosting-card:hover { border-color: var(--primary-mid); }
+  .hosting-card.active { border-color: var(--primary); background: #eef2f8; }
+  .hosting-card-icon { font-size: 1.6rem; width: 40px; text-align: center; flex-shrink: 0; }
+    .badge-active   { background:#d1fae5; color:#065f46; padding:3px 10px; border-radius:var(--r-full); font-size:.72rem; font-weight:600; }
+    .badge-inactive { background:#fee2e2; color:#7f1d1d; padding:3px 10px; border-radius:var(--r-full); font-size:.72rem; font-weight:600; }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; animation: fadeIn .25s ease; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+    .stat-blue   { background:rgba(59,130,246,.12); color:#1d4ed8; }
+    .stat-green  { background:rgba(5,150,105,.12); color:#065f46; }
+    .stat-gold   { background:rgba(201,168,76,.18); color:var(--gold-dark); }
+    .stat-purple { background:rgba(139,92,246,.12); color:#6d28d9; }
+    .form-section { background:#fff; border-radius:var(--r-lg); padding:28px; border:1px solid var(--border-light); box-shadow:var(--shadow-xs); margin-bottom:20px; }
+    .form-section-title { font-size:1rem; font-weight:700; color:var(--primary); margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid var(--border-light); display:flex; align-items:center; gap:10px; }
+    .form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .form-grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+    .tag-input-wrap { display:flex; flex-wrap:wrap; gap:6px; padding:10px 12px; border:1.5px solid var(--border); border-radius:var(--r-md); background:#fff; min-height:46px; align-items:center; cursor:text; }
+    .tag-input-wrap input { border:none; outline:none; font-size:.9rem; flex:1; min-width:120px; font-family:inherit; }
+    .tag-chip { background:var(--gold-lighter); color:var(--gold-dark); padding:3px 10px; border-radius:var(--r-full); font-size:.75rem; font-weight:500; display:flex; align-items:center; gap:5px; }
+    .tag-chip-x { cursor:pointer; opacity:.6; } .tag-chip-x:hover { opacity:1; }
+    .upload-area { border:2px dashed var(--border); border-radius:var(--r-lg); padding:28px; text-align:center; cursor:pointer; transition:var(--tr); background:var(--cream); }
+    .upload-area:hover { border-color:var(--gold); background:var(--gold-lighter); }
+    .upload-icon { font-size:32px; color:var(--text-muted); margin-bottom:8px; }
+    .quick-stat { display:flex; align-items:center; gap:8px; padding:10px 0; border-bottom:1px solid var(--border-light); }
+    .quick-stat:last-child { border-bottom:none; }
+    .quick-stat-icon { width:32px; height:32px; border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+    select.form-control, input.form-control { font-family:var(--font-en); }
+    .user-avatar-sm { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem; flex-shrink:0; }
+    .toggle-switch { position:relative; width:44px; height:24px; }
+    .toggle-switch input { opacity:0; width:0; height:0; }
+    .toggle-slider { position:absolute; inset:0; background:#ccc; border-radius:12px; cursor:pointer; transition:.3s; }
+    .toggle-slider:before { content:''; position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.3s; }
+    input:checked + .toggle-slider { background:var(--gold); }
+    input:checked + .toggle-slider:before { transform:translateX(20px); }
+    /* Category tree view */
+    .cat-tree-node { border-radius:var(--r-md); margin-bottom:2px; }
+    .cat-tree-row {
+      display:flex; align-items:center; gap:0; padding:8px 12px;
+      border-radius:var(--r-md); transition:background .15s; cursor:default;
+      border:1px solid transparent;
+    }
+    .cat-tree-row:hover { background:var(--cream); border-color:var(--border-light); }
+    .cat-tree-row.has-children:hover { background:rgba(12,31,61,.04); }
+    .cat-tree-toggle { width:22px; height:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--primary-mid); font-size:.72rem; flex-shrink:0; border-radius:4px; transition:background .15s; }
+    .cat-tree-toggle:hover { background:rgba(12,31,61,.08); }
+    .cat-tree-icon { font-size:1rem; margin:0 6px; flex-shrink:0; }
+    .cat-tree-label { font-weight:700; color:var(--primary); font-size:.88rem; min-width:100px; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .cat-tree-en { font-size:.78rem; color:var(--text-muted); min-width:80px; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-right:8px; }
+    .cat-tree-id { font-size:.7rem; color:var(--text-light); background:var(--cream); padding:1px 6px; border-radius:4px; font-family:var(--font-en); margin-right:8px; flex-shrink:0; }
+    .cat-tree-meta { margin-right:auto; display:flex; align-items:center; gap:6px; }
+    .cat-tree-actions { display:flex; gap:4px; flex-shrink:0; }
+    .cat-tree-children { margin-right:28px; border-right:2px solid rgba(12,31,61,.07); padding-right:8px; }
+    .cat-inline-form { background:rgba(201,168,76,.06); border:1px dashed rgba(201,168,76,.4); border-radius:var(--r-md); padding:14px 16px; margin:6px 0 6px 0; }
+    .cat-inline-form-grid { display:grid; grid-template-columns:1fr 1fr 160px auto; gap:10px; align-items:end; }
+    @media(max-width:700px) { .cat-inline-form-grid { grid-template-columns:1fr 1fr; } }
+    /* Translate buttons */
+    .translate-btn {
+      position:absolute; left:8px; top:50%; transform:translateY(-50%);
+      background:linear-gradient(135deg,var(--primary),var(--primary-light));
+      color:#fff; border:none; border-radius:var(--r-sm);
+      padding:4px 10px; font-size:.7rem; cursor:pointer;
+      display:flex; align-items:center; gap:4px; white-space:nowrap;
+      transition:opacity .2s; font-family:var(--font-he); font-weight:600;
+    }
+    .translate-btn:hover { opacity:.85; }
+    .translate-btn.loading { opacity:.6; pointer-events:none; }
+    .translate-btn-below {
+      display:inline-flex; align-items:center; gap:5px;
+      margin-top:6px; background:rgba(12,31,61,.06); border:1px solid var(--border);
+      color:var(--primary); border-radius:var(--r-sm); padding:5px 12px;
+      font-size:.75rem; cursor:pointer; font-family:var(--font-he); font-weight:600;
+      transition:background .2s;
+    }
+    .translate-btn-below:hover { background:rgba(12,31,61,.12); }
+    .translate-btn-below.loading { opacity:.5; pointer-events:none; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="admin-login-wrap">
+  <div class="admin-login-card">
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="width:60px;height:60px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:var(--primary);margin:0 auto 14px">תי</div>
+      <h2 style="font-size:1.4rem;color:var(--primary);margin-bottom:4px" data-i18n="login.title">פורטל מנהל</h2>
+      <p style="font-size:.88rem;color:var(--text-light)" data-i18n="login.sub">מכון תהלות ישראל</p>
+      <div style="margin-top:10px">
+        <button class="lang-toggle" style="background:rgba(12,31,61,.08);border-color:var(--border);color:var(--primary)" id="loginLangBtn" onclick="AdminLang.toggle()">EN</button>
+      </div>
+    </div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label class="form-label" data-i18n="login.user">שם משתמש</label>
+        <input type="text" id="loginUser" class="form-control" placeholder="admin" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="login.pass">סיסמה</label>
+        <div style="position:relative">
+          <input type="password" id="loginPass" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+          <span onclick="togglePassVis()" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);cursor:pointer"><i class="fas fa-eye" id="passEye"></i></span>
+        </div>
+      </div>
+      <div id="loginError" style="display:none;background:#fee2e2;color:#7f1d1d;padding:10px 14px;border-radius:var(--r-md);font-size:.85rem;margin-bottom:14px"></div>
+      <button type="submit" class="btn btn-dark" style="width:100%;justify-content:center;padding:13px">
+        <i class="fas fa-sign-in-alt"></i> <span data-i18n="login.btn">כניסה</span>
+      </button>
+    </form>
+    <p style="text-align:center;font-size:.78rem;color:var(--text-muted);margin-top:16px" data-i18n="login.demo">שם משתמש: <strong>admin</strong> / סיסמה: <strong>admin123</strong></p>
+    <div style="text-align:center;margin-top:12px">
+      <a href="../index.html" style="font-size:.82rem;color:var(--text-light)" data-i18n="login.back">← חזרה לאתר</a>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PORTAL -->
+<div id="adminPortal" class="hidden admin-wrap">
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo-wrap" style="align-items:center;gap:8px">
+        <div class="admin-logo-icon">תי</div>
+        <div style="flex:1;min-width:0">
+          <div class="admin-logo-text" data-i18n="logoText">תהלות ישראל</div>
+          <div class="admin-logo-sub" data-i18n="logoSub">פורטל מנהל</div>
+        </div>
+        <button class="lang-toggle" id="langToggleBtn" onclick="AdminLang.toggle()">EN</button>
+      </div>
+      <nav class="sidebar-nav">
+        <span class="sidebar-sec" data-i18n="sec.main">ראשי</span>
+        <div class="sidebar-link active" onclick="showTab('dashboard')"><i class="fas fa-tachometer-alt"></i> <span data-i18n="nav.dashboard">לוח בקרה</span></div>
+        <span class="sidebar-sec" data-i18n="sec.content">ניהול תוכן</span>
+        <div class="sidebar-link" onclick="showTab('uploadLesson')"><i class="fas fa-headphones"></i> <span data-i18n="nav.uploadLesson">העלאת שיעור</span></div>
+        <div class="sidebar-link" onclick="showTab('uploadBook')"><i class="fas fa-book"></i> <span data-i18n="nav.uploadBook">העלאת ספר</span></div>
+        <div class="sidebar-link" onclick="showTab('manageContent')"><i class="fas fa-list"></i> <span data-i18n="nav.manageContent">ניהול תוכן</span></div>
+        <div class="sidebar-link" onclick="showTab('manageUpdates')"><i class="fas fa-newspaper"></i> <span data-i18n="nav.manageUpdates">חדשות ועדכונים</span></div>
+        <div class="sidebar-link" onclick="showTab('categories')"><i class="fas fa-tags"></i> <span data-i18n="nav.categories">קטגוריות ונושאים</span></div>
+        <span class="sidebar-sec" data-i18n="sec.community">קהילה</span>
+        <div class="sidebar-link" onclick="showTab('users')"><i class="fas fa-users"></i> <span data-i18n="nav.users">משתמשים</span></div>
+        <div class="sidebar-link" onclick="showTab('subscribers')"><i class="fas fa-envelope"></i> <span data-i18n="nav.subscribers">מנויים</span></div>
+        <div class="sidebar-link" onclick="showTab('contacts')"><i class="fas fa-inbox"></i> <span data-i18n="nav.contacts">הודעות</span></div>
+        <span class="sidebar-sec" data-i18n="sec.system">מערכת</span>
+        <div class="sidebar-link" onclick="showTab('storage')"><i class="fas fa-cloud"></i> <span data-i18n="nav.storage">אחסון קבצים</span></div>
+        <div class="sidebar-link" onclick="showTab('settings')"><i class="fas fa-cog"></i> <span data-i18n="nav.settings">הגדרות</span></div>
+        <a href="../index.html" class="sidebar-link" style="color:rgba(255,255,255,.45)"><i class="fas fa-external-link-alt"></i> <span data-i18n="nav.viewSite">צפה באתר</span></a>
+      </nav>
+      <div class="admin-user">
+        <div class="admin-avatar" id="adminAvatar">א</div>
+        <div style="flex:1;min-width:0">
+          <div class="admin-username" id="adminName">מנהל</div>
+          <div style="font-size:.7rem;color:rgba(255,255,255,.35)" id="adminRole">מנהל מערכת</div>
+        </div>
+        <span class="admin-logout" onclick="logout()" title="יציאה"><i class="fas fa-sign-out-alt"></i></span>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+      <!-- DASHBOARD -->
+      <div id="tab-dashboard" class="tab-content active">
+        <div class="admin-topbar">
+          <div><div class="admin-page-title" data-i18n="page.dashboard">לוח בקרה</div><div class="admin-page-sub"><span data-i18n="page.dashboard.sub">ברוך הבא,</span> <span id="dashName">מנהל</span></div></div>
+          <div style="display:flex;gap:10px">
+            <button class="abtn abtn-primary" onclick="showTab('uploadLesson')"><i class="fas fa-plus"></i> <span data-i18n="btn.addLesson">הוסף שיעור</span></button>
+            <button class="abtn abtn-success" onclick="showTab('uploadBook')"><i class="fas fa-plus"></i> <span data-i18n="btn.addBook">הוסף ספר</span></button>
+          </div>
+        </div>
+        <div class="admin-stats" id="dashStats"></div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px">
+          <div class="acard">
+            <div class="acard-head"><div class="acard-title" data-i18n="card.recentLessons">שיעורים אחרונים</div><button class="abtn abtn-primary" onclick="showTab('manageContent')" data-i18n="btn.viewAll">הצג הכל</button></div>
+            <div class="acard-body" style="padding:0"><table class="atable"><thead><tr><th>Title</th><th>Category</th><th>שנה</th><th>Downloads</th></tr></thead><tbody id="recentLessons"></tbody></table></div>
+          </div>
+          <div class="acard">
+            <div class="acard-head"><div class="acard-title" data-i18n="card.quickStats">נתונים מהירים</div></div>
+            <div class="acard-body" id="quickStats"></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
+          <div class="acard">
+            <div class="acard-head"><div class="acard-title" data-i18n="card.recentBooks">ספרים אחרונים</div><button class="abtn abtn-primary" onclick="showTab('manageContent')" data-i18n="btn.viewAll">הצג הכל</button></div>
+            <div class="acard-body" style="padding:0"><table class="atable"><thead><tr><th>Title</th><th>Category</th><th>Downloads</th></tr></thead><tbody id="recentBooks"></tbody></table></div>
+          </div>
+          <div class="acard">
+            <div class="acard-head"><div class="acard-title" data-i18n="card.inbox">הודעות נכנסות</div><button class="abtn abtn-primary" onclick="showTab('contacts')" data-i18n="btn.viewAll">הצג הכל</button></div>
+            <div class="acard-body" id="recentContacts"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPLOAD LESSON -->
+      <div id="tab-uploadLesson" class="tab-content">
+        <div class="admin-topbar">
+          <div>
+            <div class="admin-page-title" id="lessonPageTitle" data-i18n="page.uploadLesson">העלאת שיעור</div>
+            <div class="admin-page-sub" id="lessonPageSub" data-i18n="page.uploadLesson.sub">הוספת שיעור שמע חדש לספרייה</div>
+          </div>
+        </div>
+        <div id="lessonEditBanner" style="display:none;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(59,130,246,.06));border:1px solid rgba(59,130,246,.3);border-radius:var(--r-lg);padding:12px 18px;margin-bottom:16px;align-items:center;gap:12px">
+          <i class="fas fa-edit" style="color:#2563eb;font-size:1.1rem"></i>
+          <span style="font-weight:700;color:#1d4ed8">מצב עריכה —</span>
+          <span id="lessonEditBannerTitle" style="color:#1e40af"></span>
+          <button type="button" onclick="cancelLessonEdit()" style="margin-right:auto;background:none;border:1px solid rgba(59,130,246,.4);color:#1d4ed8;border-radius:var(--r-sm);padding:4px 12px;cursor:pointer;font-size:.8rem"><i class="fas fa-times"></i> בטל עריכה</button>
+        </div>
+        <form id="lessonForm" onsubmit="submitLesson(event)">
+          <div class="form-section">
+            <div class="form-section-title"><i class="fas fa-info-circle" style="color:var(--primary-mid)"></i> <span data-i18n="sec.lessonDetails">פרטי השיעור</span></div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.titleHe">כותרת (עברית) *</label>
+                <input type="text" name="titleHe" id="lTitleHe" class="form-control" required placeholder="שם השיעור בעברית" dir="rtl">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.titleEn">כותרת (אנגלית)</label>
+                <div style="position:relative">
+                  <input type="text" name="titleEn" id="lTitleEn" class="form-control" placeholder="Lesson title in English" style="padding-left:90px">
+                  <button type="button" class="translate-btn" onclick="autoTranslate('lTitleHe','lTitleEn')"><i class="fas fa-language"></i> תרגם</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.category">קטגוריה *</label>
+                <select name="category" class="form-control" required id="lessonCatSelect" onchange="updateLessonSubCats(this.value)">
+                  <option value="" data-i18n="ph.selectCat">בחר קטגוריה...</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">שנת השיעור *</label>
+                <select name="year" id="lessonYearSelect" class="form-control" required>
+                  <option value="">— בחר שנה —</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" id="lessonSubCatGroup" style="display:none">
+              <label class="form-label">תת-קטגוריה / Sub-Topic</label>
+              <select name="subcategory" class="form-control" id="lessonSubCatSel" onchange="updateLessonSubSubCats(this.value)">
+                <option value="">— ללא —</option>
+              </select>
+            </div>
+            <div class="form-group" id="lessonSubSubCatGroup" style="display:none">
+              <label class="form-label">תת-תת-קטגוריה / Sub-Sub-Topic</label>
+              <select name="subsubcategory" class="form-control" id="lessonSubSubCatSel">
+                <option value="">— ללא —</option>
+              </select>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.duration">משך (שע:דק:שנ)</label>
+                <input type="text" name="duration" class="form-control" placeholder="45:30">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.language">שפת השיעור</label>
+                <select name="language" class="form-control" id="lessonLangSelect">
+                  <option value="">— בחר שפה —</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.descHe">תיאור (עברית)</label>
+              <textarea name="descHe" id="lDescHe" class="form-control" rows="3" placeholder="תיאור השיעור בעברית..." dir="rtl"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.descEn">תיאור (אנגלית)</label>
+              <textarea name="descEn" id="lDescEn" class="form-control" rows="3" placeholder="Lesson description in English..."></textarea>
+              <button type="button" class="translate-btn-below" onclick="autoTranslate('lDescHe','lDescEn')"><i class="fas fa-language"></i> תרגם תיאור מעברית לאנגלית</button>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.tags">תגיות</label>
+              <div class="tag-input-wrap" id="lessonTagsWrap" onclick="this.querySelector('input').focus()">
+                <input type="text" id="lessonTagInput" placeholder="הוסף תגית ולחץ Enter..." onkeydown="addTag(event,'lesson')">
+              </div>
+              <div class="form-hint" data-i18n="hint.tags">לחץ Enter להוספת תגית</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+              <label class="toggle-switch"><input type="checkbox" name="featured" id="lessonFeatured"><span class="toggle-slider"></span></label>
+              <label for="lessonFeatured" style="font-size:.88rem;font-weight:600;color:var(--text-med);cursor:pointer" data-i18n="label.featured">סמן כמומלץ</label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title"><i class="fas fa-file-audio" style="color:var(--gold-dark)"></i> <span data-i18n="sec.audioFile">קובץ שמע</span></div>
+            <div class="upload-area" onclick="document.getElementById('lessonFileInput').click()">
+              <div class="upload-icon"><i class="fas fa-headphones"></i></div>
+              <p><span style="color:var(--gold-dark);font-weight:600" data-i18n="upload.click">לחץ להעלאה</span> <span data-i18n="upload.or">או גרור ושחרר</span></p>
+              <p style="font-size:.78rem;color:var(--text-muted);margin-top:4px" data-i18n="upload.audioTypes">MP3, WAV, M4A עד 500MB</p>
+              <div id="lessonFileName" style="margin-top:10px;font-size:.85rem;color:var(--primary);font-weight:600"></div>
+            </div>
+            <input type="file" id="lessonFileInput" accept="audio/*" style="display:none" onchange="showFileName(this,'lessonFileName')">
+            <div class="form-group" style="margin-top:14px">
+              <label class="form-label" data-i18n="label.fileUrl">או הזן כתובת URL לקובץ</label>
+              <input type="url" name="file" class="form-control" id="lessonFileUrl" placeholder="https://...">
+            </div>
+            <div id="storageHintLesson" style="font-size:.76rem;color:var(--text-muted);margin-top:6px"></div>
+          </div>
+
+          <div style="display:flex;gap:12px">
+            <button type="submit" class="btn btn-dark btn-lg"><i class="fas fa-save"></i> <span id="lessonSubmitLabel" data-i18n="btn.saveLesson">שמור שיעור</span></button>
+            <button type="button" class="btn btn-outline-dark" onclick="cancelLessonEdit()"><i class="fas fa-times"></i> <span data-i18n="btn.clear">נקה</span></button>
+          </div>
+        </form>
+      </div>
+
+      <!-- UPLOAD BOOK -->
+      <div id="tab-uploadBook" class="tab-content">
+        <div class="admin-topbar">
+          <div>
+            <div class="admin-page-title" id="bookPageTitle" data-i18n="page.uploadBook">העלאת ספר</div>
+            <div class="admin-page-sub" id="bookPageSub" data-i18n="page.uploadBook.sub">הוספת ספר או עלון חדש לספרייה</div>
+          </div>
+        </div>
+        <div id="bookEditBanner" style="display:none;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(59,130,246,.06));border:1px solid rgba(59,130,246,.3);border-radius:var(--r-lg);padding:12px 18px;margin-bottom:16px;align-items:center;gap:12px">
+          <i class="fas fa-edit" style="color:#2563eb;font-size:1.1rem"></i>
+          <span style="font-weight:700;color:#1d4ed8">מצב עריכה —</span>
+          <span id="bookEditBannerTitle" style="color:#1e40af"></span>
+          <button type="button" onclick="cancelBookEdit()" style="margin-right:auto;background:none;border:1px solid rgba(59,130,246,.4);color:#1d4ed8;border-radius:var(--r-sm);padding:4px 12px;cursor:pointer;font-size:.8rem"><i class="fas fa-times"></i> בטל עריכה</button>
+        </div>
+        <form id="bookForm" onsubmit="submitBook(event)">
+          <div class="form-section">
+            <div class="form-section-title"><i class="fas fa-book" style="color:var(--primary-mid)"></i> <span data-i18n="sec.bookDetails">פרטי הספר</span></div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.titleHe">כותרת (עברית) *</label>
+                <input type="text" name="titleHe" id="bTitleHe" class="form-control" required placeholder="שם הספר בעברית" dir="rtl">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.titleEn">כותרת (אנגלית)</label>
+                <div style="position:relative">
+                  <input type="text" name="titleEn" id="bTitleEn" class="form-control" placeholder="Book title in English" style="padding-left:90px">
+                  <button type="button" class="translate-btn" onclick="autoTranslate('bTitleHe','bTitleEn')"><i class="fas fa-language"></i> תרגם</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.category">קטגוריה *</label>
+                <select name="category" class="form-control" required id="bookCatSelect">
+                  <option value="" data-i18n="ph.selectCat">בחר קטגוריה...</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">שנת הספר</label>
+                <select name="year" id="bookYearSelect" class="form-control">
+                  <option value="">— בחר שנה —</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.language">שפת הספר</label>
+                <select name="language" class="form-control" id="bookLangSelect">
+                  <option value="">— בחר שפה —</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.pages">מספר עמודים</label>
+                <input type="number" name="pages" id="bookPagesInput" class="form-control" placeholder="יתמלא אוטומטי בעת העלאת PDF" min="1">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.cover">אימוג׳י כריכה</label>
+                <input type="text" name="cover" class="form-control" placeholder="📖" style="font-size:1.5rem">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.descHe">תיאור (עברית)</label>
+              <textarea name="descHe" id="bDescHe" class="form-control" rows="3" placeholder="תיאור הספר בעברית..." dir="rtl"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.descEn">תיאור (אנגלית)</label>
+              <textarea name="descEn" id="bDescEn" class="form-control" rows="3" placeholder="Book description in English..."></textarea>
+              <button type="button" class="translate-btn-below" onclick="autoTranslate('bDescHe','bDescEn')"><i class="fas fa-language"></i> תרגם תיאור מעברית לאנגלית</button>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.tags">תגיות</label>
+              <div class="tag-input-wrap" id="bookTagsWrap" onclick="this.querySelector('input').focus()">
+                <input type="text" id="bookTagInput" placeholder="הוסף תגית ולחץ Enter..." onkeydown="addTag(event,'book')">
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+              <label class="toggle-switch"><input type="checkbox" name="featured" id="bookFeatured"><span class="toggle-slider"></span></label>
+              <label for="bookFeatured" style="font-size:.88rem;font-weight:600;color:var(--text-med);cursor:pointer" data-i18n="label.featured">סמן כמומלץ</label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title"><i class="fas fa-file-pdf" style="color:#dc2626"></i> <span data-i18n="sec.pdfFile">קובץ PDF</span></div>
+            <div class="upload-area" onclick="document.getElementById('bookFileInput').click()">
+              <div class="upload-icon"><i class="fas fa-file-pdf"></i></div>
+              <p><span style="color:var(--gold-dark);font-weight:600" data-i18n="upload.click">לחץ להעלאה</span> <span data-i18n="upload.or">או גרור ושחרר</span></p>
+              <p style="font-size:.78rem;color:var(--text-muted);margin-top:4px" data-i18n="upload.pdfTypes">קובצי PDF עד 200MB</p>
+              <div id="bookFileName" style="margin-top:10px;font-size:.85rem;color:var(--primary);font-weight:600"></div>
+            </div>
+            <input type="file" id="bookFileInput" accept=".pdf" style="display:none" onchange="showFileName(this,'bookFileName')">
+            <div class="form-group" style="margin-top:14px">
+              <label class="form-label" data-i18n="label.fileUrl">או הזן כתובת URL לקובץ</label>
+              <input type="url" name="file" class="form-control" id="bookFileUrl" placeholder="https://...">
+            </div>
+            <div id="storageHintBook" style="font-size:.76rem;color:var(--text-muted);margin-top:6px"></div>
+          </div>
+
+          <div style="display:flex;gap:12px">
+            <button type="submit" class="btn btn-dark btn-lg"><i class="fas fa-save"></i> <span id="bookSubmitLabel" data-i18n="btn.saveBook">שמור ספר</span></button>
+            <button type="button" class="btn btn-outline-dark" onclick="cancelBookEdit()"><i class="fas fa-times"></i> <span data-i18n="btn.clear">נקה</span></button>
+          </div>
+        </form>
+      </div>
+
+      <!-- MANAGE CONTENT -->
+      <div id="tab-manageContent" class="tab-content">
+        <div class="admin-topbar">
+          <div><div class="admin-page-title" data-i18n="page.manageContent">ניהול תוכן</div><div class="admin-page-sub" data-i18n="page.manageContent.sub">צפה, ערוך ומחק שיעורים וספרים</div></div>
+        </div>
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="switchContentTab('lessons',this)" data-i18n="tab.lessons">שיעורים</button>
+          <button class="admin-tab" onclick="switchContentTab('books',this)" data-i18n="tab.books">ספרים</button>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+          <input type="text" class="filter-input" id="contentSearch" placeholder="חיפוש..." oninput="renderContent()" style="flex:1;min-width:200px">
+          <select class="filter-select" id="contentCatFilter" onchange="renderContent()" style="min-width:160px">
+            <option value="all" data-i18n="ph.allCats">כל הקטגוריות</option>
+          </select>
+          <button class="abtn abtn-primary" onclick="showTab(currentContentTab==='lessons'?'uploadLesson':'uploadBook')">
+            <i class="fas fa-plus"></i> <span data-i18n="btn.addNew">הוסף חדש</span>
+          </button>
+        </div>
+        <div class="acard">
+          <div class="acard-body" style="padding:0">
+            <table class="atable" id="contentTable">
+              <thead><tr id="contentTableHead"></tr></thead>
+              <tbody id="contentTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="contentPagination" style="display:flex;gap:6px;justify-content:center;padding:16px 0"></div>
+      </div>
+
+      <!-- MANAGE UPDATES -->
+      <div id="tab-manageUpdates" class="tab-content">
+        <div class="admin-topbar">
+          <div><div class="admin-page-title" data-i18n="page.manageUpdates">חדשות ועדכונים</div><div class="admin-page-sub" data-i18n="page.manageUpdates.sub">ניהול הודעות ואירועי המכון</div></div>
+          <button class="abtn abtn-primary" onclick="showAddUpdateForm()"><i class="fas fa-plus"></i> <span data-i18n="btn.addUpdate">הוסף עדכון</span></button>
+        </div>
+        <div id="updateFormWrap" style="display:none;margin-bottom:20px">
+          <div class="form-section">
+            <div class="form-section-title"><i class="fas fa-newspaper" style="color:var(--primary-mid)"></i> <span id="updateFormTitle">New Update</span></div>
+            <form id="updateForm" onsubmit="submitUpdate(event)">
+              <input type="hidden" id="updateEditId">
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Title (Hebrew) *</label>
+                  <input type="text" id="updTitleHe" class="form-control" required placeholder="כותרת העדכון" dir="rtl">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Title (English)</label>
+                  <div style="position:relative">
+                    <input type="text" id="updTitleEn" class="form-control" placeholder="Update title" style="padding-left:90px">
+                    <button type="button" class="translate-btn" onclick="autoTranslate('updTitleHe','updTitleEn')"><i class="fas fa-language"></i> תרגם</button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Category</label>
+                  <select id="updCategory" class="form-control">
+                    <option value="event">Event</option>
+                    <option value="publication">Publication</option>
+                    <option value="announcement">Announcement</option>
+                    <option value="schedule">Schedule</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Date</label>
+                  <input type="date" id="updDate" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Content (Hebrew)</label>
+                <textarea id="updContentHe" class="form-control" rows="3" placeholder="תוכן העדכון בעברית..." dir="rtl"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Content (English)</label>
+                <textarea id="updContentEn" class="form-control" rows="3" placeholder="Update content in English..."></textarea>
+                <button type="button" class="translate-btn-below" onclick="autoTranslate('updContentHe','updContentEn')"><i class="fas fa-language"></i> תרגם תוכן מעברית לאנגלית</button>
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Emoji Icon</label>
+                  <input type="text" id="updImage" class="form-control" placeholder="📢" style="font-size:1.4rem">
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding-top:24px">
+                  <label class="toggle-switch"><input type="checkbox" id="updFeatured"><span class="toggle-slider"></span></label>
+                  <label style="font-size:.88rem;font-weight:600;color:var(--text-med)">Featured</label>
+                </div>
+              </div>
+              <div style="display:flex;gap:10px">
+                <button type="submit" class="btn btn-dark"><i class="fas fa-save"></i> Save</button>
+                <button type="button" class="btn btn-outline-dark" onclick="cancelUpdateForm()"><i class="fas fa-times"></i> Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="acard">
+          <div class="acard-body" style="padding:0">
+            <table class="atable">
+              <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Featured</th><th>Actions</th></tr></thead>
+              <tbody id="updatesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div id="tab-users" class="tab-content">
+        <div class="admin-topbar">
+          <div><div class="admin-page-title" data-i18n="page.users">ניהול משתמשים</div><div class="admin-page-sub" data-i18n="page.users.sub">ניהול חשבונות מנהלים והרשאות</div></div>
+          <button class="abtn abtn-primary" onclick="showAddUserForm()"><i class="fas fa-user-plus"></i> <span data-i18n="btn.addUser">הוסף משתמש</span></button>
+        </div>
+        <div id="userFormWrap" style="display:none;margin-bottom:20px">
+          <div class="form-section">
+            <div class="form-section-title"><i class="fas fa-user-cog" style="color:var(--primary-mid)"></i> <span id="userFormTitle">New User</span></div>
+            <form id="userForm" onsubmit="submitUser(event)">
+              <input type="hidden" id="userEditId">
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Full Name *</label>
+                  <input type="text" id="uName" class="form-control" required placeholder="Full name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Username *</label>
+                  <input type="text" id="uUsername" class="form-control" required placeholder="username">
+                </div>
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Email *</label>
+                  <input type="email" id="uEmail" class="form-control" required placeholder="user@email.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Password *</label>
+                  <input type="password" id="uPassword" class="form-control" placeholder="Min 6 characters">
+                </div>
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Role</label>
+                  <select id="uRole" class="form-control">
+                    <option value="viewer">Viewer — Read only</option>
+                    <option value="editor">Editor — Upload & edit content</option>
+                    <option value="admin">Admin — Full access</option>
+                  </select>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding-top:24px">
+                  <label class="toggle-switch"><input type="checkbox" id="uActive" checked><span class="toggle-slider"></span></label>
+                  <label style="font-size:.88rem;font-weight:600;color:var(--text-med)">Active account</label>
+                </div>
+              </div>
+              <!-- Advanced Permissions -->
+              <div style="border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin-bottom:16px">
+                <div style="font-size:.82rem;font-weight:700;color:var(--primary);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+                  <i class="fas fa-shield-alt" style="color:var(--gold-dark)"></i> הרשאות מתקדמות / Advanced Permissions
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">
+                  <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer">
+                    <input type="checkbox" id="perm_upload_lessons" style="accent-color:var(--primary)"> העלאת שיעורים</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer">
+                    <input type="checkbox" id="perm_upload_books" style="accent-color:var(--primary)"> העלאת ספרים</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer">
+                    <input type="checkbox" id="perm_edit_content" style="accent-color:var(--primary)"> עריכת תוכן קיים</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer">
+                    <input type="checkbox" id="perm_delete_content" style="accent-color:var(--primary)"> מחיקת תוכן</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer">
+                    <input type="checkbox" id="perm_manage_categories" style="accent-color:var(--primary)"> ניהול קטגוריות</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer">
+                    <input type="checkbox" id="perm_manage_users" style="accent-color:var(--primary)"> ניהול משתמשים</label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer">
+                    <input type="checkbox" id="perm_view_stats" style="accent-color:var(--primary)"> צפייה בסטטיסטיקות</label>
+                </div>
+                <div style="margin-top:10px;display:flex;gap:8px">
+                  <button type="button" class="abtn abtn-ghost" style="font-size:.75rem" onclick="setAllPerms(true)"><i class="fas fa-check-double"></i> בחר הכל</button>
+                  <button type="button" class="abtn abtn-ghost" style="font-size:.75rem" onclick="setAllPerms(false)"><i class="fas fa-times"></i> נקה הכל</button>
+                </div>
+              </div>
+              <div style="display:flex;gap:10px">
+                <button type="submit" class="btn btn-dark"><i class="fas fa-save"></i> Save User</button>
+                <button type="button" class="btn btn-outline-dark" onclick="cancelUserForm()"><i class="fas fa-times"></i> Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="acard">
+          <div class="acard-body" style="padding:0">
+            <table class="atable">
+              <thead><tr><th>User</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+              <tbody id="usersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORIES & TOPICS -->
+      <div id="tab-categories" class="tab-content">
+        <div class="admin-topbar">
+          <div><div class="admin-page-title" data-i18n="page.categories">קטגוריות ונושאים</div><div class="admin-page-sub" data-i18n="page.categories.sub">ניהול קטגוריות שיעורים וספרים</div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:20px">
+          <button class="admin-tab active" id="catTabLessons" onclick="switchCatTab('lessons',this)"><i class="fas fa-headphones"></i> Lesson Categories</button>
+          <button class="admin-tab" id="catTabBooks" onclick="switchCatTab('books',this)"><i class="fas fa-book"></i> Book Categories</button>
+          <button class="admin-tab" id="catTabLangs" onclick="switchCatTab('languages',this)"><i class="fas fa-language"></i> Languages</button>
+        </div>
+
+        <!-- Add / Edit Root Category Form -->
+        <div class="form-section" id="catFormWrap">
+          <div class="form-section-title" id="catFormTitle"><i class="fas fa-plus-circle" style="color:var(--primary-mid)"></i> Add Category</div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Hebrew Name <span style="color:#e53e3e">*</span></label>
+              <input type="text" class="form-control" id="catHeInput" dir="rtl" placeholder="שם בעברית">
+            </div>
+            <div class="form-group">
+              <label class="form-label">English Name <span style="color:#e53e3e">*</span></label>
+              <div style="position:relative">
+                <input type="text" class="form-control" id="catEnInput" placeholder="English name" style="padding-left:90px">
+                <button type="button" class="translate-btn" onclick="autoTranslate('catHeInput','catEnInput')"><i class="fas fa-language"></i> תרגם</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">ID (slug) <span style="color:#e53e3e">*</span></label>
+            <input type="text" class="form-control" id="catIdInput" placeholder="e.g. parasha (lowercase, no spaces)" style="max-width:300px">
+            <span style="font-size:.75rem;color:var(--text-muted)">Used internally to link content to categories. Cannot be changed after saving.</span>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:4px">
+            <button class="abtn abtn-primary" onclick="saveCat()"><i class="fas fa-save"></i> Save Category</button>
+            <button class="abtn abtn-ghost" onclick="cancelCatEdit()" id="catCancelBtn" style="display:none"><i class="fas fa-times"></i> Cancel</button>
+          </div>
+        </div>
+
+        <!-- TREE VIEW -->
+        <div class="acard" id="catTreeCard">
+          <div class="acard-head">
+            <div class="acard-title" style="display:flex;align-items:center;gap:8px">
+              <i class="fas fa-sitemap" style="color:var(--primary-mid)"></i>
+              <span id="catTreeTitle">Category Tree</span>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="abtn abtn-ghost" style="font-size:.75rem" onclick="expandAllNodes()"><i class="fas fa-expand-alt"></i> פרוס הכל</button>
+              <button class="abtn abtn-ghost" style="font-size:.75rem" onclick="collapseAllNodes()"><i class="fas fa-compress-alt"></i> כווץ הכל</button>
+            </div>
+          </div>
+          <div class="acard-body" style="padding:12px">
+            <div id="catTreeWrap"></div>
+          </div>
+        </div>
+
+        <!-- Inline sub-category inputs are rendered inside the tree -->
+
+        <!-- Hidden inputs for sub-category (used by tree inline forms) -->
+        <input type="hidden" id="subHeInput">
+        <input type="hidden" id="subEnInput">
+        <input type="hidden" id="subIdInput">
+        <div id="subCatPanel" style="display:none">
+          <div id="subListWrap"></div>
+        </div>
+
+        <!-- Language Management Panel -->
+        <div id="langPanel" style="display:none">
+          <div class="form-section" id="langFormSection">
+            <div class="form-section-title" id="langFormTitle"><i class="fas fa-plus-circle" style="color:var(--primary-mid)"></i> <span id="langFormTitleText">הוסף שפה / Add Language</span></div>
+            <!-- Edit-mode banner -->
+            <div id="langEditBanner" style="display:none;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(59,130,246,.06));border:1px solid rgba(59,130,246,.3);border-radius:var(--r-md);padding:10px 16px;margin-bottom:14px;align-items:center;gap:10px">
+              <i class="fas fa-edit" style="color:#2563eb"></i>
+              <span style="font-weight:700;color:#1d4ed8">מצב עריכה —</span>
+              <span id="langEditBannerName" style="color:#1e40af"></span>
+              <button type="button" onclick="cancelLangEdit()" style="margin-right:auto;background:none;border:1px solid rgba(59,130,246,.4);color:#1d4ed8;border-radius:var(--r-sm);padding:3px 10px;cursor:pointer;font-size:.78rem"><i class="fas fa-times"></i> בטל</button>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">שם בעברית *</label>
+                <input type="text" class="form-control" id="langHeInput" dir="rtl" placeholder="עברית">
+              </div>
+              <div class="form-group">
+                <label class="form-label">English Name *</label>
+                <input type="text" class="form-control" id="langEnInput" placeholder="Hebrew">
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">ID (slug) *</label>
+                <input type="text" class="form-control" id="langIdInput" placeholder="he" style="max-width:200px">
+                <div id="langIdNote" style="display:none;font-size:.72rem;color:var(--text-muted);margin-top:4px"><i class="fas fa-lock" style="margin-left:3px"></i> לא ניתן לשנות ID בעת עריכה</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Flag Emoji</label>
+                <input type="text" class="form-control" id="langFlagInput" placeholder="🇮🇱" style="max-width:120px;font-size:1.3rem">
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center">
+              <button class="abtn abtn-primary" id="langSubmitBtn" onclick="addLang()"><i class="fas fa-plus" id="langSubmitIcon"></i> <span id="langSubmitLabel">Add Language</span></button>
+              <button class="abtn" id="langCancelBtn" onclick="cancelLangEdit()" style="display:none;background:var(--cream);color:var(--primary);border:1px solid var(--border)"><i class="fas fa-times"></i> בטל</button>
+            </div>
+          </div>
+          <div class="acard" style="margin-top:16px">
+            <div class="acard-body" style="padding:0">
+              <table class="atable">
+                <thead><tr><th>ID</th><th>Flag</th><th>עברית</th><th>English</th><th>Actions</th></tr></thead>
+                <tbody id="langTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBSCRIBERS -->
+      <div id="tab-subscribers" class="tab-content">
+        <div class="admin-topbar">
+          <div><div class="admin-page-title" data-i18n="page.subscribers">מנויי ניוזלטר</div><div class="admin-page-sub" data-i18n="page.subscribers.sub">אנשים שנרשמו לקבלת עדכונים</div></div>
+          <button class="abtn abtn-warning" onclick="exportSubscribers()"><i class="fas fa-download"></i> <span data-i18n="btn.exportCsv">ייצוא CSV</span></button>
+        </div>
+        <div class="acard">
+          <div class="acard-head">
+            <div class="acard-title">Subscriber List</div>
+            <span id="subCount" style="font-size:.82rem;color:var(--text-light)"></span>
+          </div>
+          <div class="acard-body" style="padding:0">
+            <table class="atable">
+              <thead><tr><th>#</th><th>Email</th><th>Name</th><th>Date</th><th>Actions</th></tr></thead>
+              <tbody id="subsTableBody"></tbody>
+            </table>
+            <div id="noSubs" style="display:none;padding:32px;text-align:center;color:var(--text-muted)">
+              <i class="fas fa-envelope" style="font-size:32px;opacity:.3;margin-bottom:10px;display:block"></i>
+              No subscribers yet
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACTS -->
+      <div id="tab-contacts" class="tab-content">
+        <div class="admin-topbar">
+          <div><div class="admin-page-title" data-i18n="page.contacts">הודעות יצירת קשר</div><div class="admin-page-sub" data-i18n="page.contacts.sub">הודעות שנשלחו דרך טופס יצירת הקשר</div></div>
+        </div>
+        <div class="acard">
+          <div class="acard-body" style="padding:0">
+            <table class="atable">
+              <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Date</th></tr></thead>
+              <tbody id="contactsTableBody"></tbody>
+            </table>
+            <div id="noContacts" style="display:none;padding:32px;text-align:center;color:var(--text-muted)">
+              <i class="fas fa-inbox" style="font-size:32px;opacity:.3;margin-bottom:10px;display:block"></i>
+              No messages yet
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="tab-settings" class="tab-content">
+        <div class="admin-topbar">
+          <div><div class="admin-page-title" data-i18n="page.settings">הגדרות</div><div class="admin-page-sub" data-i18n="page.settings.sub">הגדרת אתר המכון</div></div>
+        </div>
+        <div class="form-section">
+          <div class="form-section-title"><i class="fas fa-building" style="color:var(--primary-mid)"></i> <span data-i18n="sec.instInfo">מידע על המכון</span></div>
+          <div class="form-grid-2">
+            <div class="form-group"><label class="form-label" data-i18n="label.instNameHe">שם המכון (עברית)</label><input type="text" class="form-control" value="מכון תהלות ישראל" dir="rtl"></div>
+            <div class="form-group"><label class="form-label" data-i18n="label.instNameEn">שם המכון (אנגלית)</label><input type="text" class="form-control" value="Tehillot Israel Institute"></div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group"><label class="form-label" data-i18n="label.email">דוא"ל ליצירת קשר</label><input type="email" class="form-control" value="info@tehillotisrael.org"></div>
+            <div class="form-group"><label class="form-label" data-i18n="label.phone">טלפון</label><input type="tel" class="form-control" value="02-1234567"></div>
+          </div>
+          <div class="form-group"><label class="form-label" data-i18n="label.address">כתובת</label><input type="text" class="form-control" value="רחוב התורה 1, ירושלים" dir="rtl"></div>
+          <button class="abtn abtn-primary" style="margin-top:4px" onclick="Toast.show(AdminLang.t('toast.settingsSaved'),'success')"><i class="fas fa-save"></i> <span data-i18n="btn.saveSettings">שמור הגדרות</span></button>
+        </div>
+        <div class="form-section">
+          <div class="form-section-title"><i class="fas fa-database" style="color:var(--gold-dark)"></i> <span data-i18n="sec.dataMgmt">ניהול נתונים</span></div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="abtn abtn-warning" onclick="exportAll()"><i class="fas fa-download"></i> <span data-i18n="btn.exportJson">ייצוא כל הנתונים (JSON)</span></button>
+            <button class="abtn abtn-danger" onclick="resetAllData()"><i class="fas fa-trash"></i> <span data-i18n="btn.resetDemo">אפס לנתוני הדגמה</span></button>
+          </div>
+          <p style="font-size:.8rem;color:var(--text-muted);margin-top:12px" data-i18n="hint.localStorage">כל הנתונים שמורים מקומית בדפדפן (localStorage). חבר שרת לשימוש בייצור.</p>
+        </div>
+        <div class="form-section">
+          <div class="form-section-title"><i class="fas fa-user-shield" style="color:#6d28d9"></i> <span data-i18n="sec.myAccount">החשבון שלי</span></div>
+          <div class="form-grid-2">
+            <div class="form-group"><label class="form-label" data-i18n="label.currentPass">סיסמה נוכחית</label><input type="password" class="form-control" placeholder="סיסמה נוכחית"></div>
+            <div class="form-group"><label class="form-label" data-i18n="label.newPass">סיסמה חדשה</label><input type="password" class="form-control" placeholder="סיסמה חדשה"></div>
+          </div>
+          <button class="abtn abtn-primary" onclick="Toast.show(AdminLang.t('toast.passChanged'),'success')"><i class="fas fa-key"></i> <span data-i18n="btn.changePass">שנה סיסמה</span></button>
+        </div>
+      </div>
+
+      <!-- STORAGE -->
+      <div id="tab-storage" class="tab-content">
+        <div class="admin-topbar">
+          <div><div class="admin-page-title" data-i18n="page.storage">אחסון קבצים</div><div class="admin-page-sub" data-i18n="page.storage.sub">הגדר ספק אחסון לשיעורים, ספרים ותמונות</div></div>
+          <div id="storageStatusBadge"></div>
+        </div>
+
+        <!-- Media Storage -->
+        <div class="form-section">
+          <div class="form-section-title"><i class="fas fa-cloud-upload-alt" style="color:var(--primary-mid)"></i> <span data-i18n="sec.mediaStorage">אחסון מדיה (שיעורים, ספרים, תמונות)</span></div>
+          <p style="font-size:.84rem;color:var(--text-muted);margin-bottom:20px" data-i18n="hint.mediaStorage">בחר ספק אחסון לקבצי המדיה של האתר. כתובת הבסיס תמולא אוטומטית בטפסי ההעלאה.</p>
+
+          <div class="storage-providers">
+            <div class="storage-card" id="sc-gdrive" onclick="selectProvider('gdrive')">
+              <div class="check-badge"><i class="fas fa-check"></i></div>
+              <div class="storage-logo">🗂️</div>
+              <div class="storage-name">Google Drive</div>
+              <div class="storage-desc" data-i18n="storage.gdrive.desc">שיתוף תיקיה ב-Google Drive</div>
+            </div>
+            <div class="storage-card" id="sc-dropbox" onclick="selectProvider('dropbox')">
+              <div class="check-badge"><i class="fas fa-check"></i></div>
+              <div class="storage-logo">📦</div>
+              <div class="storage-name">Dropbox</div>
+              <div class="storage-desc" data-i18n="storage.dropbox.desc">אחסון ושיתוף ב-Dropbox</div>
+            </div>
+            <div class="storage-card" id="sc-s3" onclick="selectProvider('s3')">
+              <div class="check-badge"><i class="fas fa-check"></i></div>
+              <div class="storage-logo">☁️</div>
+              <div class="storage-name">Amazon S3</div>
+              <div class="storage-desc" data-i18n="storage.s3.desc">S3 או כל ספק תואם (Wasabi, Backblaze)</div>
+            </div>
+            <div class="storage-card" id="sc-ftp" onclick="selectProvider('ftp')">
+              <div class="check-badge"><i class="fas fa-check"></i></div>
+              <div class="storage-logo">🖥️</div>
+              <div class="storage-name">FTP / שרת</div>
+              <div class="storage-desc" data-i18n="storage.ftp.desc">שרת FTP, cPanel או שרת מותאם אישית</div>
+            </div>
+            <div class="storage-card" id="sc-custom" onclick="selectProvider('custom')">
+              <div class="check-badge"><i class="fas fa-check"></i></div>
+              <div class="storage-logo">🔗</div>
+              <div class="storage-name" data-i18n="storage.custom.name">כתובת URL מותאמת</div>
+              <div class="storage-desc" data-i18n="storage.custom.desc">כל CDN, שרת web או כתובת ציבורית</div>
+            </div>
+            <div class="storage-card" id="sc-local" onclick="selectProvider('local')" style="border-color:rgba(16,185,129,.3);background:linear-gradient(135deg,rgba(16,185,129,.04),#fff)">
+              <div class="check-badge" style="background:#10b981"><i class="fas fa-check"></i></div>
+              <div class="storage-logo">🏠</div>
+              <div class="storage-name" style="color:#065f46">מחשב מקומי</div>
+              <div class="storage-desc">אחסון ישיר על המחשב הביתי ללא ענן</div>
+              <div style="margin-top:8px;display:inline-block;background:rgba(16,185,129,.12);color:#065f46;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px">ללא עלות</div>
+            </div>
+          </div>
+
+          <!-- Google Drive Panel -->
+          <div class="storage-panel" id="panel-gdrive">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.gdriveFolderId">מזהה תיקיה (Folder ID)</label>
+                <input type="text" class="form-control" id="gdriveFolderId" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs">
+                <span class="form-hint" data-i18n="hint.gdriveFolderId">מתוך כתובת ה-URL של התיקיה ב-Drive</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.gdriveBaseUrl">כתובת בסיס להורדה</label>
+                <input type="url" class="form-control" id="gdriveBaseUrl" placeholder="https://drive.google.com/uc?id=">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Google API Key <span style="font-size:.75rem;color:var(--text-muted)">(אופציונלי — לצפייה בקבצים)</span></label>
+              <input type="password" class="form-control" id="gdriveApiKey" placeholder="AIza...">
+            </div>
+            <div style="background:#fef9e7;border:1px solid #f6d860;border-radius:var(--r-md);padding:12px 16px;font-size:.8rem;color:#856404;margin-bottom:16px">
+              <i class="fas fa-info-circle"></i> <span data-i18n="hint.gdrivePublic">ודא שהתיקיה משותפת ל"כל מי שיש לו קישור". העלאת קבצים חדשים תתבצע ידנית דרך Google Drive.</span>
+            </div>
+          </div>
+
+          <!-- Dropbox Panel -->
+          <div class="storage-panel" id="panel-dropbox">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Access Token</label>
+                <input type="password" class="form-control" id="dropboxToken" placeholder="sl.XXXXXXXX...">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.dropboxFolder">נתיב תיקיה</label>
+                <input type="text" class="form-control" id="dropboxFolder" placeholder="/tehillot-israel/audio">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.dropboxBaseUrl">כתובת בסיס ציבורית (Shared Link prefix)</label>
+              <input type="url" class="form-control" id="dropboxBaseUrl" placeholder="https://www.dropbox.com/s/">
+            </div>
+          </div>
+
+          <!-- S3 Panel -->
+          <div class="storage-panel" id="panel-s3">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Endpoint URL</label>
+                <input type="url" class="form-control" id="s3Endpoint" placeholder="https://s3.amazonaws.com">
+                <span class="form-hint">השאר ריק ל-AWS. Wasabi: s3.wasabisys.com</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Bucket Name</label>
+                <input type="text" class="form-control" id="s3Bucket" placeholder="tehillot-israel-media">
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Access Key ID</label>
+                <input type="text" class="form-control" id="s3AccessKey" placeholder="AKIAIOSFODNN7EXAMPLE">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Secret Access Key</label>
+                <input type="password" class="form-control" id="s3SecretKey" placeholder="wJalrXUtnFEMI/K7MDENG/...">
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Region</label>
+                <input type="text" class="form-control" id="s3Region" placeholder="us-east-1">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.s3PathPrefix">נתיב בתוך ה-Bucket</label>
+                <input type="text" class="form-control" id="s3Path" placeholder="media/">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.s3PublicUrl">כתובת URL ציבורית (CDN או bucket URL)</label>
+              <input type="url" class="form-control" id="s3PublicUrl" placeholder="https://tehillot-israel-media.s3.amazonaws.com/media/">
+            </div>
+          </div>
+
+          <!-- FTP Panel -->
+          <div class="storage-panel" id="panel-ftp">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">FTP Host</label>
+                <input type="text" class="form-control" id="ftpHost" placeholder="ftp.tehillotisrael.org">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Port</label>
+                <input type="number" class="form-control" id="ftpPort" value="21" placeholder="21">
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.ftpUser">שם משתמש FTP</label>
+                <input type="text" class="form-control" id="ftpUser" placeholder="ftpuser">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.ftpPass">סיסמת FTP</label>
+                <input type="password" class="form-control" id="ftpPass" placeholder="••••••••">
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.ftpRemotePath">נתיב מרוחק</label>
+                <input type="text" class="form-control" id="ftpRemotePath" placeholder="/public_html/media">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="label.ftpPublicUrl">כתובת URL ציבורית</label>
+                <input type="url" class="form-control" id="ftpPublicUrl" placeholder="https://tehillotisrael.org/media/">
+              </div>
+            </div>
+            <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:var(--r-md);padding:12px 16px;font-size:.8rem;color:#0369a1;margin-bottom:16px">
+              <i class="fas fa-info-circle"></i> <span data-i18n="hint.ftpNote">גישת FTP ישירה מהדפדפן מוגבלת. פרטי ה-FTP משמשים לתיעוד — העלאה אמיתית מחייבת סקריפט שרת.</span>
+            </div>
+          </div>
+
+          <!-- Local Storage Panel -->
+          <div class="storage-panel" id="panel-local">
+            <div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:var(--r-lg);padding:20px 24px;margin-bottom:20px">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <div style="width:36px;height:36px;background:linear-gradient(135deg,#10b981,#059669);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:1.1rem">🏠</div>
+                <div>
+                  <div style="font-weight:700;color:#065f46;font-size:.95rem">אחסון מקומי — על המחשב שלך</div>
+                  <div style="font-size:.78rem;color:#047857">מתאים לשימוש אישי ללא תלות בשירותי ענן</div>
+                </div>
+              </div>
+              <p style="font-size:.82rem;color:#065f46;line-height:1.7;margin:0 0 12px">
+                במצב זה, כל קבצי האתר (שיעורים, ספרים, תמונות) מאוחסנים ישירות על המחשב שלך.
+                האתר עובד לגמרי ללא אינטרנט, ואין עלות אחסון חיצונית.
+              </p>
+              <p style="font-size:.82rem;color:#047857;margin:0;font-weight:600">
+                <i class="fas fa-info-circle"></i>
+                כדי לשתף תכנים עם אחרים, יש לגבות ולהעלות לאחסון ענן או לשרת אינטרנט.
+              </p>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">תיקיית קבצים מקומית</label>
+                <div style="position:relative">
+                  <input type="text" class="form-control" id="localFolderPath" placeholder="C:\Users\שם\OrLeYisroel\media" dir="ltr">
+                </div>
+                <span class="form-hint">נתיב מלא לתיקיית האחסון במחשב</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">כתובת URL מקומית</label>
+                <input type="text" class="form-control" id="localBaseUrl" placeholder="file:///C:/Users/שם/OrLeYisroel/media/" dir="ltr">
+                <span class="form-hint">כתובת גישה לתיקיה — לרוב file:/// + הנתיב</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">תיקיות משנה</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+                <div>
+                  <label style="font-size:.75rem;color:var(--text-muted);margin-bottom:4px;display:block">שיעורים</label>
+                  <input type="text" class="form-control" id="localLessonsDir" placeholder="lessons/" style="font-size:.82rem">
+                </div>
+                <div>
+                  <label style="font-size:.75rem;color:var(--text-muted);margin-bottom:4px;display:block">ספרים</label>
+                  <input type="text" class="form-control" id="localBooksDir" placeholder="books/" style="font-size:.82rem">
+                </div>
+                <div>
+                  <label style="font-size:.75rem;color:var(--text-muted);margin-bottom:4px;display:block">תמונות</label>
+                  <input type="text" class="form-control" id="localImagesDir" placeholder="images/" style="font-size:.82rem">
+                </div>
+              </div>
+            </div>
+            <div style="background:#fef9e7;border:1px solid #f6d860;border-radius:var(--r-md);padding:12px 16px;font-size:.8rem;color:#856404;margin-bottom:16px">
+              <i class="fas fa-lightbulb"></i>
+              <strong>טיפ:</strong> צור תיקיה בשם <code>media</code> ובתוכה תיקיות <code>lessons</code>, <code>books</code> ו-<code>images</code>.
+              הכנס את הנתיב המלא לתיקיית <code>media</code> למעלה.
+            </div>
+          </div>
+
+          <!-- Custom URL Panel -->
+          <div class="storage-panel" id="panel-custom">
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.customBaseUrl">כתובת בסיס לקבצים (Base URL)</label>
+              <input type="url" class="form-control" id="customBaseUrl" placeholder="https://media.tehillotisrael.org/files/">
+              <span class="form-hint" data-i18n="hint.customBaseUrl">כתובת זו תמולא אוטומטית בטפסי העלאת שיעורים וספרים</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.customUploadUrl">כתובת API להעלאה (Upload Endpoint)</label>
+              <input type="url" class="form-control" id="customUploadUrl" placeholder="https://api.tehillotisrael.org/upload">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Authorization Token <span style="font-size:.75rem;color:var(--text-muted)">(Bearer)</span></label>
+              <input type="password" class="form-control" id="customAuthToken" placeholder="Bearer eyJ...">
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;align-items:center">
+            <button class="abtn abtn-primary" onclick="Storage.save()"><i class="fas fa-save"></i> <span data-i18n="btn.saveStorage">שמור הגדרות אחסון</span></button>
+            <button class="abtn abtn-ghost" onclick="Storage.test()"><i class="fas fa-plug"></i> <span data-i18n="btn.testConn">בדוק חיבור</span></button>
+            <div id="storageConnStatus"></div>
+          </div>
+        </div>
+
+        <!-- Website Hosting -->
+        <div class="form-section">
+          <div class="form-section-title"><i class="fas fa-server" style="color:#6d28d9"></i> <span data-i18n="sec.hosting">אחסון האתר (Hosting)</span></div>
+          <p style="font-size:.84rem;color:var(--text-muted);margin-bottom:18px" data-i18n="hint.hosting">בחר את סוג האחסון של האתר עצמו. מידע זה אינפורמטיבי ועוזר לתיעוד.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+            <div class="hosting-card" id="hc-shared" onclick="selectHosting('shared')">
+              <div class="hosting-card-icon">🌐</div>
+              <div><div style="font-weight:600;font-size:.88rem" data-i18n="hosting.shared">אחסון משותף (cPanel)</div><div style="font-size:.73rem;color:var(--text-muted)">Bluehost, SiteGround, Hostinger...</div></div>
+            </div>
+            <div class="hosting-card" id="hc-vps" onclick="selectHosting('vps')">
+              <div class="hosting-card-icon">🖥️</div>
+              <div><div style="font-weight:600;font-size:.88rem" data-i18n="hosting.vps">VPS / שרת ייעודי</div><div style="font-size:.73rem;color:var(--text-muted)">DigitalOcean, Linode, AWS EC2...</div></div>
+            </div>
+            <div class="hosting-card" id="hc-static" onclick="selectHosting('static')">
+              <div class="hosting-card-icon">⚡</div>
+              <div><div style="font-weight:600;font-size:.88rem" data-i18n="hosting.static">אחסון סטטי</div><div style="font-size:.73rem;color:var(--text-muted)">Netlify, Vercel, GitHub Pages...</div></div>
+            </div>
+            <div class="hosting-card" id="hc-wordpress" onclick="selectHosting('wordpress')">
+              <div class="hosting-card-icon">📝</div>
+              <div><div style="font-weight:600;font-size:.88rem">WordPress</div><div style="font-size:.73rem;color:var(--text-muted)">WordPress.com, Elementor...</div></div>
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.siteUrl">כתובת האתר</label>
+              <input type="url" class="form-control" id="hostingSiteUrl" placeholder="https://tehillotisrael.org">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="label.serverPath">נתיב שורש בשרת</label>
+              <input type="text" class="form-control" id="hostingServerPath" placeholder="/home/user/public_html">
+            </div>
+          </div>
+          <button class="abtn abtn-primary" onclick="Storage.saveHosting()"><i class="fas fa-save"></i> <span data-i18n="btn.saveHosting">שמור הגדרות אחסון האתר</span></button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-title" id="confirmTitle">אישור פעולה</div>
+      <button class="modal-close" onclick="Modal.close('confirmModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <p id="confirmMsg" style="margin-bottom:24px;color:var(--text-med)"></p>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="abtn abtn-primary" id="confirmCancelBtn" onclick="Modal.close('confirmModal')">ביטול</button>
+      <button class="abtn abtn-danger" id="confirmBtn">מחק</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/data.js"></script>
+<script src="../js/app.js"></script>
+<script>
+// ===== INIT =====
+let currentUser = null;
+let currentContentTab = 'lessons';
+let lessonTags = [], bookTags = [];
+let lessonEditId = null, bookEditId = null;
+let editingUpdateId = null, editingUserId = null;
+let contentPage = 1;
+
+document.addEventListener('DOMContentLoaded', () => {
+  initData();
+  AdminLang.init();
+  document.getElementById('loginForm').addEventListener('submit', handleLogin);
+  const today = new Date().toISOString().split('T')[0];
+  document.querySelectorAll('input[type="date"]').forEach(d => { if (!d.value) d.value = today; });
+  populateSelects();
+  Storage.updateUploadHints();
+});
+
+function updateLessonSubCats(catId) {
+  const group = document.getElementById('lessonSubCatGroup');
+  const sel = document.getElementById('lessonSubCatSel');
+  const group2 = document.getElementById('lessonSubSubCatGroup');
+  const sel2 = document.getElementById('lessonSubSubCatSel');
+  if (group2) group2.style.display = 'none';
+  if (!group || !sel) return;
+  const cat = findCatNode(catId, getCategories('lessons')) || getCategories('lessons').find(c => c.id === catId);
+  const subs = cat?.subs || [];
+  if (!catId || !subs.length) { group.style.display = 'none'; if(sel)sel.value = ''; return; }
+  sel.innerHTML = '<option value="">— ללא —</option>';
+  subs.forEach(s => { const o = document.createElement('option'); o.value = s.id; o.textContent = s.he + (s.en ? ' / ' + s.en : ''); sel.appendChild(o); });
+  group.style.display = '';
+}
+
+function updateLessonSubSubCats(subId) {
+  const group2 = document.getElementById('lessonSubSubCatGroup');
+  const sel2 = document.getElementById('lessonSubSubCatSel');
+  if (!group2 || !sel2) return;
+  if (!subId) { group2.style.display = 'none'; return; }
+  const cats = getCategories('lessons');
+  // Find subNode anywhere in the tree
+  let subNode = null;
+  for (const c of cats) { subNode = findCatNode(subId, c.subs || []); if (subNode) break; if (c.id === subId) { subNode = c; break; } }
+  const subs = subNode?.subs || [];
+  if (!subs.length) { group2.style.display = 'none'; return; }
+  sel2.innerHTML = '<option value="">— ללא —</option>';
+  subs.forEach(s => { const o = document.createElement('option'); o.value = s.id; o.textContent = s.he + (s.en ? ' / ' + s.en : ''); sel2.appendChild(o); });
+  group2.style.display = '';
+}
+
+function populateSelects() {
+  const catSel = document.getElementById('lessonCatSelect');
+  if (catSel) getCategories('lessons').forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.he + ' / ' + c.en; catSel.appendChild(o); });
+  const bookSel = document.getElementById('bookCatSelect');
+  if (bookSel) getCategories('books').forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.he + ' / ' + c.en; bookSel.appendChild(o); });
+  const langs = getLanguages();
+  ['lessonLangSelect','bookLangSelect'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    langs.forEach(l => { const o = document.createElement('option'); o.value = l.id; o.textContent = l.flag + ' ' + l.he + ' / ' + l.en; sel.appendChild(o); });
+  });
+  // Year selectors (lessons + books) — 2000 to current+1, newest first
+  const curGreg = new Date().getFullYear();
+  ['lessonYearSelect', 'bookYearSelect'].forEach(selId => {
+    const sel = document.getElementById(selId);
+    if (!sel) return;
+    for (let y = curGreg + 1; y >= 2000; y--) {
+      const heYear = toHebrewYear(y);
+      const o = document.createElement('option');
+      o.value = y;
+      o.textContent = heYear ? `${heYear}  —  ${y}` : y;
+      if (y === curGreg) o.selected = true;
+      sel.appendChild(o);
+    }
+  });
+}
+
+const PERM_KEYS = ['upload_lessons','upload_books','edit_content','delete_content','manage_categories','manage_users','view_stats'];
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes
+
+function handleLogin(e) {
+  e.preventDefault();
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginError');
+  const isHe = AdminLang.current === 'he';
+
+  // Rate limiting
+  const now = Date.now();
+  const allAttempts = getData('login_attempts').filter(a => now - a.time < LOCKOUT_MS);
+  const userAttempts = allAttempts.filter(a => a.username === u);
+  if (userAttempts.length >= MAX_LOGIN_ATTEMPTS) {
+    const mins = Math.ceil((LOCKOUT_MS - (now - userAttempts[0].time)) / 60000);
+    err.style.display = 'block';
+    err.innerHTML = isHe
+      ? `<i class="fas fa-lock" style="margin-left:6px"></i>חשבון נחסם זמנית עקב ניסיונות כניסה רבים. נסה שוב בעוד ${mins} דקות.`
+      : `<i class="fas fa-lock" style="margin-left:6px"></i>Account temporarily locked. Try again in ${mins} minutes.`;
+    return;
+  }
+
+  const users = getData('users');
+  const user = users.find(x => x.username === u && x.password === p && x.active);
+  if (!user) {
+    allAttempts.push({ username: u, time: now });
+    setData('login_attempts', allAttempts);
+    const remaining = MAX_LOGIN_ATTEMPTS - userAttempts.length - 1;
+    err.style.display = 'block';
+    err.textContent = isHe
+      ? `שם משתמש או סיסמה שגויים. ${remaining > 0 ? `נותרו ${remaining} ניסיונות.` : 'החשבון ייחסם.'}`
+      : `Invalid credentials. ${remaining > 0 ? `${remaining} attempts left.` : 'Account will be locked.'}`;
+    return;
+  }
+
+  // Clear failed attempts on success
+  setData('login_attempts', allAttempts.filter(a => a.username !== u));
+  // Update last login
+  user.lastLogin = new Date().toISOString();
+  setData('users', users);
+
+  currentUser = user;
+  localStorage.setItem('ti_adminSession', JSON.stringify({ id: user.id, role: user.role }));
+
+  // Session auto-timeout: 60 min inactivity
+  localStorage.setItem('ti_lastActivity', String(now));
+  clearInterval(window._sessionTimer);
+  window._sessionTimer = setInterval(() => {
+    const last = parseInt(localStorage.getItem('ti_lastActivity') || '0');
+    if (Date.now() - last > 60 * 60 * 1000) {
+      clearInterval(window._sessionTimer);
+      logout();
+      Toast.show(isHe ? 'פסקת הזמן — נא להתחבר מחדש' : 'Session expired — please log in again', 'error');
+    }
+  }, 60000);
+  document.addEventListener('click', () => localStorage.setItem('ti_lastActivity', String(Date.now())));
+
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('adminPortal').classList.remove('hidden');
+  document.getElementById('adminName').textContent = user.name;
+  document.getElementById('adminRole').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+  document.getElementById('adminAvatar').textContent = user.name.charAt(0).toUpperCase();
+  document.getElementById('dashName').textContent = user.name;
+  if (user.role !== 'admin') {
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+  }
+  renderDashboard();
+  renderUsersTable();
+  renderUpdatesTable();
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('ti_adminSession');
+  document.getElementById('adminPortal').classList.add('hidden');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('loginForm').reset();
+  document.getElementById('loginError').style.display = 'none';
+}
+
+function togglePassVis() {
+  const inp = document.getElementById('loginPass');
+  const eye = document.getElementById('passEye');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  eye.className = inp.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+}
+
+// ===== TABS =====
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  const tab = document.getElementById('tab-' + name);
+  if (tab) tab.classList.add('active');
+  document.querySelectorAll('.sidebar-link').forEach(l => {
+    if (l.getAttribute('onclick') === `showTab('${name}')`) l.classList.add('active');
+  });
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'manageContent') renderContent();
+  if (name === 'users') renderUsersTable();
+  if (name === 'subscribers') renderSubscribers();
+  if (name === 'contacts') renderContacts();
+  if (name === 'manageUpdates') renderUpdatesTable();
+  if (name === 'categories') renderCatTree();
+  if (name === 'storage') Storage.renderPage();
+}
+
+// ===== DASHBOARD =====
+function renderDashboard() {
+  const isHe = AdminLang.current === 'he';
+  const lessons = getData('lessons'), books = getData('books'), subs = getData('subscribers'), users = getData('users');
+  const statsData = [
+    { label: isHe?'סך שיעורים':'Total Lessons', val: lessons.length, icon:'fa-headphones', cls:'stat-blue' },
+    { label: isHe?'סך ספרים':'Total Books', val: books.length, icon:'fa-book', cls:'stat-gold' },
+    { label: isHe?'מנויים':'Subscribers', val: subs.length, icon:'fa-envelope', cls:'stat-green' },
+    { label: isHe?'משתמשי מנהל':'Admin Users', val: users.length, icon:'fa-users', cls:'stat-purple' },
+  ];
+  document.getElementById('dashStats').innerHTML = statsData.map(s => `
+    <div class="astat">
+      <div class="astat-top"><div></div><div class="astat-icon ${s.cls}"><i class="fas ${s.icon}"></i></div></div>
+      <div class="astat-num">${s.val.toLocaleString()}</div>
+      <div class="astat-lbl">${s.label}</div>
+    </div>`).join('');
+  document.getElementById('recentLessons').innerHTML = lessons.slice(0,6).map(l => {
+    const cat = getCategories('lessons').find(c => c.id === l.category);
+    const catLabel = cat ? (isHe ? cat.he : cat.en) : l.category;
+    return `<tr><td style="font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.titleHe}</td><td>${catLabel}</td><td style="font-size:.78rem;font-weight:600;color:var(--primary)">${toHebrewYear(getLessonYear(l))||'—'}</td><td>${(l.downloads||0).toLocaleString()}</td></tr>`;
+  }).join('');
+  document.getElementById('recentBooks').innerHTML = books.slice(0,5).map(b => {
+    const cat = getCategories('books').find(c => c.id === b.category);
+    const catLabel = cat ? (isHe ? cat.he : cat.en) : b.category;
+    return `<tr><td style="font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.titleHe}</td><td>${catLabel}</td><td>${(b.downloads||0).toLocaleString()}</td></tr>`;
+  }).join('');
+  const totalDownloads = [...lessons, ...books].reduce((a, i) => a + (i.downloads||0), 0);
+  const featured = lessons.filter(l => l.featured).length;
+  document.getElementById('quickStats').innerHTML = `
+    <div class="quick-stat"><div class="quick-stat-icon stat-blue"><i class="fas fa-download"></i></div><div><div style="font-weight:700;color:var(--primary)">${totalDownloads.toLocaleString()}</div><div style="font-size:.78rem;color:var(--text-muted)">${isHe?'סך הורדות':'Total Downloads'}</div></div></div>
+    <div class="quick-stat"><div class="quick-stat-icon stat-gold"><i class="fas fa-star"></i></div><div><div style="font-weight:700;color:var(--primary)">${featured}</div><div style="font-size:.78rem;color:var(--text-muted)">${isHe?'שיעורים מומלצים':'Featured Lessons'}</div></div></div>
+    <div class="quick-stat"><div class="quick-stat-icon stat-green"><i class="fas fa-book-open"></i></div><div><div style="font-weight:700;color:var(--primary)">${books.filter(b=>b.featured).length}</div><div style="font-size:.78rem;color:var(--text-muted)">${isHe?'ספרים מומלצים':'Featured Books'}</div></div></div>
+    <div class="quick-stat"><div class="quick-stat-icon stat-purple"><i class="fas fa-newspaper"></i></div><div><div style="font-weight:700;color:var(--primary)">${getData('updates').length}</div><div style="font-size:.78rem;color:var(--text-muted)">${isHe?'עדכוני חדשות':'News Updates'}</div></div></div>`;
+  const contacts = getData('contacts');
+  document.getElementById('recentContacts').innerHTML = contacts.length
+    ? contacts.slice(0,5).map(c => `<div style="padding:12px 0;border-bottom:1px solid var(--border-light)"><div style="font-weight:600;font-size:.88rem">${c.name}</div><div style="font-size:.78rem;color:var(--text-muted)">${c.email} • ${c.subject||'—'}</div></div>`).join('')
+    : `<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:.88rem">${isHe?'אין הודעות עדיין':'No messages yet'}</div>`;
+}
+
+// ===== CONTENT MANAGEMENT =====
+function switchContentTab(tab, btn) {
+  currentContentTab = tab;
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  contentPage = 1;
+  const isHe = AdminLang.current === 'he';
+  const catSel = document.getElementById('contentCatFilter');
+  catSel.innerHTML = `<option value="all">${isHe?'כל הקטגוריות':'All Categories'}</option>`;
+  const cats = tab === 'lessons' ? getCategories('lessons') : getCategories('books');
+  cats.forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.en; catSel.appendChild(o); });
+  renderContent();
+}
+
+function renderContent() {
+  const isHe = AdminLang.current === 'he';
+  const q = document.getElementById('contentSearch')?.value?.toLowerCase() || '';
+  const cat = document.getElementById('contentCatFilter')?.value || 'all';
+  let items = getData(currentContentTab === 'lessons' ? 'lessons' : 'books');
+  if (q) items = items.filter(i => (i.titleHe+i.titleEn+i.author+'').toLowerCase().includes(q));
+  if (cat !== 'all') items = items.filter(i => i.category === cat);
+  const perPage = 10, pages = Math.ceil(items.length / perPage);
+  const pageItems = items.slice((contentPage-1)*perPage, contentPage*perPage);
+  const isLesson = currentContentTab === 'lessons';
+  const head = document.getElementById('contentTableHead');
+  head.innerHTML = isLesson
+    ? (isHe
+        ? '<th>כותרת</th><th>קטגוריה</th><th>שנה</th><th>הורדות</th><th>מומלץ</th><th>פעולות</th>'
+        : '<th>Title</th><th>Category</th><th>Year</th><th>Downloads</th><th>Featured</th><th>Actions</th>')
+    : (isHe
+        ? '<th>כריכה</th><th>כותרת</th><th>קטגוריה</th><th>שנה</th><th>הורדות</th><th>מומלץ</th><th>פעולות</th>'
+        : '<th>Cover</th><th>Title</th><th>Category</th><th>Year</th><th>Downloads</th><th>Featured</th><th>Actions</th>');
+  const body = document.getElementById('contentTableBody');
+  body.innerHTML = pageItems.map(item => {
+    const cat = isLesson ? getCategories('lessons').find(c=>c.id===item.category) : getCategories('books').find(c=>c.id===item.category);
+    const catLabel = cat ? (isHe ? cat.he : cat.en) : item.category;
+    const coverCol = isLesson ? '' : `<td style="font-size:1.4rem">${item.cover||'📖'}</td>`;
+    const extra = isLesson ? '' : '';
+    const extraDate = isLesson
+      ? `<td style="font-size:.8rem;color:var(--text-muted);font-weight:600">${toHebrewYear(getLessonYear(item))||'—'}</td>`
+      : `<td style="font-size:.8rem;color:var(--text-muted);font-weight:600">${toHebrewYear(item.year)||'—'}</td>`;
+    return `<tr>
+      ${coverCol}
+      <td style="font-weight:600;max-width:200px"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px" title="${item.titleHe}">${item.titleHe}</div></td>
+      ${extra}
+      <td><span class="badge-gold" style="padding:3px 8px;border-radius:var(--r-full);font-size:.72rem;font-weight:600;background:var(--gold-lighter);color:var(--gold-dark)">${catLabel}</span></td>
+      ${extraDate}
+      <td>${(item.downloads||0).toLocaleString()}</td>
+      <td>${item.featured ? `<span class="badge-green" style="padding:3px 8px;border-radius:var(--r-full);font-size:.72rem;font-weight:600;background:#d1fae5;color:#065f46">${isHe?'כן':'Yes'}</span>` : `<span style="color:var(--text-muted);font-size:.8rem">${isHe?'לא':'No'}</span>`}</td>
+      <td><div class="atable-actions">
+        <button class="abtn abtn-primary" title="${isHe?'ערוך':'Edit'}" onclick="editItem(${item.id},'${currentContentTab}')"><i class="fas fa-edit"></i></button>
+        <button class="abtn abtn-warning" title="${isHe?'מומלץ':'Featured'}" onclick="toggleFeatured(${item.id},'${currentContentTab}')"><i class="fas fa-star"></i></button>
+        <button class="abtn abtn-danger" title="${isHe?'מחק':'Delete'}" onclick="deleteItem(${item.id},'${currentContentTab}')"><i class="fas fa-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted)">${isHe ? 'לא נמצאו תוצאות' : `No ${currentContentTab} found`}</td></tr>`;
+  // Pagination
+  const pagEl = document.getElementById('contentPagination');
+  pagEl.innerHTML = '';
+  if (pages > 1) {
+    for (let i = 1; i <= pages; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'page-btn' + (i === contentPage ? ' active' : '');
+      btn.textContent = i;
+      btn.onclick = () => { contentPage = i; renderContent(); };
+      pagEl.appendChild(btn);
+    }
+  }
+}
+
+function toggleFeatured(id, type) {
+  const items = getData(type);
+  const item = items.find(i => i.id === id);
+  if (item) {
+    item.featured = !item.featured; setData(type, items); renderContent();
+    const isHe = AdminLang.current === 'he';
+    Toast.show(item.featured ? (isHe?'⭐ סומן כמומלץ':'⭐ Marked as featured') : (isHe?'הוסר ממומלצים':'Removed from featured'), 'success');
+  }
+}
+
+function deleteItem(id, type) {
+  const isHe = AdminLang.current === 'he';
+  const typeLabel = type === 'lessons' ? (isHe?'שיעור':'lesson') : (isHe?'ספר':'book');
+  confirmAction(isHe?`מחק ${typeLabel}?`:`Delete this ${typeLabel}?`, isHe?'לא ניתן לבטל פעולה זו.':'This cannot be undone.', () => {
+    const items = getData(type).filter(i => i.id !== id);
+    setData(type, items);
+    renderContent();
+    Toast.show(isHe?'נמחק בהצלחה':'Deleted successfully', 'success');
+  });
+}
+
+// ===== UPLOAD LESSON =====
+function submitLesson(e) {
+  e.preventDefault();
+  const f = e.target;
+  const isHe = AdminLang.current === 'he';
+  const lessons = getData('lessons');
+  if (lessonEditId !== null) {
+    // ── EDIT MODE ──
+    const idx = lessons.findIndex(i => i.id === lessonEditId);
+    if (idx !== -1) {
+      const orig = lessons[idx];
+      lessons[idx] = {
+        ...orig,
+        titleHe: f.titleHe.value, titleEn: f.titleEn.value,
+        category: f.category.value,
+        subcategory: f.subcategory?.value || '',
+        subsubcategory: f.subsubcategory?.value || '',
+        year: f.year.value ? parseInt(f.year.value) : orig.year || null,
+        duration: f.duration.value || orig.duration || '0:00',
+        language: f.language?.value || orig.language || '',
+        descHe: f.descHe.value, descEn: f.descEn.value,
+        tags: [...lessonTags],
+        featured: f.featured.checked,
+        file: f.file?.value || orig.file || '#',
+      };
+      setData('lessons', lessons);
+      Toast.show(isHe ? '✅ השיעור עודכן בהצלחה' : '✅ Lesson updated successfully', 'success');
+    }
+  } else {
+    // ── NEW LESSON ──
+    const lesson = {
+      id: nextId(lessons),
+      titleHe: f.titleHe.value, titleEn: f.titleEn.value,
+      category: f.category.value,
+      subcategory: f.subcategory?.value || '',
+      subsubcategory: f.subsubcategory?.value || '',
+      year: f.year.value ? parseInt(f.year.value) : new Date().getFullYear(),
+      duration: f.duration.value || '0:00',
+      language: f.language?.value || '',
+      descHe: f.descHe.value, descEn: f.descEn.value,
+      tags: [...lessonTags],
+      featured: f.featured.checked,
+      file: f.file?.value || '#',
+      downloads: 0,
+    };
+    lessons.unshift(lesson);
+    setData('lessons', lessons);
+    Toast.show(isHe ? '✅ השיעור נשמר בהצלחה' : '✅ Lesson saved successfully', 'success');
+  }
+  cancelLessonEdit();
+}
+
+function cancelLessonEdit() {
+  lessonEditId = null;
+  resetForm('lessonForm');
+  lessonTags = [];
+  document.getElementById('lessonTagsWrap').querySelectorAll('.tag-chip').forEach(c => c.remove());
+  document.getElementById('lessonFileName').textContent = '';
+  document.getElementById('lessonEditBanner').style.display = 'none';
+  document.getElementById('lessonPageTitle').textContent = 'העלאת שיעור';
+  document.getElementById('lessonPageSub').textContent = 'הוספת שיעור שמע חדש לספרייה';
+  document.getElementById('lessonSubmitLabel').textContent = 'שמור שיעור';
+}
+
+function submitBook(e) {
+  e.preventDefault();
+  const f = e.target;
+  const isHe = AdminLang.current === 'he';
+  const books = getData('books');
+  if (bookEditId !== null) {
+    // ── EDIT MODE ──
+    const idx = books.findIndex(i => i.id === bookEditId);
+    if (idx !== -1) {
+      const orig = books[idx];
+      books[idx] = {
+        ...orig,
+        titleHe: f.titleHe.value, titleEn: f.titleEn.value,
+        category: f.category.value,
+        language: f.language?.value || orig.language || '',
+        year: f.year.value ? parseInt(f.year.value) : orig.year,
+        pages: f.pages.value ? parseInt(f.pages.value) : orig.pages,
+        cover: f.cover.value || orig.cover || '📖',
+        descHe: f.descHe.value, descEn: f.descEn.value,
+        tags: [...bookTags],
+        featured: f.featured.checked,
+        file: f.file?.value || orig.file || '#',
+      };
+      setData('books', books);
+      Toast.show(isHe ? '✅ הספר עודכן בהצלחה' : '✅ Book updated successfully', 'success');
+    }
+  } else {
+    // ── NEW BOOK ──
+    const book = {
+      id: nextId(books),
+      titleHe: f.titleHe.value, titleEn: f.titleEn.value,
+      category: f.category.value,
+      language: f.language?.value || '',
+      year: f.year.value ? parseInt(f.year.value) : new Date().getFullYear(),
+      pages: f.pages.value ? parseInt(f.pages.value) : null,
+      cover: f.cover.value || '📖',
+      descHe: f.descHe.value, descEn: f.descEn.value,
+      tags: [...bookTags],
+      featured: f.featured.checked,
+      file: f.file?.value || '#',
+      downloads: 0,
+    };
+    books.unshift(book);
+    setData('books', books);
+    Toast.show(isHe ? '✅ הספר נשמר בהצלחה' : '✅ Book saved successfully', 'success');
+  }
+  cancelBookEdit();
+}
+
+function cancelBookEdit() {
+  bookEditId = null;
+  resetForm('bookForm');
+  bookTags = [];
+  document.getElementById('bookTagsWrap').querySelectorAll('.tag-chip').forEach(c => c.remove());
+  document.getElementById('bookFileName').textContent = '';
+  document.getElementById('bookEditBanner').style.display = 'none';
+  document.getElementById('bookPageTitle').textContent = 'העלאת ספר';
+  document.getElementById('bookPageSub').textContent = 'הוספת ספר או עלון חדש לספרייה';
+  document.getElementById('bookSubmitLabel').textContent = 'שמור ספר';
+}
+
+// ===== EDIT ITEM =====
+function editItem(id, type) {
+  const items = getData(type);
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+
+  if (type === 'lessons') {
+    lessonEditId = id;
+    const f = document.getElementById('lessonForm');
+
+    // Fill basic fields
+    f.titleHe.value  = item.titleHe  || '';
+    f.titleEn.value  = item.titleEn  || '';
+    f.duration.value = item.duration || '';
+    const ySel = document.getElementById('lessonYearSelect');
+    if (ySel) ySel.value = getLessonYear(item) || new Date().getFullYear();
+    f.descHe.value   = item.descHe   || '';
+    f.descEn.value   = item.descEn   || '';
+    f.featured.checked = !!item.featured;
+    const fileEl = f.querySelector('[name="file"]');
+    if (fileEl) fileEl.value = (item.file && item.file !== '#') ? item.file : '';
+
+    // Category → subcategory chain
+    const catSel = document.getElementById('lessonCatSelect');
+    catSel.value = item.category || '';
+    updateLessonSubCats(item.category);
+    setTimeout(() => {
+      if (item.subcategory) {
+        const subSel = document.getElementById('lessonSubCatSel');
+        if (subSel) { subSel.value = item.subcategory; updateLessonSubSubCats(item.subcategory); }
+        setTimeout(() => {
+          if (item.subsubcategory) {
+            const sub2Sel = document.getElementById('lessonSubSubCatSel');
+            if (sub2Sel) sub2Sel.value = item.subsubcategory;
+          }
+        }, 60);
+      }
+    }, 60);
+
+    // Language
+    const langSel = document.getElementById('lessonLangSelect');
+    if (langSel) langSel.value = item.language || '';
+
+    // Tags
+    lessonTags = [...(item.tags || [])];
+    const wrap = document.getElementById('lessonTagsWrap');
+    wrap.querySelectorAll('.tag-chip').forEach(c => c.remove());
+    lessonTags.forEach(t => addTagChip(t, 'lessonTagsWrap', () => { lessonTags = lessonTags.filter(x => x !== t); }));
+
+    // Edit-mode UI
+    document.getElementById('lessonEditBannerTitle').textContent = item.titleHe;
+    document.getElementById('lessonEditBanner').style.display = 'flex';
+    document.getElementById('lessonPageTitle').textContent = 'עריכת שיעור';
+    document.getElementById('lessonPageSub').textContent = 'ערוך את פרטי השיעור הקיים';
+    document.getElementById('lessonSubmitLabel').textContent = 'שמור שינויים';
+
+    showTab('uploadLesson');
+
+  } else {
+    bookEditId = id;
+    const f = document.getElementById('bookForm');
+
+    // Fill basic fields
+    f.titleHe.value = item.titleHe || '';
+    f.titleEn.value = item.titleEn || '';
+    f.pages.value   = item.pages   || '';
+    f.cover.value   = item.cover   || '';
+    const bYSel = document.getElementById('bookYearSelect');
+    if (bYSel) bYSel.value = item.year || new Date().getFullYear();
+    f.descHe.value  = item.descHe  || '';
+    f.descEn.value  = item.descEn  || '';
+    f.featured.checked = !!item.featured;
+    const fileEl = f.querySelector('[name="file"]');
+    if (fileEl) fileEl.value = (item.file && item.file !== '#') ? item.file : '';
+
+    // Category
+    const catSel = document.getElementById('bookCatSelect');
+    if (catSel) catSel.value = item.category || '';
+
+    // Language
+    const langSel = document.getElementById('bookLangSelect');
+    if (langSel) langSel.value = item.language || '';
+
+    // Tags
+    bookTags = [...(item.tags || [])];
+    const wrap = document.getElementById('bookTagsWrap');
+    wrap.querySelectorAll('.tag-chip').forEach(c => c.remove());
+    bookTags.forEach(t => addTagChip(t, 'bookTagsWrap', () => { bookTags = bookTags.filter(x => x !== t); }));
+
+    // Edit-mode UI
+    document.getElementById('bookEditBannerTitle').textContent = item.titleHe;
+    document.getElementById('bookEditBanner').style.display = 'flex';
+    document.getElementById('bookPageTitle').textContent = 'עריכת ספר';
+    document.getElementById('bookPageSub').textContent = 'ערוך את פרטי הספר הקיים';
+    document.getElementById('bookSubmitLabel').textContent = 'שמור שינויים';
+
+    showTab('uploadBook');
+  }
+}
+
+// ===== UPDATES =====
+function showAddUpdateForm() {
+  editingUpdateId = null;
+  document.getElementById('updateFormTitle').textContent = 'New Update';
+  document.getElementById('updateForm').reset();
+  document.getElementById('updDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('updateFormWrap').style.display = 'block';
+  document.getElementById('updateFormWrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelUpdateForm() { document.getElementById('updateFormWrap').style.display = 'none'; editingUpdateId = null; }
+
+function submitUpdate(e) {
+  e.preventDefault();
+  const updates = getData('updates');
+  const upd = {
+    id: editingUpdateId || nextId(updates),
+    titleHe: document.getElementById('updTitleHe').value,
+    titleEn: document.getElementById('updTitleEn').value,
+    category: document.getElementById('updCategory').value,
+    date: document.getElementById('updDate').value,
+    contentHe: document.getElementById('updContentHe').value,
+    contentEn: document.getElementById('updContentEn').value,
+    image: document.getElementById('updImage').value || '📢',
+    featured: document.getElementById('updFeatured').checked,
+  };
+  if (editingUpdateId) {
+    const idx = updates.findIndex(u => u.id === editingUpdateId);
+    if (idx >= 0) updates[idx] = upd;
+  } else {
+    updates.unshift(upd);
+  }
+  setData('updates', updates);
+  cancelUpdateForm();
+  renderUpdatesTable();
+  Toast.show('Update saved! ✅', 'success');
+}
+
+function renderUpdatesTable() {
+  const updates = getData('updates');
+  const CAT = { event:'Event', publication:'Publication', announcement:'Announcement', schedule:'Schedule' };
+  document.getElementById('updatesTableBody').innerHTML = updates.map(u => `
+    <tr>
+      <td style="font-weight:600;max-width:240px"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px">${u.image||''} ${u.titleHe}</div></td>
+      <td><span class="badge-blue" style="padding:3px 8px;border-radius:var(--r-full);font-size:.72rem;font-weight:600;background:rgba(12,31,61,.08);color:var(--primary)">${CAT[u.category]||u.category}</span></td>
+      <td style="font-size:.78rem;color:var(--text-muted)">${toHebrewDate(u.date)||'—'}</td>
+      <td>${u.featured ? '⭐ Yes' : '—'}</td>
+      <td><div class="atable-actions">
+        <button class="abtn abtn-warning" onclick="editUpdate(${u.id})"><i class="fas fa-edit"></i></button>
+        <button class="abtn abtn-danger" onclick="deleteUpdate(${u.id})"><i class="fas fa-trash"></i></button>
+      </div></td>
+    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted)">No updates yet</td></tr>';
+}
+
+function editUpdate(id) {
+  const upd = getData('updates').find(u => u.id === id);
+  if (!upd) return;
+  editingUpdateId = id;
+  document.getElementById('updateFormTitle').textContent = 'Edit Update';
+  document.getElementById('updTitleHe').value = upd.titleHe || '';
+  document.getElementById('updTitleEn').value = upd.titleEn || '';
+  document.getElementById('updCategory').value = upd.category || 'event';
+  document.getElementById('updDate').value = upd.date || '';
+  document.getElementById('updContentHe').value = upd.contentHe || '';
+  document.getElementById('updContentEn').value = upd.contentEn || '';
+  document.getElementById('updImage').value = upd.image || '';
+  document.getElementById('updFeatured').checked = !!upd.featured;
+  document.getElementById('updateFormWrap').style.display = 'block';
+  document.getElementById('updateFormWrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+function deleteUpdate(id) {
+  const isHe = AdminLang.current === 'he';
+  confirmAction(isHe?'מחק עדכון?':'Delete this update?', isHe?'לא ניתן לבטל פעולה זו.':'This cannot be undone.', () => {
+    setData('updates', getData('updates').filter(u => u.id !== id));
+    renderUpdatesTable();
+    Toast.show(isHe?'העדכון נמחק':'Update deleted', 'success');
+  });
+}
+
+// ===== USERS =====
+function showAddUserForm() {
+  editingUserId = null;
+  document.getElementById('userFormTitle').textContent = 'New User';
+  document.getElementById('userForm').reset();
+  document.getElementById('uActive').checked = true;
+  document.getElementById('userFormWrap').style.display = 'block';
+  document.getElementById('userFormWrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelUserForm() { document.getElementById('userFormWrap').style.display = 'none'; editingUserId = null; }
+
+function setAllPerms(val) {
+  PERM_KEYS.forEach(k => { const el = document.getElementById('perm_'+k); if (el) el.checked = val; });
+}
+
+function getPermsFromForm() {
+  return Object.fromEntries(PERM_KEYS.map(k => [k, !!(document.getElementById('perm_'+k)?.checked)]));
+}
+
+function setPermsToForm(perms) {
+  PERM_KEYS.forEach(k => { const el = document.getElementById('perm_'+k); if (el) el.checked = !!(perms?.[k]); });
+}
+
+// Auto-fill permissions based on role
+document.getElementById('uRole')?.addEventListener('change', e => {
+  const role = e.target.value;
+  if (role === 'admin') setAllPerms(true);
+  else if (role === 'editor') setPermsToForm({ upload_lessons:true,upload_books:true,edit_content:true,delete_content:false,manage_categories:false,manage_users:false,view_stats:true });
+  else setPermsToForm({ upload_lessons:false,upload_books:false,edit_content:false,delete_content:false,manage_categories:false,manage_users:false,view_stats:true });
+});
+
+function submitUser(e) {
+  e.preventDefault();
+  const users = getData('users');
+  const pw = document.getElementById('uPassword').value;
+  if (!editingUserId && !pw) { Toast.show('Password is required', 'error'); return; }
+  if (pw && pw.length < 6) { Toast.show('Password must be at least 6 characters', 'error'); return; }
+  const existing = editingUserId ? users.find(u => u.id === editingUserId) : null;
+  const user = {
+    id: editingUserId || nextId(users),
+    name: document.getElementById('uName').value,
+    username: document.getElementById('uUsername').value,
+    email: document.getElementById('uEmail').value,
+    password: pw || existing?.password || '',
+    role: document.getElementById('uRole').value,
+    active: document.getElementById('uActive').checked,
+    created: existing?.created || new Date().toISOString().split('T')[0],
+    permissions: getPermsFromForm(),
+  };
+  if (editingUserId) { const idx = users.findIndex(u => u.id === editingUserId); if (idx >= 0) users[idx] = user; }
+  else { users.push(user); }
+  setData('users', users);
+  cancelUserForm();
+  renderUsersTable();
+  Toast.show('User saved! ✅', 'success');
+}
+
+function renderUsersTable() {
+  const users = getData('users');
+  const ROLE_CLASS = { admin:'role-admin', editor:'role-editor', viewer:'role-viewer' };
+  document.getElementById('usersTableBody').innerHTML = users.map(u => {
+    const permCount = Object.values(u.permissions||{}).filter(Boolean).length;
+    const lastLogin = u.lastLogin ? toHebrewDate(u.lastLogin.split('T')[0]) : '—';
+    return `<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div class="user-avatar-sm" style="background:var(--gold);color:var(--primary)">${u.name.charAt(0)}</div>
+        <div><div style="font-weight:600">${u.name}</div><div style="font-size:.72rem;color:var(--text-muted)">${lastLogin}</div></div>
+      </div></td>
+      <td style="color:var(--text-light)">${u.username}</td>
+      <td style="color:var(--text-light);font-size:.82rem">${u.email}</td>
+      <td><span class="role-badge ${ROLE_CLASS[u.role]||''}">${u.role}</span></td>
+      <td>
+        <span class="${u.active ? 'badge-active' : 'badge-inactive'}">${u.active ? 'Active' : 'Inactive'}</span>
+        <div style="font-size:.7rem;color:var(--text-muted);margin-top:3px"><i class="fas fa-shield-alt" style="margin-left:3px"></i>${permCount}/${PERM_KEYS.length} הרשאות</div>
+      </td>
+      <td style="color:var(--text-muted);font-size:.82rem">${u.created||'—'}</td>
+      <td><div class="atable-actions">
+        <button class="abtn abtn-warning" onclick="editUser(${u.id})"><i class="fas fa-edit"></i></button>
+        <button class="abtn ${u.active?'abtn-danger':'abtn-success'}" onclick="toggleUserActive(${u.id})">${u.active?'<i class="fas fa-ban"></i>':'<i class="fas fa-check"></i>'}</button>
+        ${currentUser?.role === 'admin' && u.id !== currentUser.id ? `<button class="abtn abtn-danger" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button>` : ''}
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function editUser(id) {
+  const u = getData('users').find(x => x.id === id);
+  if (!u) return;
+  editingUserId = id;
+  document.getElementById('userFormTitle').textContent = 'Edit User';
+  document.getElementById('uName').value = u.name;
+  document.getElementById('uUsername').value = u.username;
+  document.getElementById('uEmail').value = u.email;
+  document.getElementById('uPassword').value = '';
+  document.getElementById('uPassword').placeholder = 'Leave blank to keep current';
+  document.getElementById('uRole').value = u.role;
+  document.getElementById('uActive').checked = u.active;
+  setPermsToForm(u.permissions || (u.role === 'admin'
+    ? Object.fromEntries(PERM_KEYS.map(k => [k, true]))
+    : { upload_lessons:true,upload_books:true,edit_content:true,delete_content:false,manage_categories:false,manage_users:false,view_stats:true }));
+  document.getElementById('userFormWrap').style.display = 'block';
+  document.getElementById('userFormWrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+function toggleUserActive(id) {
+  const users = getData('users');
+  const u = users.find(x => x.id === id);
+  if (u) {
+    u.active = !u.active; setData('users', users); renderUsersTable();
+    const isHe = AdminLang.current === 'he';
+    Toast.show(u.active ? (isHe?'המשתמש הופעל':'User activated') : (isHe?'המשתמש הושבת':'User deactivated'), 'info');
+  }
+}
+
+function deleteUser(id) {
+  const isHe = AdminLang.current === 'he';
+  confirmAction(isHe?'מחק משתמש?':'Delete this user?', isHe?'לא ניתן לבטל פעולה זו.':'This cannot be undone.', () => {
+    setData('users', getData('users').filter(u => u.id !== id));
+    renderUsersTable();
+    Toast.show(isHe?'המשתמש נמחק':'User deleted', 'success');
+  });
+}
+
+// ===== SUBSCRIBERS =====
+function renderSubscribers() {
+  const subs = getData('subscribers');
+  const isHe = AdminLang.current === 'he';
+  document.getElementById('subCount').textContent = subs.length + (isHe ? ' מנויים' : ' subscribers');
+  const body = document.getElementById('subsTableBody');
+  const noSubs = document.getElementById('noSubs');
+  if (!subs.length) { body.innerHTML = ''; noSubs.style.display = 'block'; return; }
+  noSubs.style.display = 'none';
+  body.innerHTML = subs.map((s,i) => `
+    <tr>
+      <td style="color:var(--text-muted)">${i+1}</td>
+      <td style="font-weight:600">${s.email}</td>
+      <td>${s.name||'—'}</td>
+      <td style="color:var(--text-muted);font-size:.82rem">${s.date||'—'}</td>
+      <td><button class="abtn abtn-danger" onclick="deleteSub(${s.id})"><i class="fas fa-trash"></i></button></td>
+    </tr>`).join('');
+}
+
+function deleteSub(id) {
+  const isHe = AdminLang.current === 'he';
+  confirmAction(isHe?'הסר מנוי?':'Remove subscriber?', isHe?'הם לא יקבלו עוד עדכונים.':'They will no longer receive updates.', () => {
+    setData('subscribers', getData('subscribers').filter(s => s.id !== id));
+    renderSubscribers();
+    Toast.show('Subscriber removed', 'success');
+  });
+}
+
+function exportSubscribers() {
+  const subs = getData('subscribers');
+  const csv = 'Email,Name,Date\n' + subs.map(s => `${s.email},${s.name||''},${s.date||''}`).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'subscribers.csv'; a.click();
+}
+
+// ===== CONTACTS =====
+function renderContacts() {
+  const contacts = getData('contacts');
+  const body = document.getElementById('contactsTableBody');
+  const noContacts = document.getElementById('noContacts');
+  if (!contacts.length) { body.innerHTML = ''; noContacts.style.display = 'block'; return; }
+  noContacts.style.display = 'none';
+  body.innerHTML = contacts.map(c => `
+    <tr>
+      <td style="font-weight:600">${c.name||'—'}</td>
+      <td style="color:var(--text-light)">${c.email||'—'}</td>
+      <td><span style="background:rgba(12,31,61,.08);color:var(--primary);padding:3px 8px;border-radius:var(--r-full);font-size:.72rem;font-weight:600">${c.subject||'—'}</span></td>
+      <td style="max-width:200px"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.83rem;color:var(--text-light)">${c.message||'—'}</div></td>
+      <td style="color:var(--text-muted);font-size:.78rem">${c.date ? new Date(c.date).toLocaleDateString() : '—'}</td>
+    </tr>`).join('');
+}
+
+// ===== HELPERS =====
+function addTag(e, type) {
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  const val = e.target.value.trim();
+  if (!val) return;
+  if (type === 'lesson') {
+    if (lessonTags.includes(val)) return;
+    lessonTags.push(val);
+    addTagChip(val, 'lessonTagsWrap', () => { lessonTags = lessonTags.filter(t => t !== val); });
+  } else {
+    if (bookTags.includes(val)) return;
+    bookTags.push(val);
+    addTagChip(val, 'bookTagsWrap', () => { bookTags = bookTags.filter(t => t !== val); });
+  }
+  e.target.value = '';
+}
+
+function addTagChip(val, wrapId, onRemove) {
+  const wrap = document.getElementById(wrapId);
+  const chip = document.createElement('div');
+  chip.className = 'tag-chip';
+  chip.innerHTML = `${val} <span class="tag-chip-x" onclick="this.parentElement.remove()">×</span>`;
+  chip.querySelector('.tag-chip-x').addEventListener('click', onRemove);
+  wrap.insertBefore(chip, wrap.querySelector('input'));
+}
+
+function showFileName(input, elId) {
+  const el = document.getElementById(elId);
+  if (!el || !input.files[0]) return;
+  const file = input.files[0];
+  el.textContent = '✓ ' + file.name;
+
+  // ── Audio: auto-fill duration ──
+  if (elId === 'lessonFileName') {
+    const objUrl = URL.createObjectURL(file);
+    const audio = new Audio();
+    audio.preload = 'metadata';
+    audio.onloadedmetadata = () => {
+      URL.revokeObjectURL(objUrl);
+      const total = Math.round(audio.duration);
+      if (!isFinite(total) || total <= 0) return;
+      const h = Math.floor(total / 3600);
+      const m = Math.floor((total % 3600) / 60);
+      const s = total % 60;
+      const formatted = h > 0
+        ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+        : `${m}:${String(s).padStart(2,'0')}`;
+      const durInput = document.querySelector('#lessonForm [name="duration"]');
+      if (durInput) {
+        durInput.value = formatted;
+        flashGreen(durInput);
+      }
+    };
+    audio.onerror = () => URL.revokeObjectURL(objUrl);
+    audio.src = objUrl;
+  }
+
+  // ── PDF: auto-fill page count ──
+  if (elId === 'bookFileName') {
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      try {
+        if (typeof pdfjsLib === 'undefined') return;
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        const pdf = await pdfjsLib.getDocument({ data: ev.target.result }).promise;
+        const pagesInput = document.querySelector('#bookForm [name="pages"]');
+        if (pagesInput) {
+          pagesInput.value = pdf.numPages;
+          flashGreen(pagesInput);
+        }
+      } catch (err) { console.warn('PDF parse error:', err); }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+}
+
+function flashGreen(el) {
+  el.style.transition = 'background .3s';
+  el.style.background = 'rgba(16,185,129,.15)';
+  setTimeout(() => { el.style.background = ''; }, 1800);
+}
+
+function resetForm(formId) {
+  document.getElementById(formId)?.reset();
+}
+
+function confirmAction(title, msg, callback, actionLabel) {
+  const isHe = AdminLang.current === 'he';
+  document.getElementById('confirmTitle').textContent = title || (isHe ? 'אישור פעולה' : 'Confirm Action');
+  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmBtn').textContent = actionLabel || (isHe ? 'מחק' : 'Delete');
+  document.getElementById('confirmCancelBtn').textContent = isHe ? 'ביטול' : 'Cancel';
+  document.getElementById('confirmBtn').onclick = () => { Modal.close('confirmModal'); callback(); };
+  Modal.open('confirmModal');
+}
+
+// ===== CATEGORIES MANAGEMENT (TREE VIEW) =====
+let currentCatTab = 'lessons';
+let editingCatId = null;
+let expandedNodes = new Set(); // stores pathKeys like "parasha" or "parasha/bereishit"
+
+function switchCatTab(type, btn) {
+  currentCatTab = type;
+  document.querySelectorAll('#tab-categories .admin-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const isLang = type === 'languages';
+  document.getElementById('catFormWrap').style.display = isLang ? 'none' : '';
+  document.getElementById('catTreeCard').style.display = isLang ? 'none' : '';
+  document.getElementById('langPanel').style.display = isLang ? '' : 'none';
+  if (isLang) { renderLangTable(); return; }
+  expandedNodes.clear();
+  cancelCatEdit();
+  renderCatTree();
+}
+
+function renderCatTree() {
+  const cats = getCategories(currentCatTab);
+  const items = getData(currentCatTab === 'lessons' ? 'lessons' : 'books');
+  const wrap = document.getElementById('catTreeWrap');
+  if (!wrap) return;
+  const isHe = AdminLang.current === 'he';
+  document.getElementById('catTreeTitle').textContent = isHe
+    ? (currentCatTab === 'lessons' ? 'עץ קטגוריות שיעורים' : 'עץ קטגוריות ספרים')
+    : (currentCatTab === 'lessons' ? 'Lesson Category Tree' : 'Book Category Tree');
+  if (!cats.length) {
+    wrap.innerHTML = `<div style="text-align:center;padding:32px;color:var(--text-muted)">
+      <i class="fas fa-folder-open" style="font-size:28px;opacity:.3;display:block;margin-bottom:10px"></i>
+      ${isHe ? 'אין קטגוריות עדיין. הוסף קטגוריה חדשה למעלה.' : 'No categories yet. Add one above.'}
+    </div>`;
+    return;
+  }
+  wrap.innerHTML = cats.map(c => renderTreeNode(c, [], items)).join('');
+}
+
+function renderTreeNode(node, path, items, depth=0) {
+  const pathKey = [...path, node.id].join('/');
+  const hasSubs = (node.subs||[]).length > 0;
+  const isExpanded = expandedNodes.has(pathKey);
+  const inUse = items.filter(i => i.category === node.id).length;
+  const totalSubs = countAllSubs(node);
+  const folderIcon = depth === 0 ? (hasSubs ? '📁' : '📂') : (hasSubs ? '📂' : '📄');
+  const indentPx = depth * 28;
+  const isHe = AdminLang.current === 'he';
+
+  const childrenHtml = (isExpanded && hasSubs)
+    ? `<div class="cat-tree-children">${(node.subs||[]).map(s => renderTreeNode(s, [...path, node.id], items, depth+1)).join('')}</div>`
+    : '';
+
+  const inlineFormId = `ifrm-${pathKey.replace(/\//g,'-')}`;
+
+  return `
+  <div class="cat-tree-node" id="tnode-${pathKey.replace(/\//g,'-')}">
+    <div class="cat-tree-row${hasSubs?' has-children':''}" style="padding-right:${12+indentPx}px">
+      <span class="cat-tree-toggle" onclick="toggleTreeNode('${pathKey}')">
+        ${hasSubs
+          ? `<i class="fas fa-${isExpanded?'chevron-down':'chevron-left'}" style="color:var(--primary-mid)"></i>`
+          : '<i class="fas fa-minus" style="color:var(--border);font-size:.55rem"></i>'}
+      </span>
+      <span class="cat-tree-icon">${folderIcon}</span>
+      <span class="cat-tree-label" dir="rtl" title="${node.he}">${node.he}</span>
+      <span style="color:rgba(12,31,61,.25);margin:0 6px;font-size:.75rem">·</span>
+      <span class="cat-tree-en" title="${node.en}">${node.en}</span>
+      <code class="cat-tree-id">${node.id}</code>
+      <div class="cat-tree-meta">
+        ${inUse ? `<span style="background:#dbeafe;color:#1d4ed8;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px">${inUse} ${isHe?'פריטים':'items'}</span>` : ''}
+        ${totalSubs ? `<span style="background:var(--cream);color:var(--text-muted);font-size:.65rem;font-weight:600;padding:2px 7px;border-radius:10px">${totalSubs} ${isHe?'תת':'sub'}</span>` : ''}
+      </div>
+      <div class="cat-tree-actions">
+        <button class="abtn" style="padding:3px 8px;font-size:.72rem;gap:3px" title="${isHe?'הוסף תת-נושא':'Add sub-topic'}" onclick="toggleInlineForm('${inlineFormId}','${pathKey}')">
+          <i class="fas fa-plus" style="color:var(--success)"></i>
+        </button>
+        <button class="abtn abtn-warning" style="padding:3px 8px" title="${isHe?'ערוך':'Edit'}" onclick="editCat('${node.id}','${path.join('/')}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="abtn abtn-danger" style="padding:3px 8px" title="${isHe?'מחק':'Delete'}" onclick="deleteCatAtPath('${pathKey}',${inUse})">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Inline add sub form -->
+    <div id="${inlineFormId}" class="cat-inline-form" style="display:none;margin-right:${12+indentPx+28}px">
+      <div style="font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:10px">
+        <i class="fas fa-plus-circle" style="color:var(--success)"></i>
+        ${isHe ? `הוסף תת-נושא תחת: <strong>${node.he}</strong>` : `Add sub-topic under: <strong>${node.en}</strong>`}
+      </div>
+      <div class="cat-inline-form-grid">
+        <div class="form-group" style="margin:0">
+          <label class="form-label" style="font-size:.73rem">עברית *</label>
+          <input type="text" class="form-control" id="ihe-${inlineFormId}" dir="rtl" placeholder="שם בעברית" style="font-size:.85rem">
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label" style="font-size:.73rem">English *</label>
+          <div style="position:relative">
+            <input type="text" class="form-control" id="ien-${inlineFormId}" placeholder="English name" style="font-size:.85rem;padding-left:75px">
+            <button type="button" class="translate-btn" style="font-size:.62rem;padding:3px 7px" onclick="autoTranslate('ihe-${inlineFormId}','ien-${inlineFormId}')"><i class="fas fa-language"></i> תרגם</button>
+          </div>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label" style="font-size:.73rem">ID (slug) *</label>
+          <input type="text" class="form-control" id="iid-${inlineFormId}" placeholder="topic_id" style="font-size:.85rem;font-family:var(--font-en)">
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="abtn abtn-primary" style="font-size:.78rem;padding:6px 12px" onclick="addSubAtPath('${pathKey}','${inlineFormId}')">
+            <i class="fas fa-save"></i> ${isHe?'שמור':'Save'}
+          </button>
+          <button class="abtn abtn-ghost" style="font-size:.78rem;padding:6px 10px" onclick="document.getElementById('${inlineFormId}').style.display='none'">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    ${childrenHtml}
+  </div>`;
+}
+
+function countAllSubs(node) {
+  let total = (node.subs||[]).length;
+  (node.subs||[]).forEach(s => { total += countAllSubs(s); });
+  return total;
+}
+
+function toggleTreeNode(pathKey) {
+  if (expandedNodes.has(pathKey)) expandedNodes.delete(pathKey);
+  else expandedNodes.add(pathKey);
+  renderCatTree();
+}
+
+function expandAllNodes(cats, prefix='') {
+  const c = cats || getCategories(currentCatTab);
+  c.forEach(node => {
+    const key = prefix ? prefix+'/'+node.id : node.id;
+    if ((node.subs||[]).length) {
+      expandedNodes.add(key);
+      expandAllNodes(node.subs||[], key);
+    }
+  });
+  renderCatTree();
+}
+
+function collapseAllNodes() { expandedNodes.clear(); renderCatTree(); }
+
+function toggleInlineForm(formId, pathKey) {
+  const el = document.getElementById(formId);
+  if (!el) return;
+  const wasHidden = el.style.display === 'none';
+  // Close all other inline forms first
+  document.querySelectorAll('.cat-inline-form').forEach(f => f.style.display = 'none');
+  el.style.display = wasHidden ? '' : 'none';
+  if (wasHidden) {
+    // Auto-expand the parent node so the form is visible
+    expandedNodes.add(pathKey);
+    renderCatTree();
+    setTimeout(() => { const el2 = document.getElementById(formId); if(el2) { el2.style.display=''; el2.querySelector('input')?.focus(); } }, 50);
+  }
+}
+
+function addSubAtPath(pathKey, formId) {
+  const heEl = document.getElementById('ihe-'+formId);
+  const enEl = document.getElementById('ien-'+formId);
+  const idEl = document.getElementById('iid-'+formId);
+  if (!heEl||!enEl||!idEl) return;
+  const he = heEl.value.trim(), en = enEl.value.trim();
+  const id = idEl.value.trim().toLowerCase().replace(/\s+/g,'_');
+  if (!he||!en||!id) { Toast.show('מלא את כל השדות', 'error'); return; }
+  const cats = getCategories(currentCatTab);
+  const segments = pathKey.split('/');
+  const node = getNodeAtPath(cats, segments);
+  if (!node) return;
+  if (!node.subs) node.subs = [];
+  if (node.subs.find(s => s.id === id)) { Toast.show('מזהה קיים כבר', 'error'); return; }
+  node.subs.push({ id, he, en, subs: [] });
+  localStorage.setItem('ti_cat_' + currentCatTab, JSON.stringify(cats));
+  expandedNodes.add(pathKey);
+  Toast.show('תת-נושא נוסף ✅', 'success');
+  renderCatTree();
+  refreshDropdowns();
+}
+
+function deleteCatAtPath(pathKey, inUse) {
+  if (inUse > 0) { Toast.show('Cannot delete: category has content. Reassign items first.', 'error', 4000); return; }
+  const segments = pathKey.split('/');
+  const isHe = AdminLang.current === 'he';
+  confirmAction(isHe?'מחק קטגוריה?':'Delete Category?', isHe?'לא ניתן לבטל פעולה זו.':'This cannot be undone.', () => {
+    const cats = getCategories(currentCatTab);
+    if (segments.length === 1) {
+      const updated = cats.filter(c => c.id !== segments[0]);
+      localStorage.setItem('ti_cat_' + currentCatTab, JSON.stringify(updated));
+    } else {
+      const parentPath = segments.slice(0,-1);
+      const parent = getNodeAtPath(cats, parentPath);
+      if (parent && parent.subs) {
+        parent.subs = parent.subs.filter(s => s.id !== segments[segments.length-1]);
+        localStorage.setItem('ti_cat_' + currentCatTab, JSON.stringify(cats));
+      }
+    }
+    Toast.show(isHe?'נמחק בהצלחה':'Deleted successfully', 'success');
+    renderCatTree();
+    refreshDropdowns();
+  });
+}
+
+function saveCat() {
+  const id = document.getElementById('catIdInput').value.trim().toLowerCase().replace(/\s+/g,'-');
+  const he = document.getElementById('catHeInput').value.trim();
+  const en = document.getElementById('catEnInput').value.trim();
+  if (!id || !he || !en) { Toast.show('Please fill all fields', 'error'); return; }
+  const cats = getCategories(currentCatTab);
+  if (editingCatId) {
+    // Could be at any depth — find it recursively
+    const node = findCatNode(editingCatId, cats);
+    if (node) { node.he = he; node.en = en; }
+  } else {
+    if (cats.find(c => c.id === id)) { Toast.show('ID already exists', 'error'); return; }
+    cats.push({ id, he, en, subs: [] });
+  }
+  localStorage.setItem('ti_cat_' + currentCatTab, JSON.stringify(cats));
+  Toast.show(editingCatId ? 'Category updated' : 'Category added', 'success');
+  cancelCatEdit();
+  renderCatTree();
+  refreshDropdowns();
+}
+
+function editCat(id, parentPath) {
+  const cats = getCategories(currentCatTab);
+  const node = findCatNode(id, cats);
+  if (!node) return;
+  editingCatId = id;
+  document.getElementById('catIdInput').value = node.id;
+  document.getElementById('catIdInput').disabled = true;
+  document.getElementById('catHeInput').value = node.he;
+  document.getElementById('catEnInput').value = node.en;
+  document.getElementById('catFormTitle').innerHTML = `<i class="fas fa-edit" style="color:var(--primary-mid)"></i> Edit: ${node.he}`;
+  document.getElementById('catCancelBtn').style.display = '';
+  document.getElementById('catFormWrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function cancelCatEdit() {
+  editingCatId = null;
+  document.getElementById('catIdInput').value = '';
+  document.getElementById('catIdInput').disabled = false;
+  document.getElementById('catHeInput').value = '';
+  document.getElementById('catEnInput').value = '';
+  document.getElementById('catFormTitle').innerHTML = '<i class="fas fa-plus-circle" style="color:var(--primary-mid)"></i> Add Category';
+  document.getElementById('catCancelBtn').style.display = 'none';
+}
+
+function deleteCat(id) {
+  const cats = getCategories(currentCatTab);
+  const items = getData(currentCatTab === 'lessons' ? 'lessons' : 'books');
+  if (items.some(i => i.category === id)) {
+    Toast.show('Cannot delete: category has content. Reassign items first.', 'error', 4000);
+    return;
+  }
+  confirmAction('Delete Category?', 'This category will be permanently removed.', () => {
+    const updated = cats.filter(c => c.id !== id);
+    localStorage.setItem('ti_cat_' + currentCatTab, JSON.stringify(updated));
+    Toast.show('Category deleted', 'success');
+    renderCatTree();
+    refreshDropdowns();
+  });
+}
+
+function refreshDropdowns() {
+  const lessonSel = document.getElementById('lessonCatSelect');
+  if (lessonSel) {
+    const cur = lessonSel.value;
+    lessonSel.innerHTML = '<option value="">Select Category</option>';
+    getCategories('lessons').forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.he + ' / ' + c.en; lessonSel.appendChild(o); });
+    lessonSel.value = cur;
+    updateLessonSubCats(cur);
+  }
+  const bookSel = document.getElementById('bookCatSelect');
+  if (bookSel) {
+    const cur = bookSel.value;
+    bookSel.innerHTML = '<option value="">Select Category</option>';
+    getCategories('books').forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.he + ' / ' + c.en; bookSel.appendChild(o); });
+    bookSel.value = cur;
+  }
+  const langs = getLanguages();
+  ['lessonLangSelect','bookLangSelect'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— בחר שפה —</option>';
+    langs.forEach(l => { const o = document.createElement('option'); o.value = l.id; o.textContent = l.flag + ' ' + l.he + ' / ' + l.en; sel.appendChild(o); });
+    sel.value = cur;
+  });
+}
+
+// ===== SUB-CATEGORY PATH HELPERS (used by tree view) =====
+let currentSubPath = []; // kept for backward-compat with lessonSubSubCats etc.
+
+function getNodeAtPath(cats, path) {
+  let node = null;
+  for (const seg of path) {
+    const list = node ? (node.subs || []) : cats;
+    node = list.find(c => c.id === seg);
+    if (!node) return null;
+  }
+  return node;
+}
+
+// Legacy stubs (no longer used for UI, but kept so nothing breaks)
+function manageSubs(catId) { /* replaced by tree view */ }
+function closeSubPanel() { /* replaced by tree view */ }
+function addSub() { /* replaced by addSubAtPath */ }
+function deleteSub() { /* replaced by deleteCatAtPath */ }
+const currentSubCatParentId = null;
+
+// ===== HEBREW TRANSLITERATION =====
+// Dictionary of common Torah/Hebrew words (word → romanized form)
+const HE_WORD_DICT = {
+  // Torah books & sections
+  'תורה':'Torah','תורת':'Torat','בראשית':'Bereishit','שמות':'Shemot','ויקרא':'Vayikra',
+  'במדבר':'Bamidbar','דברים':'Devarim','נביאים':'Nevi\'im','כתובים':'Ketuvim',
+  'תנ\"ך':'Tanach','תנך':'Tanach','משנה':'Mishna','גמרא':'Gemara','תלמוד':'Talmud',
+  'זוהר':'Zohar','מדרש':'Midrash','מדרשים':'Midrashim','הגדה':'Hagada',
+  'שולחן':'Shulchan','ערוך':'Aruch','רמב\"ם':'Rambam','רש\"י':'Rashi',
+  // Parasha
+  'פרשה':'Parasha','פרשת':'Parashat','פרשיות':'Parshiyot',
+  'השבוע':'Hashavua','השבת':'Hashabbat',
+  // Tefila
+  'תפילה':'Tefila','תפילות':'Tefilot','תפילת':'Tefilat',
+  'שחרית':'Shacharit','מנחה':'Mincha','מעריב':'Maariv','ערבית':'Arvit',
+  'קדיש':'Kaddish','קדושה':'Kedusha','ברכה':'Bracha','ברכות':'Brachot',
+  'סידור':'Siddur','מחזור':'Machzor',
+  // Yamim Tovim
+  'שבת':'Shabbat','חנוכה':'Chanuka','פסח':'Pesach','שבועות':'Shavuot',
+  'סוכות':'Sukkot','פורים':'Purim','ראש':'Rosh','השנה':'Hashana',
+  'יום':'Yom','כיפור':'Kippur','הכיפורים':'Hakipurim','שמחת':'Simchat',
+  'הושענא':'Hoshana','רבה':'Raba','שמיני':'Shemini','עצרת':'Atzeret',
+  'לג':'Lag','בעומר':'BaOmer','ערב':'Erev','חול':'Chol','המועד':'HaMoed',
+  // Jewish life
+  'שיעור':'Shiur','שיעורים':'Shiurim','שיעורי':'Shiurei',
+  'ספר':'Sefer','ספרים':'Sfarim','ספרי':'Sifrei',
+  'מחשבה':'Machshava','מחשבות':'Machshavot','מחשבת':'Machshevet',
+  'הלכה':'Halacha','הלכות':'Halachot','הלכתי':'Halachic',
+  'מצווה':'Mitzva','מצוות':'Mitzvot',
+  'מוסר':'Mussar','כוונה':'Kavana','כוונות':'Kavanot',
+  'חסידות':'Chassidut','חסידי':'Chassidic','חסיד':'Chassid',
+  'קבלה':'Kabbalah','אמונה':'Emuna','בטחון':'Bitachon',
+  'תשובה':'Teshuva','תשובות':'Teshuvot',
+  'צדקה':'Tzedaka','גמילות':'Gemilut','חסדים':'Chasadim',
+  'שמחה':'Simcha','שמחות':'Smachot',
+  'אבות':'Avot','פרקי':'Pirkei',
+  'שיר':'Shir','השירים':'Hashirim','ניגון':'Nigun','ניגונים':'Nigunim',
+  'זמירות':'Zmirot','פיוטים':'Piyutim',
+  // People & titles
+  'ישראל':'Yisrael','עם':'Am','בית':'Beit','כנסת':'Knesset',
+  'רב':'Rav','רבי':'Rabbi','הרב':'HaRav','הרבי':'HaRebbe','רבנו':'Rabbeinu',
+  'גאון':'Gaon','צדיק':'Tzaddik','אדמו\"ר':'Admor',
+  'דוד':'David','שלמה':'Shlomo','משה':'Moshe','אברהם':'Avraham',
+  'יצחק':'Yitzchak','יעקב':'Yaakov','יוסף':'Yosef',
+  'מלכים':'Melachim','שמואל':'Shmuel','שופטים':'Shoftim',
+  // Institutions
+  'ישיבה':'Yeshiva','כולל':'Kollel','בית מדרש':'Beit Midrash',
+  'בית כנסת':'Beit Knesset','שול':'Shul',
+  // Common words
+  'השנה':'Hashana','שנה':'Shana','חדש':'Chodesh','שבוע':'Shavua',
+  'יום':'Yom','לילה':'Layla','זמן':'Zman','מועד':'Moed','מועדים':'Moadim',
+  'קודש':'Kodesh','חול':'Chol','טהרה':'Tahara','קדושה':'Kedusha',
+  'נשמה':'Neshama','גוף':'Guf','לב':'Lev','עולם':'Olam',
+  'בעולם':'BaOlam','לעולם':'LeOlam','הבא':'Haba','הזה':'Hazeh',
+  'גאולה':'Geula','משיח':'Mashiach','אחרית':'Acharit','הימים':'HaYamim',
+  'כל':'Kol','כלל':'Klal','פרט':'Prat','כלי':'Kli','כלים':'Kelim',
+  'נחמה':'Nechama','ישועה':'Yeshua','רפואה':'Refua',
+  'ברית':'Brit','מילה':'Mila','בר':'Bar','בת':'Bat','מצווה':'Mitzva',
+  'חתן':'Chatan','כלה':'Kala','נישואין':'Nisuin',
+  // Articles & prepositions (standalone)
+  'ה':'Ha','של':'Shel','עם':'Im','על':'Al','אל':'El',
+  'בין':'Bein','לבין':'Levein','עד':'Ad','כי':'Ki',
+  'לא':'Lo','כן':'Ken','גם':'Gam','רק':'Rak',
+  // Common suffixes as words
+  'ים':'-im','ות':'-ot','ית':'-it',
+};
+
+// Hebrew → Latin letter map (consonants)
+const HE_LETTERS = {
+  'א':'','ב':'v','ג':'g','ד':'d','ה':'h','ו':'v','ז':'z','ח':'ch',
+  'ט':'t','י':'y','כ':'ch','ך':'ch','ל':'l','מ':'m','ם':'m',
+  'נ':'n','ן':'n','ס':'s','ע':'','פ':'f','ף':'f','צ':'tz','ץ':'tz',
+  'ק':'k','ר':'r','ש':'sh','ת':'t',
+};
+
+function isHebChar(c) { return c >= 'א' && c <= 'ת'; }
+
+function transliterateWord(word) {
+  // Strip nikud (vowel marks)
+  word = word.replace(/[ְ-ׇ׉-׏װ-״]/g, '');
+  if (!word) return '';
+
+  // Check dictionary first (case-insensitive key lookup)
+  if (HE_WORD_DICT[word]) return HE_WORD_DICT[word];
+
+  // Algorithmic transliteration
+  const chars = [...word];
+  let out = '';
+  for (let i = 0; i < chars.length; i++) {
+    const c = chars[i], p = chars[i-1]||'', n = chars[i+1]||'';
+    if (!isHebChar(c)) { out += c; continue; }
+    const atStart = !isHebChar(p);
+    switch(c) {
+      case 'א': out += atStart ? 'a' : ''; break;
+      case 'ב': out += atStart ? 'b' : 'v'; break;
+      case 'ה': out += (i === chars.length-1) ? 'a' : 'h'; break;
+      case 'ו': out += isHebChar(p) ? 'o' : 'v'; break;
+      case 'י': out += isHebChar(p) ? 'i' : 'y'; break;
+      case 'כ': out += atStart ? 'k' : 'ch'; break;
+      case 'ע': out += atStart ? 'a' : ''; break;
+      case 'פ': out += atStart ? 'p' : 'f'; break;
+      default:  out += HE_LETTERS[c] || c;
+    }
+  }
+  // Capitalize first letter
+  return out ? out[0].toUpperCase() + out.slice(1) : out;
+}
+
+function transliterateHebrew(text) {
+  if (!text) return '';
+  // Split into tokens (words + spaces + punctuation)
+  return text.split(/(\s+)/).map(seg => {
+    if (!/[א-ת]/.test(seg)) return seg; // non-Hebrew: keep as-is
+    return transliterateWord(seg);
+  }).join('');
+}
+
+function autoTranslate(heId, enId) {
+  const heEl = document.getElementById(heId);
+  const enEl = document.getElementById(enId);
+  if (!heEl || !enEl) return;
+  const heText = heEl.value.trim();
+  const isHe = AdminLang.current === 'he';
+  if (!heText) {
+    Toast.show(isHe ? 'נא להזין טקסט בעברית תחילה' : 'Please enter Hebrew text first', 'error');
+    return;
+  }
+  const result = transliterateHebrew(heText);
+  enEl.value = result;
+  enEl.focus();
+  Toast.show(isHe ? '✅ תועתק — ניתן לתקן לפי הצורך' : '✅ Transliterated — you may edit as needed', 'success');
+}
+
+// ===== LANGUAGE MANAGEMENT =====
+let editingLangId = null;
+
+function renderLangTable() {
+  const langs = getLanguages();
+  const body = document.getElementById('langTableBody');
+  if (!body) return;
+  if (!langs.length) {
+    body.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted)">No languages yet.</td></tr>';
+    return;
+  }
+  body.innerHTML = langs.map(l => `<tr id="lang-row-${l.id}">
+    <td><code style="background:var(--cream);padding:2px 7px;border-radius:4px;font-size:.78rem">${l.id}</code></td>
+    <td style="font-size:1.4rem">${l.flag||'🌐'}</td>
+    <td dir="rtl" style="font-weight:600">${l.he}</td>
+    <td>${l.en}</td>
+    <td><div class="atable-actions">
+      <button class="abtn abtn-primary" title="ערוך" onclick="editLang('${l.id}')"><i class="fas fa-edit"></i></button>
+      <button class="abtn abtn-danger" title="מחק" onclick="deleteLang('${l.id}')"><i class="fas fa-trash"></i></button>
+    </div></td>
+  </tr>`).join('');
+}
+
+function editLang(id) {
+  const lang = getLanguages().find(l => l.id === id);
+  if (!lang) return;
+  editingLangId = id;
+
+  // Fill form
+  document.getElementById('langHeInput').value   = lang.he   || '';
+  document.getElementById('langEnInput').value   = lang.en   || '';
+  document.getElementById('langFlagInput').value = lang.flag || '';
+  // ID is read-only while editing (changing it would break all content references)
+  const idInput = document.getElementById('langIdInput');
+  idInput.value    = lang.id;
+  idInput.readOnly = true;
+  idInput.style.background = 'var(--cream)';
+  idInput.style.cursor     = 'not-allowed';
+  document.getElementById('langIdNote').style.display = '';
+
+  // Edit-mode UI
+  document.getElementById('langEditBanner').style.display = 'flex';
+  document.getElementById('langEditBannerName').textContent = `${lang.flag||''} ${lang.he} / ${lang.en}`;
+  document.getElementById('langFormTitleText').textContent  = 'ערוך שפה / Edit Language';
+  document.getElementById('langSubmitIcon').className = 'fas fa-save';
+  document.getElementById('langSubmitLabel').textContent   = 'שמור שינויים';
+  document.getElementById('langCancelBtn').style.display   = '';
+
+  // Highlight the editing row
+  document.querySelectorAll('#langTableBody tr').forEach(r => r.style.background = '');
+  const row = document.getElementById(`lang-row-${id}`);
+  if (row) row.style.background = 'rgba(59,130,246,.07)';
+
+  // Scroll form into view
+  document.getElementById('langFormSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function cancelLangEdit() {
+  editingLangId = null;
+  document.getElementById('langIdInput').value    = '';
+  document.getElementById('langHeInput').value    = '';
+  document.getElementById('langEnInput').value    = '';
+  document.getElementById('langFlagInput').value  = '';
+  const idInput = document.getElementById('langIdInput');
+  idInput.readOnly = false;
+  idInput.style.background = '';
+  idInput.style.cursor     = '';
+  document.getElementById('langIdNote').style.display   = 'none';
+  document.getElementById('langEditBanner').style.display = 'none';
+  document.getElementById('langFormTitleText').textContent = 'הוסף שפה / Add Language';
+  document.getElementById('langSubmitIcon').className   = 'fas fa-plus';
+  document.getElementById('langSubmitLabel').textContent = 'Add Language';
+  document.getElementById('langCancelBtn').style.display = 'none';
+  document.querySelectorAll('#langTableBody tr').forEach(r => r.style.background = '');
+}
+
+function addLang() {
+  const he   = document.getElementById('langHeInput').value.trim();
+  const en   = document.getElementById('langEnInput').value.trim();
+  const flag = document.getElementById('langFlagInput').value.trim() || '🌐';
+
+  if (!he || !en) { Toast.show('אנא מלא שם בעברית ואנגלית', 'error'); return; }
+
+  const langs = getLanguages();
+
+  if (editingLangId !== null) {
+    // ── EDIT MODE ──
+    const idx = langs.findIndex(l => l.id === editingLangId);
+    if (idx !== -1) {
+      langs[idx] = { ...langs[idx], he, en, flag };
+      localStorage.setItem('ti_languages', JSON.stringify(langs));
+      Toast.show('✅ השפה עודכנה בהצלחה', 'success');
+    }
+    cancelLangEdit();
+  } else {
+    // ── ADD MODE ──
+    const id = document.getElementById('langIdInput').value.trim().toLowerCase().replace(/\s+/g,'-');
+    if (!id) { Toast.show('אנא הכנס ID לשפה', 'error'); return; }
+    if (langs.find(l => l.id === id)) { Toast.show('Language ID כבר קיים', 'error'); return; }
+    langs.push({ id, he, en, flag });
+    localStorage.setItem('ti_languages', JSON.stringify(langs));
+    Toast.show('✅ השפה נוספה בהצלחה', 'success');
+    document.getElementById('langIdInput').value   = '';
+    document.getElementById('langHeInput').value   = '';
+    document.getElementById('langEnInput').value   = '';
+    document.getElementById('langFlagInput').value = '';
+  }
+
+  renderLangTable();
+  refreshDropdowns();
+}
+
+function deleteLang(id) {
+  const isHe = AdminLang.current === 'he';
+  confirmAction(
+    isHe ? 'מחק שפה?' : 'Delete Language?',
+    isHe ? 'פעולה זו לא ניתנת לביטול.' : 'This cannot be undone.',
+    () => {
+      if (editingLangId === id) cancelLangEdit();
+      const langs = getLanguages().filter(l => l.id !== id);
+      localStorage.setItem('ti_languages', JSON.stringify(langs));
+      Toast.show(isHe ? 'השפה נמחקה' : 'Language deleted', 'success');
+      renderLangTable();
+      refreshDropdowns();
+    }
+  );
+}
+
+// ===== ADMIN LANGUAGE =====
+const AdminLang = {
+  current: localStorage.getItem('ti_admin_lang') || 'he',
+  s: {
+    he: {
+      logoText:'תהלות ישראל', logoSub:'פורטל מנהל',
+      'sec.main':'ראשי','sec.content':'ניהול תוכן','sec.community':'קהילה','sec.system':'מערכת',
+      'nav.dashboard':'לוח בקרה','nav.uploadLesson':'העלאת שיעור','nav.uploadBook':'העלאת ספר',
+      'nav.manageContent':'ניהול תוכן','nav.manageUpdates':'חדשות ועדכונים','nav.categories':'קטגוריות ונושאים',
+      'nav.users':'משתמשים','nav.subscribers':'מנויים','nav.contacts':'הודעות',
+      'nav.storage':'אחסון קבצים','nav.settings':'הגדרות','nav.viewSite':'צפה באתר',
+      'login.title':'פורטל מנהל','login.sub':'מכון תהלות ישראל','login.user':'שם משתמש',
+      'login.pass':'סיסמה','login.btn':'כניסה','login.demo':'שם משתמש: admin / סיסמה: admin123','login.back':'← חזרה לאתר',
+      'page.dashboard':'לוח בקרה','page.dashboard.sub':'ברוך הבא,',
+      'btn.addLesson':'הוסף שיעור','btn.addBook':'הוסף ספר',
+      'card.recentLessons':'שיעורים אחרונים','card.recentBooks':'ספרים אחרונים',
+      'card.quickStats':'נתונים מהירים','card.inbox':'הודעות נכנסות','btn.viewAll':'הצג הכל',
+      'page.uploadLesson':'העלאת שיעור','page.uploadLesson.sub':'הוספת שיעור שמע חדש לספרייה',
+      'sec.lessonDetails':'פרטי השיעור','sec.audioFile':'קובץ שמע',
+      'btn.saveLesson':'שמור שיעור','btn.clear':'נקה',
+      'label.titleHe':'כותרת (עברית) *','label.titleEn':'כותרת (אנגלית)',
+      'label.speaker':'מרצה *','label.category':'קטגוריה *','label.date':'תאריך *',
+      'label.duration':'משך (שע:דק:שנ)','label.language':'שפת השיעור',
+      'label.descHe':'תיאור (עברית)','label.descEn':'תיאור (אנגלית)',
+      'label.tags':'תגיות','label.featured':'סמן כמומלץ','label.fileUrl':'או הזן כתובת URL לקובץ',
+      'upload.click':'לחץ להעלאה','upload.or':'או גרור ושחרר',
+      'upload.audioTypes':'MP3, WAV, M4A עד 500MB','upload.pdfTypes':'קובצי PDF עד 200MB',
+      'hint.tags':'לחץ Enter להוספת תגית',
+      'ph.selectSpeaker':'בחר מרצה...','ph.selectCat':'בחר קטגוריה...','ph.allCats':'כל הקטגוריות',
+      'lang.he':'עברית','lang.en':'אנגלית','lang.both':'שתיהן',
+      'page.uploadBook':'העלאת ספר','page.uploadBook.sub':'הוספת ספר או עלון חדש לספרייה',
+      'sec.bookDetails':'פרטי הספר','sec.pdfFile':'קובץ PDF',
+      'btn.saveBook':'שמור ספר','label.author':'מחבר *','label.year':'שנת הוצאה',
+      'label.pages':'מספר עמודים','label.cover':'אימוג׳י כריכה',
+      'page.manageContent':'ניהול תוכן','page.manageContent.sub':'צפה, ערוך ומחק שיעורים וספרים',
+      'tab.lessons':'שיעורים','tab.books':'ספרים','btn.addNew':'הוסף חדש',
+      'page.manageUpdates':'חדשות ועדכונים','page.manageUpdates.sub':'ניהול הודעות ואירועי המכון',
+      'btn.addUpdate':'הוסף עדכון',
+      'page.categories':'קטגוריות ונושאים','page.categories.sub':'ניהול קטגוריות שיעורים וספרים',
+      'tab.lessonCats':'קטגוריות שיעורים','tab.bookCats':'קטגוריות ספרים',
+      'page.users':'ניהול משתמשים','page.users.sub':'ניהול חשבונות מנהלים והרשאות',
+      'btn.addUser':'הוסף משתמש',
+      'page.subscribers':'מנויי ניוזלטר','page.subscribers.sub':'אנשים שנרשמו לקבלת עדכונים',
+      'btn.exportCsv':'ייצוא CSV',
+      'page.contacts':'הודעות יצירת קשר','page.contacts.sub':'הודעות שנשלחו דרך טופס יצירת הקשר',
+      'page.storage':'אחסון קבצים','page.storage.sub':'הגדר ספק אחסון לשיעורים, ספרים ותמונות',
+      'sec.mediaStorage':'אחסון מדיה (שיעורים, ספרים, תמונות)',
+      'hint.mediaStorage':'בחר ספק אחסון לקבצי המדיה של האתר. כתובת הבסיס תמולא אוטומטית בטפסי ההעלאה.',
+      'storage.gdrive.desc':'שיתוף תיקיה ב-Google Drive',
+      'storage.dropbox.desc':'אחסון ושיתוף ב-Dropbox',
+      'storage.s3.desc':'S3 או כל ספק תואם (Wasabi, Backblaze)',
+      'storage.ftp.desc':'שרת FTP, cPanel או שרת מותאם אישית',
+      'storage.custom.name':'כתובת URL מותאמת','storage.custom.desc':'כל CDN, שרת web או כתובת ציבורית',
+      'label.gdriveFolderId':'מזהה תיקיה (Folder ID)','hint.gdriveFolderId':'מתוך כתובת ה-URL של התיקיה ב-Drive',
+      'label.gdriveBaseUrl':'כתובת בסיס להורדה',
+      'hint.gdrivePublic':'ודא שהתיקיה משותפת ל"כל מי שיש לו קישור". העלאת קבצים חדשים תתבצע ידנית דרך Google Drive.',
+      'label.dropboxFolder':'נתיב תיקיה','label.dropboxBaseUrl':'כתובת בסיס ציבורית (Shared Link prefix)',
+      'label.s3PathPrefix':'נתיב בתוך ה-Bucket','label.s3PublicUrl':'כתובת URL ציבורית (CDN או bucket URL)',
+      'label.ftpUser':'שם משתמש FTP','label.ftpPass':'סיסמת FTP',
+      'label.ftpRemotePath':'נתיב מרוחק','label.ftpPublicUrl':'כתובת URL ציבורית',
+      'hint.ftpNote':'גישת FTP ישירה מהדפדפן מוגבלת. פרטי ה-FTP משמשים לתיעוד — העלאה אמיתית מחייבת סקריפט שרת.',
+      'label.customBaseUrl':'כתובת בסיס לקבצים (Base URL)',
+      'hint.customBaseUrl':'כתובת זו תמולא אוטומטית בטפסי העלאת שיעורים וספרים',
+      'label.customUploadUrl':'כתובת API להעלאה (Upload Endpoint)',
+      'btn.saveStorage':'שמור הגדרות אחסון','btn.testConn':'בדוק חיבור',
+      'sec.hosting':'אחסון האתר (Hosting)',
+      'hint.hosting':'בחר את סוג האחסון של האתר עצמו. מידע זה אינפורמטיבי ועוזר לתיעוד.',
+      'hosting.shared':'אחסון משותף (cPanel)','hosting.vps':'VPS / שרת ייעודי','hosting.static':'אחסון סטטי',
+      'label.siteUrl':'כתובת האתר','label.serverPath':'נתיב שורש בשרת',
+      'btn.saveHosting':'שמור הגדרות אחסון האתר',
+      'page.settings':'הגדרות','page.settings.sub':'הגדרת אתר המכון',
+      'sec.instInfo':'מידע על המכון','sec.dataMgmt':'ניהול נתונים','sec.myAccount':'החשבון שלי',
+      'label.instNameHe':'שם המכון (עברית)','label.instNameEn':'שם המכון (אנגלית)',
+      'label.email':'דוא"ל ליצירת קשר','label.phone':'טלפון','label.address':'כתובת',
+      'btn.saveSettings':'שמור הגדרות','btn.exportJson':'ייצוא כל הנתונים (JSON)',
+      'btn.resetDemo':'אפס לנתוני הדגמה',
+      'hint.localStorage':'כל הנתונים שמורים מקומית בדפדפן (localStorage). חבר שרת לשימוש בייצור.',
+      'label.currentPass':'סיסמה נוכחית','label.newPass':'סיסמה חדשה','btn.changePass':'שנה סיסמה',
+      'toast.settingsSaved':'ההגדרות נשמרו','toast.passChanged':'הסיסמה עודכנה',
+      'toast.storageSaved':'הגדרות האחסון נשמרו','toast.hostingSaved':'הגדרות האחסון נשמרו',
+      'status.connected':'מחובר','status.disconnected':'לא מחובר','status.testing':'בודק...',
+    },
+    en: {
+      logoText:'Tehillot Israel', logoSub:'Admin Portal',
+      'sec.main':'Main','sec.content':'Content','sec.community':'Community','sec.system':'System',
+      'nav.dashboard':'Dashboard','nav.uploadLesson':'Upload Lesson','nav.uploadBook':'Upload Book',
+      'nav.manageContent':'Manage Content','nav.manageUpdates':'News & Updates','nav.categories':'Categories & Topics',
+      'nav.users':'Users','nav.subscribers':'Subscribers','nav.contacts':'Messages',
+      'nav.storage':'File Storage','nav.settings':'Settings','nav.viewSite':'View Website',
+      'login.title':'Admin Portal','login.sub':'Tehillot Israel Institute','login.user':'Username',
+      'login.pass':'Password','login.btn':'Sign In','login.demo':'Username: admin / Password: admin123','login.back':'← Back to website',
+      'page.dashboard':'Dashboard','page.dashboard.sub':'Welcome back,',
+      'btn.addLesson':'Add Lesson','btn.addBook':'Add Book',
+      'card.recentLessons':'Recent Lessons','card.recentBooks':'Recent Books',
+      'card.quickStats':'Quick Stats','card.inbox':'Inbox Messages','btn.viewAll':'View All',
+      'page.uploadLesson':'Upload Lesson','page.uploadLesson.sub':'Add a new audio lesson to the library',
+      'sec.lessonDetails':'Lesson Details','sec.audioFile':'Audio File',
+      'btn.saveLesson':'Save Lesson','btn.clear':'Clear',
+      'label.titleHe':'Title (Hebrew) *','label.titleEn':'Title (English)',
+      'label.speaker':'Speaker *','label.category':'Category *','label.date':'Date *',
+      'label.duration':'Duration (HH:MM:SS)','label.language':'Language',
+      'label.descHe':'Description (Hebrew)','label.descEn':'Description (English)',
+      'label.tags':'Tags','label.featured':'Mark as Featured','label.fileUrl':'Or enter file URL',
+      'upload.click':'Click to upload','upload.or':'or drag and drop',
+      'upload.audioTypes':'MP3, WAV, M4A up to 500MB','upload.pdfTypes':'PDF files up to 200MB',
+      'hint.tags':'Press Enter to add a tag',
+      'ph.selectSpeaker':'Select speaker...','ph.selectCat':'Select category...','ph.allCats':'All Categories',
+      'lang.he':'Hebrew','lang.en':'English','lang.both':'Both',
+      'page.uploadBook':'Upload Book','page.uploadBook.sub':'Add a new book or pamphlet to the library',
+      'sec.bookDetails':'Book Details','sec.pdfFile':'PDF File',
+      'btn.saveBook':'Save Book','label.author':'Author *','label.year':'Year Published',
+      'label.pages':'Number of Pages','label.cover':'Cover Emoji',
+      'page.manageContent':'Manage Content','page.manageContent.sub':'View, edit and delete lessons and books',
+      'tab.lessons':'Lessons','tab.books':'Books','btn.addNew':'Add New',
+      'page.manageUpdates':'News & Updates','page.manageUpdates.sub':'Manage institute announcements and events',
+      'btn.addUpdate':'Add Update',
+      'page.categories':'Categories & Topics','page.categories.sub':'Manage lesson and book categories',
+      'tab.lessonCats':'Lesson Categories','tab.bookCats':'Book Categories',
+      'page.users':'User Management','page.users.sub':'Manage admin portal users and permissions',
+      'btn.addUser':'Add User',
+      'page.subscribers':'Newsletter Subscribers','page.subscribers.sub':'People who signed up for email updates',
+      'btn.exportCsv':'Export CSV',
+      'page.contacts':'Contact Messages','page.contacts.sub':'Messages submitted via the contact form',
+      'page.storage':'File Storage','page.storage.sub':'Configure storage provider for lessons, books and images',
+      'sec.mediaStorage':'Media Storage (Lessons, Books, Images)',
+      'hint.mediaStorage':'Choose a storage provider for your media files. The base URL will auto-fill in upload forms.',
+      'storage.gdrive.desc':'Share a Google Drive folder',
+      'storage.dropbox.desc':'Store and share via Dropbox',
+      'storage.s3.desc':'S3 or any compatible provider (Wasabi, Backblaze)',
+      'storage.ftp.desc':'FTP server, cPanel or custom server',
+      'storage.custom.name':'Custom URL','storage.custom.desc':'Any CDN, web server or public URL',
+      'label.gdriveFolderId':'Folder ID','hint.gdriveFolderId':'From the Drive folder URL',
+      'label.gdriveBaseUrl':'Download Base URL',
+      'hint.gdrivePublic':'Make sure the folder is shared to "Anyone with the link". New file uploads must be done manually via Google Drive.',
+      'label.dropboxFolder':'Folder Path','label.dropboxBaseUrl':'Public Base URL (Shared Link prefix)',
+      'label.s3PathPrefix':'Path within Bucket','label.s3PublicUrl':'Public URL (CDN or bucket URL)',
+      'label.ftpUser':'FTP Username','label.ftpPass':'FTP Password',
+      'label.ftpRemotePath':'Remote Path','label.ftpPublicUrl':'Public URL',
+      'hint.ftpNote':'Direct FTP access from the browser is limited. FTP details are for documentation — real uploads require a server-side script.',
+      'label.customBaseUrl':'Files Base URL',
+      'hint.customBaseUrl':'This URL will auto-fill in lesson and book upload forms',
+      'label.customUploadUrl':'Upload API Endpoint',
+      'btn.saveStorage':'Save Storage Settings','btn.testConn':'Test Connection',
+      'sec.hosting':'Website Hosting',
+      'hint.hosting':'Choose your website hosting type. This is informational for documentation purposes.',
+      'hosting.shared':'Shared Hosting (cPanel)','hosting.vps':'VPS / Dedicated Server','hosting.static':'Static Hosting',
+      'label.siteUrl':'Website URL','label.serverPath':'Server Root Path',
+      'btn.saveHosting':'Save Hosting Settings',
+      'page.settings':'Settings','page.settings.sub':'Configure the institute website',
+      'sec.instInfo':'Institute Information','sec.dataMgmt':'Data Management','sec.myAccount':'My Account',
+      'label.instNameHe':'Institute Name (Hebrew)','label.instNameEn':'Institute Name (English)',
+      'label.email':'Contact Email','label.phone':'Phone','label.address':'Address',
+      'btn.saveSettings':'Save Settings','btn.exportJson':'Export All Data (JSON)',
+      'btn.resetDemo':'Reset to Demo Data',
+      'hint.localStorage':'All data is stored locally in the browser (localStorage). Connect a backend server for production use.',
+      'label.currentPass':'Current Password','label.newPass':'New Password','btn.changePass':'Change Password',
+      'toast.settingsSaved':'Settings saved','toast.passChanged':'Password updated',
+      'toast.storageSaved':'Storage settings saved','toast.hostingSaved':'Hosting settings saved',
+      'status.connected':'Connected','status.disconnected':'Not Connected','status.testing':'Testing...',
+    }
+  },
+  t(key) { return (this.s[this.current]||this.s.en)[key] || key; },
+  apply(lang) {
+    this.current = lang || this.current;
+    localStorage.setItem('ti_admin_lang', this.current);
+    const isHe = this.current === 'he';
+    document.documentElement.lang = this.current;
+    document.documentElement.dir = isHe ? 'rtl' : 'ltr';
+    document.body.classList.toggle('admin-ltr', !isHe);
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const val = this.s[this.current][el.dataset.i18n];
+      if (val !== undefined) el.textContent = val;
+    });
+    const btns = document.querySelectorAll('#langToggleBtn, #loginLangBtn');
+    btns.forEach(b => { if(b) b.textContent = isHe ? 'EN' : 'עב'; });
+    Storage.updateUploadHints();
+  },
+  toggle() { this.apply(this.current === 'he' ? 'en' : 'he'); },
+  init() { this.apply(this.current); }
+};
+
+// ===== FILE STORAGE =====
+const Storage = {
+  defaultConfig: { provider: 'custom', hosting: '', siteUrl: '', serverPath: '',
+    gdrive:{folderId:'',baseUrl:'',apiKey:''},
+    dropbox:{token:'',folder:'',baseUrl:''},
+    s3:{endpoint:'',bucket:'',accessKey:'',secretKey:'',region:'',path:'',publicUrl:''},
+    ftp:{host:'',port:'21',user:'',pass:'',remotePath:'',publicUrl:''},
+    custom:{baseUrl:'',uploadUrl:'',authToken:''},
+    local:{folderPath:'',baseUrl:'',lessonsDir:'lessons/',booksDir:'books/',imagesDir:'images/'}
+  },
+  load() {
+    try { return JSON.parse(localStorage.getItem('ti_storage_config')) || this.defaultConfig; }
+    catch(e) { return this.defaultConfig; }
+  },
+  save() {
+    const cfg = this.load();
+    cfg.provider = cfg.provider;
+    const p = cfg.provider;
+    if (p==='gdrive') { cfg.gdrive.folderId=v('gdriveFolderId'); cfg.gdrive.baseUrl=v('gdriveBaseUrl'); cfg.gdrive.apiKey=v('gdriveApiKey'); }
+    else if (p==='dropbox') { cfg.dropbox.token=v('dropboxToken'); cfg.dropbox.folder=v('dropboxFolder'); cfg.dropbox.baseUrl=v('dropboxBaseUrl'); }
+    else if (p==='s3') { cfg.s3.endpoint=v('s3Endpoint'); cfg.s3.bucket=v('s3Bucket'); cfg.s3.accessKey=v('s3AccessKey'); cfg.s3.secretKey=v('s3SecretKey'); cfg.s3.region=v('s3Region'); cfg.s3.path=v('s3Path'); cfg.s3.publicUrl=v('s3PublicUrl'); }
+    else if (p==='ftp') { cfg.ftp.host=v('ftpHost'); cfg.ftp.port=v('ftpPort'); cfg.ftp.user=v('ftpUser'); cfg.ftp.pass=v('ftpPass'); cfg.ftp.remotePath=v('ftpRemotePath'); cfg.ftp.publicUrl=v('ftpPublicUrl'); }
+    else if (p==='custom') { cfg.custom.baseUrl=v('customBaseUrl'); cfg.custom.uploadUrl=v('customUploadUrl'); cfg.custom.authToken=v('customAuthToken'); }
+    else if (p==='local') { if(!cfg.local) cfg.local={}; cfg.local.folderPath=v('localFolderPath'); cfg.local.baseUrl=v('localBaseUrl'); cfg.local.lessonsDir=v('localLessonsDir'); cfg.local.booksDir=v('localBooksDir'); cfg.local.imagesDir=v('localImagesDir'); }
+    localStorage.setItem('ti_storage_config', JSON.stringify(cfg));
+    Toast.show(AdminLang.t('toast.storageSaved'), 'success');
+    this.updateUploadHints();
+  },
+  saveHosting() {
+    const cfg = this.load();
+    cfg.hosting = document.querySelector('.hosting-card.active')?.id?.replace('hc-','') || '';
+    cfg.siteUrl = v('hostingSiteUrl'); cfg.serverPath = v('hostingServerPath');
+    localStorage.setItem('ti_storage_config', JSON.stringify(cfg));
+    Toast.show(AdminLang.t('toast.hostingSaved'), 'success');
+  },
+  getPublicBaseUrl() {
+    const cfg = this.load();
+    const p = cfg.provider;
+    if (p==='gdrive') return cfg.gdrive.baseUrl;
+    if (p==='dropbox') return cfg.dropbox.baseUrl;
+    if (p==='s3') return cfg.s3.publicUrl;
+    if (p==='ftp') return cfg.ftp.publicUrl;
+    if (p==='custom') return cfg.custom.baseUrl;
+    if (p==='local') return cfg.local?.baseUrl || '';
+    return '';
+  },
+  updateUploadHints() {
+    const base = this.getPublicBaseUrl();
+    const cfg = this.load();
+    const providerNames = {gdrive:'Google Drive',dropbox:'Dropbox',s3:'Amazon S3',ftp:'FTP Server',custom:'Custom URL',local:'מחשב מקומי'};
+    const name = providerNames[cfg.provider] || '';
+    const msg = base
+      ? `<i class="fas fa-cloud" style="color:var(--primary-mid)"></i> ${AdminLang.t('nav.storage')}: <strong>${name}</strong> — ${base}`
+      : '';
+    ['storageHintLesson','storageHintBook'].forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML=msg; });
+    const badge = document.getElementById('storageStatusBadge');
+    if (badge) badge.innerHTML = base
+      ? `<span class="conn-status connected"><span class="conn-dot"></span>${name}</span>`
+      : `<span class="conn-status disconnected"><span class="conn-dot"></span>${AdminLang.t('status.disconnected')}</span>`;
+  },
+  test() {
+    const el = document.getElementById('storageConnStatus');
+    if (!el) return;
+    el.innerHTML = `<span class="conn-status testing"><span class="conn-dot"></span>${AdminLang.t('status.testing')}</span>`;
+    const base = this.getPublicBaseUrl();
+    setTimeout(() => {
+      if (base) {
+        el.innerHTML = `<span class="conn-status connected"><span class="conn-dot"></span>${AdminLang.t('status.connected')}: ${base}</span>`;
+      } else {
+        el.innerHTML = `<span class="conn-status disconnected"><span class="conn-dot"></span>${AdminLang.t('status.disconnected')} — ${AdminLang.t('hint.customBaseUrl')}</span>`;
+      }
+    }, 1200);
+  },
+  renderPage() {
+    const cfg = this.load();
+    selectProvider(cfg.provider || 'custom', true);
+    selectHosting(cfg.hosting || '', true);
+    if (cfg.gdrive.folderId) sv('gdriveFolderId', cfg.gdrive.folderId);
+    if (cfg.gdrive.baseUrl) sv('gdriveBaseUrl', cfg.gdrive.baseUrl);
+    if (cfg.gdrive.apiKey) sv('gdriveApiKey', cfg.gdrive.apiKey);
+    if (cfg.dropbox.token) sv('dropboxToken', cfg.dropbox.token);
+    if (cfg.dropbox.folder) sv('dropboxFolder', cfg.dropbox.folder);
+    if (cfg.dropbox.baseUrl) sv('dropboxBaseUrl', cfg.dropbox.baseUrl);
+    if (cfg.s3.endpoint) sv('s3Endpoint', cfg.s3.endpoint);
+    if (cfg.s3.bucket) sv('s3Bucket', cfg.s3.bucket);
+    if (cfg.s3.accessKey) sv('s3AccessKey', cfg.s3.accessKey);
+    if (cfg.s3.secretKey) sv('s3SecretKey', cfg.s3.secretKey);
+    if (cfg.s3.region) sv('s3Region', cfg.s3.region);
+    if (cfg.s3.path) sv('s3Path', cfg.s3.path);
+    if (cfg.s3.publicUrl) sv('s3PublicUrl', cfg.s3.publicUrl);
+    if (cfg.ftp.host) sv('ftpHost', cfg.ftp.host);
+    if (cfg.ftp.port) sv('ftpPort', cfg.ftp.port);
+    if (cfg.ftp.user) sv('ftpUser', cfg.ftp.user);
+    if (cfg.ftp.pass) sv('ftpPass', cfg.ftp.pass);
+    if (cfg.ftp.remotePath) sv('ftpRemotePath', cfg.ftp.remotePath);
+    if (cfg.ftp.publicUrl) sv('ftpPublicUrl', cfg.ftp.publicUrl);
+    if (cfg.custom.baseUrl) sv('customBaseUrl', cfg.custom.baseUrl);
+    if (cfg.custom.uploadUrl) sv('customUploadUrl', cfg.custom.uploadUrl);
+    if (cfg.custom.authToken) sv('customAuthToken', cfg.custom.authToken);
+    if (cfg.local?.folderPath) sv('localFolderPath', cfg.local.folderPath);
+    if (cfg.local?.baseUrl) sv('localBaseUrl', cfg.local.baseUrl);
+    if (cfg.local?.lessonsDir) sv('localLessonsDir', cfg.local.lessonsDir);
+    if (cfg.local?.booksDir) sv('localBooksDir', cfg.local.booksDir);
+    if (cfg.local?.imagesDir) sv('localImagesDir', cfg.local.imagesDir);
+    if (cfg.siteUrl) sv('hostingSiteUrl', cfg.siteUrl);
+    if (cfg.serverPath) sv('hostingServerPath', cfg.serverPath);
+    this.updateUploadHints();
+  }
+};
+
+function v(id) { const el=document.getElementById(id); return el?el.value.trim():''; }
+function sv(id, val) { const el=document.getElementById(id); if(el) el.value=val; }
+
+function selectProvider(id, silent) {
+  const cfg = Storage.load(); cfg.provider = id;
+  if (!silent) localStorage.setItem('ti_storage_config', JSON.stringify(cfg));
+  document.querySelectorAll('.storage-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.storage-panel').forEach(p => p.classList.remove('active'));
+  const card = document.getElementById('sc-'+id);
+  const panel = document.getElementById('panel-'+id);
+  if (card) card.classList.add('active');
+  if (panel) panel.classList.add('active');
+}
+
+function selectHosting(id, silent) {
+  if (!id) return;
+  document.querySelectorAll('.hosting-card').forEach(c => c.classList.remove('active'));
+  const card = document.getElementById('hc-'+id);
+  if (card) card.classList.add('active');
+}
+
+function exportAll() {
+  const data = { lessons: getData('lessons'), books: getData('books'), updates: getData('updates'), subscribers: getData('subscribers') };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'tehillotisrael-data.json'; a.click();
+  Toast.show('Data exported!', 'success');
+}
+
+function resetAllData() {
+  const isHe = AdminLang.current === 'he';
+  confirmAction(
+    isHe ? 'אפס נתונים?' : 'Reset All Data?',
+    isHe ? 'פעולה זו תשחזר את נתוני ההדגמה המקוריים. כל השינויים יאבדו!' : 'This will restore the original demo data. All changes will be lost!',
+    () => {
+      const storageBackup = localStorage.getItem('ti_storage_config');
+      ['ti_lessons','ti_books','ti_updates','ti_cat_lessons','ti_cat_books','ti_users','ti_subscribers','ti_contacts'].forEach(k => localStorage.removeItem(k));
+      initData();
+      if (storageBackup) localStorage.setItem('ti_storage_config', storageBackup);
+      renderDashboard();
+      Toast.show(isHe ? 'הנתונים אופסו למצב ההדגמה' : 'Data reset to demo state', 'info');
+    }
+  );
+}
+</script>
+</body>
+</html>

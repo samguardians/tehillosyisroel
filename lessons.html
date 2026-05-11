@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>שיעורים — מכון תהלות ישראל</title>
+  <meta name="description" content="ספריית שיעורים — אלפי שיעורים לשמיעה והורדה בכל נושאי התורה">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 30 22" width="26" height="19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2,16 L5,10 L8,4 L11,10 L15,0 L19,10 L22,4 L25,10 L28,16 Z" fill="#0c1f3d"/>
+          <rect x="2" y="16" width="26" height="5.5" rx="1.5" fill="#0c1f3d"/>
+          <circle cx="8"  cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+          <circle cx="15" cy="0.8" r="1.9" fill="rgba(255,215,60,1)"/>
+          <circle cx="22" cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+        </svg>
+      </div>
+      <div>
+        <div class="nav-logo-title" data-he="מכון תהלות ישראל" data-en="Tehillot Israel Institute">מכון תהלות ישראל</div>
+        <div class="nav-logo-sub" data-he="תורה | שיעורים | ספרים" data-en="Torah | Lessons | Books">תורה | שיעורים | ספרים</div>
+      </div>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" data-he="דף הבית" data-en="Home">דף הבית</a>
+      <a href="lessons.html" class="active" data-he="שיעורים" data-en="Lessons">שיעורים</a>
+      <a href="books.html" data-he="ספרים" data-en="Books">ספרים</a>
+      <a href="updates.html" data-he="עדכונים" data-en="Updates">עדכונים</a>
+      <a href="contact.html" data-he="צור קשר" data-en="Contact">צור קשר</a>
+      <a href="donate.html" data-he="תרומות" data-en="Donate">תרומות</a>
+    </div>
+    <div class="nav-actions">
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="he">עב</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <a href="donate.html" class="btn-donate-nav" data-he="תרמו עכשיו" data-en="Donate Now">תרמו עכשיו</a>
+      <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="main-content">
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container page-header-inner">
+      <div class="breadcrumb">
+        <a href="index.html" data-he="דף הבית" data-en="Home">דף הבית</a>
+        <i class="fas fa-chevron-left"></i>
+        <span data-he="שיעורים" data-en="Lessons">שיעורים</span>
+      </div>
+      <h1 data-he="ספריית השיעורים" data-en="Lessons Library">ספריית השיעורים</h1>
+      <p data-he="אלפי שיעורים לשמיעה והורדה חינם — פרשת השבוע, הלכה, מחשבה ועוד" data-en="Thousands of lessons to listen and download for free — Parasha, Halacha, Jewish Thought and more">
+        אלפי שיעורים לשמיעה והורדה חינם — פרשת השבוע, הלכה, מחשבה ועוד
+      </p>
+    </div>
+  </div>
+
+  <section class="section-sm">
+    <div class="container">
+
+      <!-- SEARCH BAR -->
+      <div style="max-width:640px;margin:0 auto 28px" class="search-wrapper">
+        <input type="text" class="search-input" id="searchInput"
+          data-he="חיפוש שיעורים, נושאים, תגיות..." data-en="Search lessons, topics, tags..."
+          placeholder="חיפוש שיעורים, נושאים, תגיות...">
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="filters-bar">
+        <div class="filter-group" style="flex:2;min-width:180px">
+          <label class="filter-label" data-he="קטגוריה" data-en="Category">קטגוריה</label>
+          <select class="filter-select" id="filterCat">
+            <option value="all" data-he="כל הקטגוריות" data-en="All Categories">כל הקטגוריות</option>
+          </select>
+        </div>
+        <div class="filter-group" id="subCatGroup" style="flex:2;min-width:180px;display:none">
+          <label class="filter-label" data-he="תת-קטגוריה" data-en="Sub-Topic">תת-קטגוריה</label>
+          <select class="filter-select" id="filterSubCat">
+            <option value="all" data-he="כל הנושאים" data-en="All Topics">כל הנושאים</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" data-he="שנה" data-en="Year">שנה</label>
+          <select class="filter-select" id="filterYear">
+            <option value="" data-he="כל השנים" data-en="All Years">כל השנים</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" data-he="מיון" data-en="Sort By">מיון</label>
+          <select class="filter-select" id="filterSort">
+            <option value="newest" data-he="חדש לישן" data-en="Newest First">חדש לישן</option>
+            <option value="oldest" data-he="ישן לחדש" data-en="Oldest First">ישן לחדש</option>
+            <option value="most-played" data-he="הכי נשמע" data-en="Most Played">הכי נשמע</option>
+            <option value="popular" data-he="הכי הורד" data-en="Most Downloaded">הכי הורד</option>
+            <option value="alpha" data-he="א-ב" data-en="A-Z">א-ב</option>
+          </select>
+        </div>
+        <div class="filter-group" style="min-width:auto;justify-content:flex-end">
+          <label class="filter-label">&nbsp;</label>
+          <div class="filter-btn-group">
+            <div class="view-toggle">
+              <button class="view-btn active" id="viewGrid" title="Grid"><i class="fas fa-th"></i></button>
+              <button class="view-btn" id="viewList" title="List"><i class="fas fa-list"></i></button>
+            </div>
+            <button class="btn btn-outline-dark btn-sm" onclick="clearFilters()">
+              <i class="fas fa-times"></i> <span data-he="איפוס" data-en="Clear">איפוס</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAGS -->
+      <div class="tags" id="categoryTags" style="margin-bottom:20px"></div>
+
+      <!-- RESULTS INFO -->
+      <div class="flex-between" style="margin-bottom:16px;flex-wrap:wrap;gap:8px">
+        <span class="results-count" id="resultsCount"></span>
+        <span style="font-size:.8rem;color:var(--text-muted)" data-he="ניתן לשמוע ולהוריד חינם" data-en="Free to listen and download">ניתן לשמוע ולהוריד חינם</span>
+      </div>
+
+      <!-- LESSONS GRID -->
+      <div class="grid-3" id="lessonsGrid"></div>
+
+      <!-- LIST VIEW (hidden by default) -->
+      <div id="lessonsList" class="hidden"></div>
+
+      <!-- PAGINATION -->
+      <div id="pagination"></div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="nav-logo" style="display:inline-flex">
+          <div class="nav-logo-icon">
+        <svg viewBox="0 0 30 22" width="26" height="19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2,16 L5,10 L8,4 L11,10 L15,0 L19,10 L22,4 L25,10 L28,16 Z" fill="#0c1f3d"/>
+          <rect x="2" y="16" width="26" height="5.5" rx="1.5" fill="#0c1f3d"/>
+          <circle cx="8"  cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+          <circle cx="15" cy="0.8" r="1.9" fill="rgba(255,215,60,1)"/>
+          <circle cx="22" cy="4"   r="1.5" fill="rgba(255,215,60,0.95)"/>
+        </svg>
+      </div>
+          <div>
+            <div class="nav-logo-title" data-he="מכון תהלות ישראל" data-en="Tehillot Israel Institute">מכון תהלות ישראל</div>
+            <div class="nav-logo-sub">Torah | Lessons | Books</div>
+          </div>
+        </a>
+        <p class="footer-desc" data-he="מכון תורה המוקדש להפצת תורה ויהדות לכל יהודי בכל מקום בעולם." data-en="A Torah institute dedicated to spreading Torah and Judaism to every Jew everywhere.">מכון תורה המוקדש להפצת תורה ויהדות לכל יהודי בכל מקום בעולם.</p>
+      </div>
+      <div>
+        <div class="footer-col-title" data-he="ניווט" data-en="Navigation">ניווט</div>
+        <div class="footer-links">
+          <a href="index.html" data-he="דף הבית" data-en="Home">דף הבית</a>
+          <a href="lessons.html" data-he="שיעורים" data-en="Lessons">שיעורים</a>
+          <a href="books.html" data-he="ספרים" data-en="Books">ספרים</a>
+          <a href="updates.html" data-he="עדכונים" data-en="Updates">עדכונים</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title" data-he="מידע" data-en="Info">מידע</div>
+        <div class="footer-links">
+          <a href="contact.html" data-he="צור קשר" data-en="Contact">צור קשר</a>
+          <a href="donate.html" data-he="תרומות" data-en="Donate">תרומות</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title" data-he="צור קשר" data-en="Contact">צור קשר</div>
+        <div class="footer-links">
+          <a href="tel:0253757504"><i class="fas fa-phone" style="margin-left:6px;margin-right:6px"></i>02-537-5704</a>
+          <a href="tel:025440544"><i class="fas fa-headphones" style="margin-left:6px;margin-right:6px"></i>02-544-0-544</a>
+          <a href="tel:+17189253202"><i class="fas fa-globe" style="margin-left:6px;margin-right:6px"></i>718-925-3202 <span style="font-size:.7em;opacity:.7">(US)</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-he="© 2024 מכון תהלות ישראל." data-en="© 2024 Tehillot Israel Institute.">© 2024 מכון תהלות ישראל.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- AUDIO PLAYER (Floating Draggable Window) -->
+<div class="audio-player" id="audioPlayer">
+  <!-- Drag handle -->
+  <div class="player-handle" id="playerHandle">
+    <i class="fas fa-grip-vertical" style="color:rgba(255,255,255,.35);font-size:13px"></i>
+    <span class="player-handle-title">מנגן שיעורים</span>
+    <button class="player-close-btn" onclick="Player.close()"><i class="fas fa-times"></i></button>
+  </div>
+  <!-- Track info -->
+  <div class="player-track">
+    <div class="player-thumb"><i class="fas fa-headphones"></i></div>
+    <div style="flex:1;min-width:0">
+      <div class="player-title" data-he="בחר שיעור להשמעה" data-en="Select a lesson">בחר שיעור להשמעה</div>
+      <div class="player-speaker"></div>
+    </div>
+  </div>
+  <!-- Controls -->
+  <div class="player-controls">
+    <button class="player-btn player-prev" title="אחורה 10 שניות" style="display:flex;flex-direction:column;align-items:center;gap:1px">
+      <i class="fas fa-rotate-left" style="font-size:14px"></i>
+      <span style="font-size:9px;font-weight:700;line-height:1">10</span>
+    </button>
+    <button class="player-btn player-play"><i class="fas fa-play"></i></button>
+    <button class="player-btn player-next" title="קדימה 10 שניות" style="display:flex;flex-direction:column;align-items:center;gap:1px">
+      <i class="fas fa-rotate-right" style="font-size:14px"></i>
+      <span style="font-size:9px;font-weight:700;line-height:1">10</span>
+    </button>
+  </div>
+  <!-- Progress -->
+  <div class="player-progress">
+    <div class="player-timeline"><div class="player-fill"></div></div>
+    <div class="player-time"><span class="player-cur">0:00</span><span class="player-dur">0:00</span></div>
+  </div>
+  <!-- Extras -->
+  <div class="player-extras">
+    <button class="speed-btn">1x</button>
+    <div class="vol-wrap">
+      <span class="vol-icon"><i class="fas fa-volume-up"></i></span>
+      <input type="range" class="vol-slider" min="0" max="1" step="0.05" value="1">
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="lessonModal">
+  <div class="modal"><div id="lessonModalBody"></div></div>
+</div>
+<div class="modal-overlay" id="bookModal">
+  <div class="modal"><div id="bookModalBody"></div></div>
+</div>
+<div class="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+let currentQ = '', isListView = false;
+
+function getFilters() {
+  return {
+    q:          document.getElementById('searchInput')?.value || '',
+    category:   document.getElementById('filterCat')?.value   || 'all',
+    subcategory:document.getElementById('filterSubCat')?.value|| 'all',
+    year:       document.getElementById('filterYear')?.value   || '',
+    sort:       document.getElementById('filterSort')?.value   || 'newest',
+  };
+}
+
+function renderPage() {
+  const lang = Lang.current;
+  const opts = getFilters();
+  currentQ = opts.q;
+  const allLessons = getData('lessons');
+  const filtered = Search.filter(allLessons, opts);
+  const countEl = document.getElementById('resultsCount');
+  if (countEl) countEl.textContent = `${filtered.length} ${lang === 'he' ? 'שיעורים' : 'lessons'}`;
+
+  if (isListView) {
+    document.getElementById('lessonsGrid').classList.add('hidden');
+    document.getElementById('lessonsList').classList.remove('hidden');
+    Paginator.render('lessonsList', filtered, l => renderLessonListItem(l, currentQ));
+  } else {
+    document.getElementById('lessonsGrid').classList.remove('hidden');
+    document.getElementById('lessonsList').classList.add('hidden');
+    Paginator.render('lessonsGrid', filtered, l => renderLessonCard(l, currentQ));
+  }
+}
+
+function renderLessonListItem(lesson, q = '') {
+  const lang = Lang.current;
+  const title = lang === 'he' ? lesson.titleHe : (lesson.titleEn||lesson.titleHe);
+  const desc  = lang === 'he' ? lesson.descHe : (lesson.descEn||lesson.descHe);
+  const catObj = getCategories('lessons').find(c => c.id === lesson.category);
+  const catLabel = catObj ? (lang === 'he' ? catObj.he : catObj.en) : lesson.category;
+  return `
+    <div class="card" style="padding:18px;margin-bottom:12px;display:flex;gap:16px;align-items:flex-start;cursor:pointer" onclick="openLesson(${lesson.id})">
+      <div class="lesson-icon" style="min-width:48px"><i class="fas fa-headphones"></i></div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+          <div class="lesson-title" style="margin:0">${Search.highlight(title, q)}</div>
+          ${lesson.featured ? '<span class="badge badge-green"><i class="fas fa-star"></i></span>' : ''}
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+          <span class="badge badge-gold">${catLabel}</span>
+          <span class="badge badge-blue"><i class="far fa-clock" style="margin:0 3px"></i>${lesson.duration}</span>
+          ${toHebrewYear(getLessonYear(lesson)) ? `<span style="font-size:.78rem;font-weight:600;color:var(--primary)"><i class="far fa-calendar-alt" style="margin:0 4px"></i>${toHebrewYear(getLessonYear(lesson))}</span>` : ''}
+          ${getLangBadge(lesson.language, lang)}
+          <span style="font-size:.76rem;color:var(--text-muted)"><i class="fas fa-headphones" style="margin:0 3px;color:var(--primary);opacity:.7"></i>${(lesson.plays||0).toLocaleString()}</span>
+          <span style="font-size:.76rem;color:var(--text-muted)"><i class="fas fa-download" style="margin:0 3px"></i>${(lesson.downloads||0).toLocaleString()}</span>
+        </div>
+        <p class="lesson-desc" style="margin-bottom:0">${Search.highlight(desc, q)}</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-shrink:0;align-items:center">
+        <button class="btn btn-dark btn-sm" onclick="event.stopPropagation();playLesson(${lesson.id})">
+          <i class="fas fa-play"></i>
+        </button>
+        <button class="btn btn-outline-dark btn-sm" onclick="event.stopPropagation();downloadLesson(${lesson.id})">
+          <i class="fas fa-download"></i>
+        </button>
+      </div>
+    </div>`;
+}
+
+function clearFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filterCat').value   = 'all';
+  document.getElementById('filterSubCat').value = 'all';
+  document.getElementById('subCatGroup').style.display = 'none';
+  document.getElementById('filterYear').value  = '';
+  document.getElementById('filterSort').value  = 'newest';
+  document.querySelectorAll('#categoryTags .tag').forEach(t => t.classList.remove('active'));
+  Paginator.page = 1;
+  renderPage();
+}
+
+function buildSubCatUI(catId) {
+  const lang = Lang.current;
+  const subGroup = document.getElementById('subCatGroup');
+  const subSel = document.getElementById('filterSubCat');
+  if (!subGroup || !subSel) return;
+  const cats = getCategories('lessons');
+  const cat = cats.find(c => c.id === catId);
+  const subs = cat?.subs || [];
+  if (catId === 'all' || !subs.length) {
+    subGroup.style.display = 'none';
+    subSel.value = 'all';
+    return;
+  }
+  subSel.innerHTML = `<option value="all">${lang === 'he' ? 'כל הנושאים' : 'All Topics'}</option>`;
+  subs.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = lang === 'he' ? s.he : s.en;
+    subSel.appendChild(opt);
+  });
+  subGroup.style.display = '';
+}
+
+function buildCatUI() {
+  const lang = Lang.current;
+  const cats = getCategories('lessons');
+  const catSel = document.getElementById('filterCat');
+  const tagsEl = document.getElementById('categoryTags');
+  const currentCat = catSel.value || 'all';
+  // Rebuild select options
+  catSel.innerHTML = `<option value="all">${lang === 'he' ? 'כל הקטגוריות' : 'All Categories'}</option>`;
+  cats.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = lang === 'he' ? c.he : c.en;
+    catSel.appendChild(opt);
+  });
+  catSel.value = currentCat;
+  buildSubCatUI(currentCat);
+  // Rebuild category tag pills
+  tagsEl.innerHTML = '';
+  const allTag = document.createElement('span');
+  allTag.className = 'tag' + (currentCat === 'all' ? ' active' : '');
+  allTag.textContent = lang === 'he' ? 'הכל' : 'All';
+  allTag.onclick = () => {
+    catSel.value = 'all';
+    document.querySelectorAll('#categoryTags .tag').forEach(t => t.classList.remove('active'));
+    allTag.classList.add('active');
+    buildSubCatUI('all');
+    Paginator.page = 1; renderPage();
+  };
+  tagsEl.appendChild(allTag);
+  cats.forEach(c => {
+    const t = document.createElement('span');
+    t.className = 'tag' + (currentCat === c.id ? ' active' : '');
+    t.textContent = lang === 'he' ? c.he : c.en;
+    t.onclick = () => {
+      catSel.value = c.id;
+      document.querySelectorAll('#categoryTags .tag').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      buildSubCatUI(c.id);
+      Paginator.page = 1; renderPage();
+    };
+    tagsEl.appendChild(t);
+  });
+}
+
+function initPage() {
+  buildCatUI();
+
+  // Populate year selector — collect years from lessons data, sort descending
+  const yearSel = document.getElementById('filterYear');
+  if (yearSel) {
+    const lessons = getData('lessons');
+    const years = [...new Set(lessons.map(l => getLessonYear(l)).filter(Boolean))].sort((a,b) => b-a);
+    years.forEach(y => {
+      const opt = document.createElement('option');
+      opt.value = y;
+      const heY = toHebrewYear(y);
+      opt.textContent = heY ? `${heY}  (${y})` : y;
+      yearSel.appendChild(opt);
+    });
+  }
+
+  // Search + filter events
+  let debounce;
+  document.getElementById('searchInput').addEventListener('input', () => {
+    clearTimeout(debounce); debounce = setTimeout(() => { Paginator.page=1; renderPage(); }, 300);
+  });
+  document.getElementById('filterCat')?.addEventListener('change', () => {
+    buildSubCatUI(document.getElementById('filterCat').value);
+    Paginator.page=1; renderPage();
+  });
+  ['filterSubCat','filterYear','filterSort'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', () => { Paginator.page=1; renderPage(); });
+  });
+  // View toggle
+  document.getElementById('viewGrid').addEventListener('click', () => {
+    isListView = false;
+    document.getElementById('viewGrid').classList.add('active');
+    document.getElementById('viewList').classList.remove('active');
+    renderPage();
+  });
+  document.getElementById('viewList').addEventListener('click', () => {
+    isListView = true;
+    document.getElementById('viewList').classList.add('active');
+    document.getElementById('viewGrid').classList.remove('active');
+    renderPage();
+  });
+  renderPage();
+}
+
+function onLangChange() {
+  buildCatUI();
+  renderPage();
+}
+</script>
+</body>
+</html>

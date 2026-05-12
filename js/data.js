@@ -39,6 +39,13 @@ const CATEGORIES_LESSONS = [
   ]},
   { id: 'mussar',   he: 'מוסר',          en: 'Mussar',               subs: [] },
   { id: 'kabala',   he: 'קבלה וחסידות', en: 'Kabbalah & Chassidut', subs: [] },
+  { id: 'shlishis', he: 'סעודת שלישית', en: 'Seudas Shlishis',      subs: [
+    { id: 'bereishit', he: 'בראשית', en: 'Bereishit' },
+    { id: 'shemot',    he: 'שמות',   en: 'Shemot' },
+    { id: 'vayikra',   he: 'ויקרא',  en: 'Vayikra' },
+    { id: 'bamidbar',  he: 'במדבר',  en: 'Bamidbar' },
+    { id: 'devarim',   he: 'דברים',  en: 'Devarim' },
+  ]},
   { id: 'gemara',   he: 'גמרא',          en: 'Gemara',               subs: [
     { id: 'brachot',   he: 'ברכות',      en: 'Brachot' },
     { id: 'shabbat_g', he: 'שבת',        en: 'Shabbat' },
@@ -68,15 +75,14 @@ const CATEGORIES_BOOKS = [
   { id: 'parshanut', he: 'פרשנות',         en: 'Biblical Commentary', subs: [] },
   { id: 'biography', he: 'ביוגרפיה',      en: 'Biography',           subs: [] },
   { id: 'pamphlets', he: 'עלונים',         en: 'Pamphlets',           subs: [] },
+  { id: 'glionot',   he: 'גליונות',        en: 'Weekly Sheets',       subs: [] },
 ];
 
 const LANGUAGES = [
-  { id: 'he', he: 'עברית',  en: 'Hebrew',  flag: '🇮🇱' },
-  { id: 'en', he: 'אנגלית', en: 'English', flag: '🇬🇧' },
-  { id: 'yi', he: 'אידיש',  en: 'Yiddish', flag: '✡️' },
-  { id: 'fr', he: 'צרפתית', en: 'French',  flag: '🇫🇷' },
-  { id: 'ru', he: 'רוסית',  en: 'Russian', flag: '🇷🇺' },
-  { id: 'es', he: 'ספרדית', en: 'Spanish', flag: '🇪🇸' },
+  { id: 'he', he: 'עברית',        en: 'Hebrew',         flag: '🇮🇱' },
+  { id: 'en', he: 'אנגלית',       en: 'English',        flag: '🇬🇧' },
+  { id: 'yi', he: 'אידיש',        en: 'Yiddish',        flag: 'YD'  },
+  { id: 'lh', he: 'לשון הקודש',   en: 'Lashon Hakodesh',flag: 'LH'  },
 ];
 
 const SPEAKERS = [
@@ -88,29 +94,54 @@ const SPEAKERS = [
 ];
 
 const INITIAL_LESSONS = [
-  { id: 1, titleHe: 'פרשת בראשית — תחילתו של הכל', titleEn: 'Parashat Bereishit — The Beginning of All', category: 'parasha', speaker: 'הרב מרדכי כהן שליט"א', date: '2024-10-05', duration: '48:22', descHe: 'שיעור מרתק על פרשת בראשית ותחילת הבריאה, עם דגש על אמירת חז"ל בנוגע לבריאת האדם.', descEn: 'A fascinating lesson on Parashat Bereishit and the creation, focusing on the Sages\' teachings about the creation of man.', tags: ['בראשית', 'בריאה', 'אדם הראשון'], downloads: 1240, featured: true, file: '#' },
-  { id: 2, titleHe: 'הלכות שבת — מלאכת בישול', titleEn: 'Shabbat Laws — Cooking', category: 'halacha', speaker: 'הרב יצחק לוי שליט"א', date: '2024-10-12', duration: '1:02:15', descHe: 'סקירה מקיפה של הלכות בישול בשבת, הגדרת מלאכה ודיני חם וקר.', descEn: 'A comprehensive review of Shabbat cooking laws, defining the melacha and laws of hot and cold.', tags: ['שבת', 'בישול', 'הלכה'], downloads: 985, featured: true, file: '#' },
-  { id: 3, titleHe: 'ימי חנוכה — אור בחשיכה', titleEn: 'Chanukah — Light in the Darkness', category: 'holidays', speaker: 'הרב שמואל גולדברג שליט"א', date: '2024-12-01', duration: '55:40', descHe: 'הרהורים על נס חנוכה ועל פיסת האור שמנצחת את החושך, בדורנו ובכל הדורות.', descEn: 'Reflections on the Chanukah miracle and the light that overcomes darkness in our generation and throughout history.', tags: ['חנוכה', 'אור', 'גלות'], downloads: 2105, featured: true, file: '#' },
-  { id: 4, titleHe: 'אמונה ובטחון — יסודות הנפש', titleEn: 'Faith and Trust — Foundations of the Soul', category: 'machshava', speaker: 'הרב אברהם פרידמן שליט"א', date: '2024-09-20', duration: '42:10', descHe: 'מה ההבדל בין אמונה לבטחון? כיצד מחנכים את הנפש להישען על ה׳ בכל מצב?', descEn: 'What is the difference between faith and trust? How do we train the soul to lean on God in every situation?', tags: ['אמונה', 'בטחון', 'מחשבה'], downloads: 732, featured: false, file: '#' },
-  { id: 5, titleHe: 'תפילת שחרית — עיון בסידור', titleEn: 'Morning Prayer — Siddur Study', category: 'tefila', speaker: 'הרב דוד רוזנברג שליט"א', date: '2024-10-18', duration: '38:55', descHe: 'עיון מעמיק במילות תפילת שחרית, משמעותן וחיוניותן בחיי היומיום.', descEn: 'A deep study of the morning prayer words, their meaning and importance in daily life.', tags: ['תפילה', 'שחרית', 'סידור'], downloads: 545, featured: false, file: '#' },
-  { id: 6, titleHe: 'פרשת נח — ה"שפה" המשותפת', titleEn: 'Parashat Noach — The Common Language', category: 'parasha', speaker: 'הרב מרדכי כהן שליט"א', date: '2024-10-26', duration: '51:08', descHe: 'דרשה על מגדל בבל ומשמעות הפיצול של האנושות, לאן מוביל הפירוד ולמה אנו שואפים.', descEn: 'A sermon on the Tower of Babel and the splitting of humanity — where division leads and what we aspire to.', tags: ['נח', 'בבל', 'פרשה'], downloads: 880, featured: false, file: '#' },
-  { id: 7, titleHe: 'מוסר — כיבוד אב ואם', titleEn: 'Mussar — Honoring Parents', category: 'mussar', speaker: 'הרב שמואל גולדברג שליט"א', date: '2024-11-03', duration: '44:20', descHe: 'עיון בחשיבות מצוות כיבוד אב ואם, בראי ספרי המוסר וסיפורי הצדיקים.', descEn: 'Examination of the importance of honoring one\'s parents through the lens of Mussar literature and stories of the righteous.', tags: ['מוסר', 'כיבוד הורים', 'מצוות'], downloads: 612, featured: false, file: '#' },
-  { id: 8, titleHe: 'קבלת שבת — כניסה למקדש מעט', titleEn: 'Kabbalat Shabbat — Entering the Sanctuary', category: 'tefila', speaker: 'הרב יצחק לוי שליט"א', date: '2024-11-08', duration: '33:14', descHe: 'על הפיוטים ומנגינות קבלת שבת ומשמעותם הרוחנית העמוקה בהלכה ובקבלה.', descEn: 'On the liturgical poems and melodies of Kabbalat Shabbat and their deep spiritual meaning in Halacha and Kabbalah.', tags: ['שבת', 'תפילה', 'קבלה'], downloads: 1087, featured: true, file: '#' },
-  { id: 9, titleHe: 'עסק בתורה לשמה', titleEn: 'Torah Study for Its Own Sake', category: 'machshava', speaker: 'הרב אברהם פרידמן שליט"א', date: '2024-11-15', duration: '49:33', descHe: 'מה פירוש "לשמה" בלימוד תורה? כיצד מגיעים לרמה הזאת ומה מעכב?', descEn: 'What does "lishmah" mean in Torah study? How does one reach that level and what hinders it?', tags: ['תורה', 'לשמה', 'מחשבה'], downloads: 890, featured: false, file: '#' },
-  { id: 10, titleHe: 'ימי ראש השנה — חשבון הנפש', titleEn: 'Rosh Hashana — Soul Accounting', category: 'holidays', speaker: 'הרב דוד רוזנברג שליט"א', date: '2024-09-28', duration: '57:45', descHe: 'ימים אלה מוציאים אותנו מהשגרה ומכריחים אותנו לבחון: האם החיים שלנו הם החיים שרצינו?', descEn: 'These Days of Awe take us out of routine and force us to examine: are we living the life we wanted?', tags: ['ראש השנה', 'תשובה', 'חגים'], downloads: 3200, featured: true, file: '#' },
-  { id: 11, titleHe: 'גמרא ברכות — תפילת הדרך', titleEn: 'Gemara Brachot — Traveler\'s Prayer', category: 'gemara', speaker: 'הרב מרדכי כהן שליט"א', date: '2024-08-10', duration: '1:15:22', descHe: 'שיעור בגמרא מסכת ברכות, עיון בסוגיית תפילת הדרך והשלכותיה ההלכתיות.', descEn: 'Gemara lesson on tractate Brachot, analyzing the traveler\'s prayer and its halachic implications.', tags: ['גמרא', 'ברכות', 'תפילה'], downloads: 420, featured: false, file: '#' },
-  { id: 12, titleHe: 'ספר איוב — צדיק ורע לו', titleEn: 'Book of Job — The Righteous Who Suffers', category: 'tanach', speaker: 'הרב יצחק לוי שליט"א', date: '2024-07-22', duration: '1:08:11', descHe: 'עיון עמוק בספר איוב ושאלת הצדיק הסובל — כיצד מתמודדת תורתנו עם השאלה הקשה ביותר.', descEn: 'A deep study of the Book of Job and the question of the suffering righteous person — how Torah addresses this hardest question.', tags: ['איוב', 'תנ"ך', 'צדיק'], downloads: 765, featured: false, file: '#' },
+  {
+    id: 3, year: 2017,
+    titleHe: 'סעודת שלישית תזריע מצורע תשע"ז',
+    titleEn:  'Seudas Shlishis Tazria Metzora 5777',
+    category: 'shlishis', subcategory: 'vayikra',
+    duration: '2:31:51', language: 'yi',
+    descHe: 'דברי תורה שנאמרו בסעודת שלישית פרשת תזריע מצורע תשע"ז',
+    descEn:  'Torah words said at Seudas Shlishis Parashas Tazria Metzora 5777',
+    tags: [], featured: false, downloads: 2, plays: 4,
+    file: 'lessons/סש_פ _תזריע_מצורע_תשעז.MP3'
+  },
+  {
+    id: 2, year: 2013,
+    titleHe: 'סעודת שלישית פרשת אחרי קדושים תשע"ג',
+    titleEn:  'Seudas Shlishis Parashas Acharei Kedoshim 5773',
+    category: 'shlishis', subcategory: 'vayikra',
+    duration: '1:51:22', language: 'yi',
+    descHe: 'דברי תורה שנאמרו בסעודת שלישית פרשת אחרי קדושים תשע"ג',
+    descEn:  'Torah words said at Seudas Shlishis Parashas Acharei Kedoshim 5773',
+    tags: [], featured: false, downloads: 6, plays: 9,
+    file: 'lessons/סש_פ_אחרי_קדושים_תשעג.MP3'
+  },
+  {
+    id: 1, year: 2013,
+    titleHe: 'דברי תורה שנאמרו בסעודת שלישית פרשת בהר בחקותי תשע"ג',
+    titleEn:  'Seudas Shlishis Parashas Behar Bechukosai 5773',
+    category: 'shlishis', subcategory: 'vayikra',
+    duration: '1:55:03', language: 'yi',
+    descHe: 'דברי תורה שנאמרו בסעודת שלישית פרשת בהר בחקותי תשע"ג',
+    descEn:  'Torah words said at Seudas Shlishis Parashas Behar Bechukosai 5773',
+    tags: [], featured: false, downloads: 6, plays: 3,
+    file: 'lessons/סש_פ_בהר_בחקותי_תשעג.MP3'
+  },
 ];
 
 const INITIAL_BOOKS = [
-  { id: 1, titleHe: 'אור הלבנה — חידושי תורה', titleEn: 'Or Halevana — Torah Novellae', category: 'drasha', author: 'הרב מרדכי כהן שליט"א', year: 2023, pages: 320, descHe: 'ספר חידושים על הפרשיות ומועדים, עם ביאורים עמוקים על פי גישת הדרש והנגלה.', descEn: 'A book of novellae on the weekly portions and holidays, with deep explanations following the homiletic approach.', tags: ['חידושים', 'פרשיות', 'מועדים'], downloads: 2140, featured: true, cover: '📖', file: '#' },
-  { id: 2, titleHe: 'שאלות ותשובות תהלות ישראל', titleEn: 'Responsa Tehillot Israel', category: 'responsa', author: 'הרב מרדכי כהן שליט"א', year: 2021, pages: 480, descHe: 'שאלות ותשובות בענייני הלכה, הכוללים שאלות מכל רחבי תפוצות ישראל.', descEn: 'Halachic responsa covering questions from Jewish communities worldwide.', tags: ['שו"ת', 'הלכה', 'תשובות'], downloads: 1875, featured: true, cover: '📜', file: '#' },
-  { id: 3, titleHe: 'ליקוטי תפילות', titleEn: 'Collected Prayers', category: 'sidur', author: 'מכון תהלות ישראל', year: 2022, pages: 248, descHe: 'ליקוט מיוחד של תפילות, תחינות ובקשות לכל עת ומצב בחיי האדם.', descEn: 'A special collection of prayers, supplications and requests for every time and situation in life.', tags: ['תפילה', 'תחינות', 'בקשות'], downloads: 3210, featured: true, cover: '🕍', file: '#' },
-  { id: 4, titleHe: 'ביאור על מסכת אבות', titleEn: 'Commentary on Pirkei Avot', category: 'parshanut', author: 'הרב שמואל גולדברג שליט"א', year: 2020, pages: 390, descHe: 'פירוש מקיף על מסכת אבות, עם עיון בדרכי המוסר ועצות לחיים.', descEn: 'A comprehensive commentary on Pirkei Avot, with insight into ethical paths and life advice.', tags: ['אבות', 'מוסר', 'פירוש'], downloads: 1560, featured: false, cover: '✡️', file: '#' },
-  { id: 5, titleHe: 'הלכות ימים טובים', titleEn: 'Laws of the Holidays', category: 'halacha', author: 'הרב יצחק לוי שליט"א', year: 2023, pages: 512, descHe: 'ספר הלכה מקיף העוסק בדיני כל ימים טובים לאורך השנה, מהמקורות ועד למעשה.', descEn: 'A comprehensive halacha book covering the laws of all holidays throughout the year, from sources to practice.', tags: ['הלכה', 'ימים טובים', 'מועדים'], downloads: 2880, featured: true, cover: '🕯️', file: '#' },
-  { id: 6, titleHe: 'נר לרגלי — עלון שבועי', titleEn: 'Ner Leragli — Weekly Bulletin', category: 'pamphlets', author: 'מכון תהלות ישראל', year: 2024, pages: 8, descHe: 'עלון שבועי הכולל דבר תורה על הפרשה, חידושים, לוח זמנים ועדכוני המכון.', descEn: 'A weekly bulletin including Torah thoughts on the portion, novellae, schedule and institute updates.', tags: ['עלון', 'שבועי', 'פרשה'], downloads: 8450, featured: true, cover: '📰', file: '#' },
-  { id: 7, titleHe: 'דרך חיים — מוסר ומחשבה', titleEn: 'Derech Chaim — Mussar and Thought', category: 'machshava', author: 'הרב אברהם פרידמן שליט"א', year: 2019, pages: 285, descHe: 'ספר עיוני העוסק בנושאי מוסר ומחשבת ישראל, בשפה נגישה לכל אחד.', descEn: 'A theoretical book dealing with Mussar and Jewish thought topics, in a language accessible to everyone.', tags: ['מוסר', 'מחשבה', 'חיים'], downloads: 1230, featured: false, cover: '🌟', file: '#' },
-  { id: 8, titleHe: 'קבלת שבת — מנהגים ומקורות', titleEn: 'Kabbalat Shabbat — Customs and Sources', category: 'moadim', author: 'הרב דוד רוזנברג שליט"א', year: 2022, pages: 178, descHe: 'עיון מקיף במנהגי קבלת שבת בעדות שונות, עם מקורות ההלכה ומשמעות כל מנהג.', descEn: 'A comprehensive study of Kabbalat Shabbat customs among different communities, with halachic sources and the meaning of each custom.', tags: ['שבת', 'מנהגים', 'קבלה'], downloads: 945, featured: false, cover: '🕎', file: '#' },
+  {
+    id: 1,
+    titleHe: 'גליון מקוצר פרשת בהר - בחקותי',
+    titleEn:  'Glion Mkotzr Parashas Behar Bechukosai',
+    category: 'glionot', language: 'lh',
+    year: 2020, pages: 12,
+    descHe: 'גליון מקוצר לכבוד פרשת בהר - בחקותי תש"פ',
+    descEn:  'Weekly sheet for Parashas Behar Bechukosai 5780',
+    tags: [], featured: false,
+    cover: '📖', downloads: 5,
+    file: 'books/בהר-בחקתי תשפ.pdf'
+  },
 ];
 
 const INITIAL_UPDATES = [
@@ -214,8 +245,8 @@ function initData() {
     localStorage.removeItem('ti_updates');
     localStorage.setItem('ti_schema_v3', '1');
   }
-  if (!localStorage.getItem('ti_lessons'))  setData('lessons', []);
-  if (!localStorage.getItem('ti_books'))    setData('books', []);
+  if (!localStorage.getItem('ti_lessons'))  setData('lessons', INITIAL_LESSONS);
+  if (!localStorage.getItem('ti_books'))    setData('books',   INITIAL_BOOKS);
   if (!localStorage.getItem('ti_updates'))  setData('updates', []);
   if (!localStorage.getItem('ti_cat_lessons')) {
     localStorage.setItem('ti_cat_lessons', JSON.stringify(CATEGORIES_LESSONS));

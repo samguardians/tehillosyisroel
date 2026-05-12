@@ -118,6 +118,7 @@
     }
     .lessons-topper {
       background: linear-gradient(160deg,#04091a 0%,#0a1628 55%,#060d1e 100%);
+      padding-bottom: 64px;
     }
     .lessons-topper::before {
       content:''; position:absolute; inset:0; pointer-events:none;
@@ -130,9 +131,13 @@
       background: radial-gradient(ellipse, rgba(201,168,76,.09) 0%, transparent 68%);
       top:50%; left:50%; transform:translate(-50%,-50%);
     }
+    /* wave transitions */
+    .lessons-wave, .books-wave {
+      position:absolute; bottom:-1px; left:0; right:0; line-height:0; z-index:3;
+    }
     .books-topper {
       background: linear-gradient(160deg,#f4eedf 0%,#faf6ee 55%,#ede5d2 100%);
-      border-bottom: 1px solid rgba(201,168,76,.2);
+      border-bottom: 1px solid rgba(201,168,76,.18);
     }
     .feat-topper-inner { position:relative; z-index:2; max-width:680px; margin:0 auto; }
     .lessons-topper .section-tag {
@@ -160,6 +165,8 @@
     .lessons-topper .feat-desc { color:rgba(255,255,255,.62); }
     .books-topper   .feat-desc { color:var(--text-light); }
     .feat-cards-wrap { padding-top:44px; padding-bottom:52px; }
+    .feat-cards-wrap:empty,
+    .feat-cards-wrap[data-empty="1"] { display:none; }
     .feat-cta-link {
       display: inline-flex; align-items: center; gap: 8px;
       color: var(--gold-light); font-weight: 700; font-size: .95rem;
@@ -368,6 +375,12 @@
         </div>
       </div>
     </div>
+    <!-- wave transition to cards area -->
+    <div class="lessons-wave">
+      <svg viewBox="0 0 1440 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;height:40px">
+        <path d="M0,20 C480,42 960,0 1440,20 L1440,40 L0,40 Z" fill="var(--cream)"/>
+      </svg>
+    </div>
   </div>
   <!-- Cards area -->
   <div class="container feat-cards-wrap">
@@ -380,7 +393,7 @@
   <!-- Warm header strip -->
   <div class="feat-section-topper books-topper">
     <div class="container">
-      <div class="feat-topper-inner">
+      <div class="feat-topper-inner" style="padding-bottom:8px">
         <div class="section-tag" style="margin-bottom:20px">
           <i class="fas fa-book-open"></i>
           <span data-he="ספרייה" data-en="Library">ספרייה</span>
@@ -413,6 +426,12 @@
           </a>
         </div>
       </div>
+    </div>
+    <!-- wave transition to cards area -->
+    <div class="books-wave">
+      <svg viewBox="0 0 1440 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;height:40px">
+        <path d="M0,20 C480,0 960,42 1440,20 L1440,40 L0,40 Z" fill="white"/>
+      </svg>
     </div>
   </div>
   <!-- Cards area -->
@@ -647,18 +666,43 @@
 <script>
 function initPage() {
   const lang = Lang.current;
-  // Featured Lessons (featured=true)
-  const lessons = getData('lessons').filter(l => l.featured).slice(0, 6);
+
+  // Featured Lessons — fallback to all if none marked featured
+  let lessons = getData('lessons').filter(l => l.featured).slice(0, 6);
+  if (!lessons.length) lessons = getData('lessons').slice(0, 6);
   const lessonContainer = document.getElementById('featuredLessons');
+  const lessonWrap = lessonContainer ? lessonContainer.closest('.feat-cards-wrap') : null;
+  const lessonsWave = document.querySelector('.lessons-wave');
   if (lessonContainer) {
-    lessonContainer.innerHTML = lessons.map(l => renderLessonCard(l)).join('');
+    if (lessons.length) {
+      lessonContainer.innerHTML = lessons.map(l => renderLessonCard(l)).join('');
+      if (lessonWrap) lessonWrap.removeAttribute('data-empty');
+      if (lessonsWave) lessonsWave.style.display = '';
+    } else {
+      lessonContainer.innerHTML = '';
+      if (lessonWrap) lessonWrap.setAttribute('data-empty', '1');
+      if (lessonsWave) lessonsWave.style.display = 'none';
+    }
   }
-  // Featured Books
-  const books = getData('books').filter(b => b.featured).slice(0, 4);
+
+  // Featured Books — fallback to all if none marked featured
+  let books = getData('books').filter(b => b.featured).slice(0, 4);
+  if (!books.length) books = getData('books').slice(0, 4);
   const bookContainer = document.getElementById('featuredBooks');
+  const bookWrap = bookContainer ? bookContainer.closest('.feat-cards-wrap') : null;
+  const booksWave = document.querySelector('.books-wave');
   if (bookContainer) {
-    bookContainer.innerHTML = books.map(b => renderBookCard(b)).join('');
+    if (books.length) {
+      bookContainer.innerHTML = books.map(b => renderBookCard(b)).join('');
+      if (bookWrap) bookWrap.removeAttribute('data-empty');
+      if (booksWave) booksWave.style.display = '';
+    } else {
+      bookContainer.innerHTML = '';
+      if (bookWrap) bookWrap.setAttribute('data-empty', '1');
+      if (booksWave) booksWave.style.display = 'none';
+    }
   }
+
   // Latest Updates
   const updates = getData('updates').slice(0, 4);
   const updContainer = document.getElementById('featuredUpdates');

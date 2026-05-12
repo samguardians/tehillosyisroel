@@ -42,29 +42,25 @@ const CATEGORIES_LESSONS = [
 ];
 
 const CATEGORIES_BOOKS = [
-  { id: 'halacha',   he: 'הלכה',          en: 'Halacha',             subs: [
-    { id: 'orach_chaim',  he: 'אורח חיים',   en: 'Orach Chaim' },
-    { id: 'yoreh_deah',   he: 'יורה דעה',    en: 'Yoreh Deah' },
-    { id: 'even_haezer',  he: 'אבן העזר',    en: 'Even HaEzer' },
-    { id: 'choshen',      he: 'חושן משפט',   en: 'Choshen Mishpat' },
+  { id: 'halacha',           he: 'הלכה',        en: 'Halacha',           subs: [
+    { id: 'orach_chaim',  he: 'אורח חיים', en: 'Orach Chaim' },
+    { id: 'yoreh_deah',   he: 'יורה דעה',  en: 'Yoreh Deah' },
+    { id: 'even_haezer',  he: 'אבן העזר',  en: 'Even HaEzer' },
+    { id: 'choshen',      he: 'חושן משפט', en: 'Choshen Mishpat' },
   ]},
-  { id: 'drasha',    he: 'דרשות',          en: 'Sermons',             subs: [] },
-  { id: 'sidur',     he: 'סידורים',        en: 'Prayer Books',        subs: [] },
-  { id: 'machshava', he: 'מחשבה',         en: 'Jewish Thought',      subs: [] },
-  { id: 'kabala',    he: 'קבלה',           en: 'Kabbalah',            subs: [] },
-  { id: 'responsa',  he: 'שו"ת',           en: 'Responsa',            subs: [] },
-  { id: 'moadim',    he: 'מועדים',         en: 'Holidays',            subs: [] },
-  { id: 'parshanut', he: 'פרשנות',         en: 'Biblical Commentary', subs: [] },
-  { id: 'biography', he: 'ביוגרפיה',      en: 'Biography',           subs: [] },
-  { id: 'pamphlets', he: 'עלונים',         en: 'Pamphlets',           subs: [] },
-  { id: 'glionot',   he: 'גליונות',        en: 'Weekly Sheets',       subs: [] },
+  { id: 'drasha',            he: 'דרשות',       en: 'Sermons',           subs: [] },
+  { id: 'kabala',            he: 'קבלה',         en: 'Kabbalah',          subs: [] },
+  { id: 'moadim',            he: 'מועדים',       en: 'Holidays',          subs: [] },
+  { id: 'pamphlets',         he: 'עלונים',       en: 'Pamphlets',         subs: [] },
+  { id: 'parashat_hashavua', he: 'פרשת השבוע',  en: 'Parashat Hashavua', subs: [] },
+  { id: 'glionot',           he: 'גליונות',      en: 'Weekly Sheets',     subs: [] },
 ];
 
 const LANGUAGES = [
-  { id: 'he', he: 'עברית',        en: 'Hebrew',         flag: '🇮🇱' },
-  { id: 'en', he: 'אנגלית',       en: 'English',        flag: '🇬🇧' },
-  { id: 'yi', he: 'אידיש',        en: 'Yiddish',        flag: 'YD'  },
-  { id: 'lh', he: 'לשון הקודש',   en: 'Lashon Hakodesh',flag: 'LH'  },
+  { id: 'he', he: 'עברית',       en: 'Hebrew',         flag: 'IL' },
+  { id: 'en', he: 'אנגלית',      en: 'English',        flag: 'EN' },
+  { id: 'yi', he: 'אידיש',       en: 'Yiddish',        flag: 'YD' },
+  { id: 'lh', he: 'לשון הקודש',  en: 'Lashon Hakodesh',flag: 'LH' },
 ];
 
 const SPEAKERS = [
@@ -226,6 +222,13 @@ function initData() {
     localStorage.removeItem('ti_books');
     localStorage.removeItem('ti_updates');
     localStorage.setItem('ti_schema_v3', '1');
+  }
+  // v4 migration: sync categories & languages to match production data
+  if (!localStorage.getItem('ti_schema_v4')) {
+    localStorage.removeItem('ti_cat_lessons');
+    localStorage.removeItem('ti_cat_books');
+    localStorage.removeItem('ti_languages');
+    localStorage.setItem('ti_schema_v4', '1');
   }
   if (!localStorage.getItem('ti_lessons'))  setData('lessons', INITIAL_LESSONS);
   if (!localStorage.getItem('ti_books'))    setData('books',   INITIAL_BOOKS);

@@ -230,6 +230,12 @@ function initData() {
     localStorage.removeItem('ti_languages');
     localStorage.setItem('ti_schema_v4', '1');
   }
+  // v5 migration: sync lessons & books content from INITIAL data
+  if (!localStorage.getItem('ti_schema_v5')) {
+    localStorage.removeItem('ti_lessons');
+    localStorage.removeItem('ti_books');
+    localStorage.setItem('ti_schema_v5', '1');
+  }
   if (!localStorage.getItem('ti_lessons'))  setData('lessons', INITIAL_LESSONS);
   if (!localStorage.getItem('ti_books'))    setData('books',   INITIAL_BOOKS);
   if (!localStorage.getItem('ti_updates'))  setData('updates', []);

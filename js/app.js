@@ -192,8 +192,9 @@ const Player = {
   },
   loadTrack(track) {
     if (!track) return;
-    const src = track.file && track.file !== '#'
-      ? track.file
+    const resolved = resolveFileUrl(track.file);
+    const src = resolved
+      ? resolved
       : 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
     this.audio.src = src;
     this.audio.play().catch(() => {});
@@ -590,6 +591,30 @@ function renderBookCard(book, q = '') {
     </div>`;
 }
 
+// ===== ONEDRIVE / FILE URL RESOLVER =====
+/**
+ * Converts a OneDrive share link to a direct-access URL via the OneDrive API.
+ * Supports:
+ *   https://1drv.ms/...           (personal OneDrive short link)
+ *   https://onedrive.live.com/... (personal OneDrive full link)
+ *   Regular URLs and relative paths are returned unchanged.
+ */
+function resolveFileUrl(fileRef) {
+  if (!fileRef || fileRef === '#') return null;
+
+  const isOneDrive = /1drv\.ms|onedrive\.live\.com/i.test(fileRef);
+  if (isOneDrive) {
+    // Base64url-encode the share URL per the OneDrive API spec
+    const encoded = btoa(fileRef)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+    return `https://api.onedrive.com/v1.0/shares/u!${encoded}/root/content`;
+  }
+
+  return fileRef; // relative path or any other URL — use as-is
+}
+
 // ===== HELPERS =====
 function countDownload(id, type) {
   const items = getData(type);
@@ -651,14 +676,14 @@ function downloadLesson(id) {
   const lesson = getData('lessons').find(l => l.id === id);
   if (!lesson) return;
   countDownload(id, 'lessons');
-  forceDownload(lesson.file, (lesson.titleHe || 'שיעור'));
+  forceDownload(resolveFileUrl(lesson.file), (lesson.titleHe || 'שיעור'));
 }
 
 function downloadBook(id) {
   const book = getData('books').find(b => b.id === id);
   if (!book) return;
   countDownload(id, 'books');
-  forceDownload(book.file, (book.titleHe || 'ספר'));
+  forceDownload(resolveFileUrl(book.file), (book.titleHe || 'ספר'));
 }
 
 function playLesson(id) {
@@ -762,7 +787,7 @@ function openBookReader(id) {
   const frameEl = document.getElementById('readerFrame');
   const noFileEl = document.getElementById('readerNoFile');
   if (titleEl) titleEl.textContent = title;
-  const fileUrl = book.file && book.file !== '#' ? book.file : null;
+  const fileUrl = resolveFileUrl(book.file);
   if (frameEl) { frameEl.src = fileUrl || ''; frameEl.style.display = fileUrl ? 'block' : 'none'; }
   if (noFileEl) noFileEl.style.display = fileUrl ? 'none' : 'flex';
   Modal.open('bookReaderModal');

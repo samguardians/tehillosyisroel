@@ -351,10 +351,22 @@
             </div>
             <input type="file" id="lessonFileInput" accept="audio/*" style="display:none" onchange="showFileName(this,'lessonFileName')">
             <div class="form-group" style="margin-top:14px">
-              <label class="form-label" data-i18n="label.fileUrl">או הזן כתובת URL לקובץ</label>
-              <input type="url" name="file" class="form-control" id="lessonFileUrl" placeholder="https://...">
+              <label class="form-label">או הדבק קישור OneDrive / URL ישיר</label>
+              <div style="position:relative">
+                <input type="text" name="file" class="form-control" id="lessonFileUrl"
+                  placeholder="https://1drv.ms/u/s!... או https://..."
+                  dir="ltr" style="padding-left:40px"
+                  oninput="previewOneDriveLesson(this.value)">
+                <i class="fab fa-microsoft" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#0078d4;font-size:1rem;pointer-events:none"></i>
+              </div>
+              <div id="onedrive-lesson-preview" style="display:none;margin-top:10px;padding:10px 14px;background:#e8f4fd;border:1px solid #0078d430;border-radius:8px;font-size:.82rem;color:#0c1f3d">
+                <i class="fab fa-microsoft" style="color:#0078d4;margin-left:6px"></i>
+                <span id="onedrive-lesson-preview-text">קישור OneDrive זוהה — יתורגם אוטומטית לקישור ישיר בעת ההפעלה</span>
+              </div>
             </div>
-            <div id="storageHintLesson" style="font-size:.76rem;color:var(--text-muted);margin-top:6px"></div>
+            <div id="storageHintLesson" style="font-size:.76rem;color:var(--text-muted);margin-top:6px">
+              💡 <strong>OneDrive:</strong> פתח OneDrive ← לחץ ימני על הקובץ ← שיתוף ← "כל מי שיש לו הקישור" ← העתק קישור ← הדבק כאן
+            </div>
           </div>
 
           <div style="display:flex;gap:12px">
@@ -455,10 +467,22 @@
             </div>
             <input type="file" id="bookFileInput" accept=".pdf" style="display:none" onchange="showFileName(this,'bookFileName')">
             <div class="form-group" style="margin-top:14px">
-              <label class="form-label" data-i18n="label.fileUrl">או הזן כתובת URL לקובץ</label>
-              <input type="url" name="file" class="form-control" id="bookFileUrl" placeholder="https://...">
+              <label class="form-label">או הדבק קישור OneDrive / URL ישיר</label>
+              <div style="position:relative">
+                <input type="text" name="file" class="form-control" id="bookFileUrl"
+                  placeholder="https://1drv.ms/b/s!... או https://..."
+                  dir="ltr" style="padding-left:40px"
+                  oninput="previewOneDriveBook(this.value)">
+                <i class="fab fa-microsoft" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#0078d4;font-size:1rem;pointer-events:none"></i>
+              </div>
+              <div id="onedrive-book-preview" style="display:none;margin-top:10px;padding:10px 14px;background:#e8f4fd;border:1px solid #0078d430;border-radius:8px;font-size:.82rem;color:#0c1f3d">
+                <i class="fab fa-microsoft" style="color:#0078d4;margin-left:6px"></i>
+                <span id="onedrive-book-preview-text">קישור OneDrive זוהה — יתורגם אוטומטית לקישור ישיר בעת הקריאה</span>
+              </div>
             </div>
-            <div id="storageHintBook" style="font-size:.76rem;color:var(--text-muted);margin-top:6px"></div>
+            <div id="storageHintBook" style="font-size:.76rem;color:var(--text-muted);margin-top:6px">
+              💡 <strong>OneDrive:</strong> פתח OneDrive ← לחץ ימני על הקובץ ← שיתוף ← "כל מי שיש לו הקישור" ← העתק קישור ← הדבק כאן
+            </div>
           </div>
 
           <div style="display:flex;gap:12px">
@@ -1618,7 +1642,7 @@ function editItem(id, type) {
     f.descEn.value   = item.descEn   || '';
     f.featured.checked = !!item.featured;
     const fileEl = f.querySelector('[name="file"]');
-    if (fileEl) fileEl.value = (item.file && item.file !== '#') ? item.file : '';
+    if (fileEl) { fileEl.value = (item.file && item.file !== '#') ? item.file : ''; previewOneDriveLesson(fileEl.value); }
 
     // Category → subcategory chain
     const catSel = document.getElementById('lessonCatSelect');
@@ -1671,7 +1695,7 @@ function editItem(id, type) {
     f.descEn.value  = item.descEn  || '';
     f.featured.checked = !!item.featured;
     const fileEl = f.querySelector('[name="file"]');
-    if (fileEl) fileEl.value = (item.file && item.file !== '#') ? item.file : '';
+    if (fileEl) { fileEl.value = (item.file && item.file !== '#') ? item.file : ''; previewOneDriveBook(fileEl.value); }
 
     // Category
     const catSel = document.getElementById('bookCatSelect');
@@ -1979,6 +2003,21 @@ function addTagChip(val, wrapId, onRemove) {
   chip.innerHTML = `${val} <span class="tag-chip-x" onclick="this.parentElement.remove()">×</span>`;
   chip.querySelector('.tag-chip-x').addEventListener('click', onRemove);
   wrap.insertBefore(chip, wrap.querySelector('input'));
+}
+
+// ===== ONEDRIVE PREVIEW =====
+function _isOneDriveUrl(url) {
+  return url && /1drv\.ms|onedrive\.live\.com/i.test(url);
+}
+function previewOneDriveLesson(val) {
+  const box = document.getElementById('onedrive-lesson-preview');
+  if (!box) return;
+  box.style.display = _isOneDriveUrl(val) ? 'block' : 'none';
+}
+function previewOneDriveBook(val) {
+  const box = document.getElementById('onedrive-book-preview');
+  if (!box) return;
+  box.style.display = _isOneDriveUrl(val) ? 'block' : 'none';
 }
 
 function showFileName(input, elId) {

@@ -3,21 +3,20 @@
 // =====================================================
 
 const CATEGORIES_LESSONS = [
-  { id: 'parasha',  he: 'פרשת השבוע',  en: 'Weekly Parasha',       subs: [
+  { id: 'parasha',  he: 'פרשת השבוע',  en: 'Weekly Parasha',  subs: [
     { id: 'bereishit', he: 'בראשית', en: 'Bereishit' },
     { id: 'shemot',    he: 'שמות',   en: 'Shemot' },
     { id: 'vayikra',   he: 'ויקרא',  en: 'Vayikra' },
     { id: 'bamidbar',  he: 'במדבר',  en: 'Bamidbar' },
     { id: 'devarim',   he: 'דברים',  en: 'Devarim' },
   ]},
-  { id: 'halacha',  he: 'הלכה',         en: 'Halacha',              subs: [
-    { id: 'shabbat',   he: 'שבת',        en: 'Shabbat' },
-    { id: 'kashrut',   he: 'כשרות',      en: 'Kashrut' },
-    { id: 'tefila_h',  he: 'תפילה',      en: 'Prayer' },
-    { id: 'family',    he: 'משפחה',      en: 'Family Laws' },
+  { id: 'halacha',  he: 'הלכה',         en: 'Halacha',         subs: [
+    { id: 'shabbat',   he: 'שבת',    en: 'Shabbat' },
+    { id: 'kashrut',   he: 'כשרות', en: 'Kashrut' },
+    { id: 'tefila_h',  he: 'תפילה', en: 'Prayer' },
+    { id: 'family',    he: 'משפחה', en: 'Family Laws' },
   ]},
-  { id: 'aggada',   he: 'אגדה',          en: 'Aggada',               subs: [] },
-  { id: 'holidays', he: 'חגים ומועדים', en: 'Holidays',              subs: [
+  { id: 'holidays', he: 'חגים ומועדים', en: 'Holidays',        subs: [
     { id: 'rosh_hashana', he: 'ראש השנה',  en: 'Rosh Hashana' },
     { id: 'yom_kippur',   he: 'יום כיפור', en: 'Yom Kippur' },
     { id: 'sukkot',       he: 'סוכות',     en: 'Sukkot' },
@@ -26,36 +25,19 @@ const CATEGORIES_LESSONS = [
     { id: 'pesach',       he: 'פסח',       en: 'Pesach' },
     { id: 'shavuot',      he: 'שבועות',    en: 'Shavuot' },
   ]},
-  { id: 'machshava',he: 'מחשבה',        en: 'Jewish Thought',       subs: [
-    { id: 'emuna',    he: 'אמונה',        en: 'Faith' },
-    { id: 'bitachon', he: 'בטחון',        en: 'Trust in God' },
-    { id: 'teshuva',  he: 'תשובה',        en: 'Repentance' },
-  ]},
-  { id: 'tefila',   he: 'תפילה',         en: 'Prayer',               subs: [
-    { id: 'shacharit', he: 'שחרית',  en: 'Shacharit' },
-    { id: 'mincha',    he: 'מנחה',   en: 'Mincha' },
-    { id: 'maariv',    he: 'מעריב',  en: 'Maariv' },
+  { id: 'tefila',   he: 'תפילה',         en: 'Prayer',          subs: [
+    { id: 'shacharit',        he: 'שחרית',    en: 'Shacharit' },
+    { id: 'mincha',           he: 'מנחה',     en: 'Mincha' },
+    { id: 'maariv',           he: 'מעריב',    en: 'Maariv' },
     { id: 'kabbalat_shabbat', he: 'קבלת שבת', en: 'Kabbalat Shabbat' },
   ]},
-  { id: 'mussar',   he: 'מוסר',          en: 'Mussar',               subs: [] },
-  { id: 'kabala',   he: 'קבלה וחסידות', en: 'Kabbalah & Chassidut', subs: [] },
-  { id: 'shlishis', he: 'סעודת שלישית', en: 'Seudas Shlishis',      subs: [
+  { id: 'mussar',   he: 'מוסר',          en: 'Mussar',          subs: [] },
+  { id: 'shlishis', he: 'סעודת שלישית', en: 'Seudas Shlishis', subs: [
     { id: 'bereishit', he: 'בראשית', en: 'Bereishit' },
     { id: 'shemot',    he: 'שמות',   en: 'Shemot' },
     { id: 'vayikra',   he: 'ויקרא',  en: 'Vayikra' },
     { id: 'bamidbar',  he: 'במדבר',  en: 'Bamidbar' },
     { id: 'devarim',   he: 'דברים',  en: 'Devarim' },
-  ]},
-  { id: 'gemara',   he: 'גמרא',          en: 'Gemara',               subs: [
-    { id: 'brachot',   he: 'ברכות',      en: 'Brachot' },
-    { id: 'shabbat_g', he: 'שבת',        en: 'Shabbat' },
-    { id: 'ketubot',   he: 'כתובות',     en: 'Ketubot' },
-    { id: 'bava_metzia',he: 'בבא מציעא', en: 'Bava Metzia' },
-  ]},
-  { id: 'tanach',   he: 'תנ״ך',          en: 'Tanach',               subs: [
-    { id: 'torah',    he: 'תורה',         en: 'Torah' },
-    { id: 'neviim',   he: 'נביאים',       en: 'Prophets' },
-    { id: 'ketuvim',  he: 'כתובים',       en: 'Writings' },
   ]},
 ];
 

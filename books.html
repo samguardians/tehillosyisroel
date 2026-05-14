@@ -579,6 +579,7 @@ const BookReader = {
 function openBookReader(id) {
   const book = getData('books').find(b => b.id === id);
   if (!book) return;
+  logAnalyticsEvent('read', 'book', id, book.titleHe || '');
   const lang = Lang.current;
   const title = lang === 'he' ? book.titleHe : (book.titleEn || book.titleHe);
   const titleEl = document.getElementById('readerTitle');

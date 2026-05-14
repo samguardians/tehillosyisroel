@@ -806,38 +806,33 @@
 <div class="modal-overlay" id="bookModal">
   <div class="modal"><div id="bookModalBody"></div></div>
 </div>
-<!-- BOOK READER MODAL -->
-<div class="modal-overlay" id="bookReaderModal" style="align-items:flex-start;padding:0">
-  <!-- Floating close button — above everything including the iframe -->
-  <button id="readerCloseBtn" onclick="Modal.close('bookReaderModal')"
-    style="position:fixed;top:16px;left:16px;z-index:9999;
-           width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;
-           background:#dc2626;color:#fff;font-size:1.1rem;
-           display:flex;align-items:center;justify-content:center;
-           box-shadow:0 4px 16px rgba(0,0,0,.4);
-           display:none">
-    <i class="fas fa-times"></i>
-  </button>
-  <div class="modal" style="max-width:100%;width:100%;height:100vh;margin:0;border-radius:0;display:flex;flex-direction:column;padding:0;overflow:hidden;max-height:100vh">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:var(--cream);border-bottom:1px solid var(--border-light);flex-shrink:0;z-index:10;position:relative">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:28px;height:28px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.78rem;flex-shrink:0"><i class="fas fa-book-open"></i></div>
-        <span id="readerTitle" style="font-weight:700;color:var(--primary);font-size:.9rem"></span>
-      </div>
-      <button onclick="Modal.close('bookReaderModal')"
-        style="width:36px;height:36px;border-radius:50%;border:2px solid #dc2626;background:#fee2e2;color:#dc2626;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:10">
-        <i class="fas fa-times"></i>
-      </button>
+<!-- BOOK READER — custom full-screen overlay (bypasses Modal system) -->
+<div id="homeBookReaderOverlay" style="display:none;position:fixed;inset:0;z-index:8000;flex-direction:column;background:#fff">
+  <!-- Header bar — always on top, no iframe interference -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--cream);border-bottom:2px solid var(--border-light);flex-shrink:0;position:relative;z-index:8001">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:30px;height:30px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;flex-shrink:0"><i class="fas fa-book-open"></i></div>
+      <span id="readerTitle" style="font-weight:700;color:var(--primary);font-size:.95rem"></span>
     </div>
-    <div style="flex:1;position:relative;overflow:hidden;min-height:0">
-      <iframe id="readerFrame" style="width:100%;height:100%;border:none;display:none"></iframe>
-      <div id="readerNoFile" style="display:none;height:100%;flex-direction:column;align-items:center;justify-content:center;color:var(--text-muted)">
-        <div style="font-size:48px;margin-bottom:16px">📄</div>
-        <p style="font-size:.95rem;font-weight:600">הקובץ אינו זמין לקריאה מקוונת</p>
-      </div>
+    <button onclick="closeHomeBookReader()"
+      style="display:flex;align-items:center;gap:8px;padding:8px 18px;
+             background:#dc2626;color:#fff;border:none;border-radius:8px;
+             font-size:.9rem;font-weight:700;cursor:pointer;flex-shrink:0">
+      <i class="fas fa-times"></i> סגור
+    </button>
+  </div>
+  <!-- iframe area -->
+  <div style="flex:1;position:relative;min-height:0;overflow:hidden">
+    <iframe id="readerFrame" style="position:absolute;inset:0;width:100%;height:100%;border:none"></iframe>
+    <div id="readerNoFile" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;color:var(--text-muted)">
+      <div style="font-size:48px;margin-bottom:16px">📄</div>
+      <p style="font-size:.95rem;font-weight:600">הקובץ אינו זמין לקריאה מקוונת</p>
+      <button onclick="closeHomeBookReader()" style="margin-top:20px;padding:10px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:.9rem">סגור</button>
     </div>
   </div>
 </div>
+<!-- keep bookReaderModal as empty placeholder so openBookReader doesn't crash -->
+<div id="bookReaderModal"></div>
 <div class="toast-container"></div>
 
 <script src="js/data.js"></script>
@@ -962,6 +957,31 @@ function initPage() {
 
 function onLangChange(lang) {
   initPage();
+}
+
+// Override openBookReader for homepage — uses custom overlay instead of Modal system
+function openBookReader(id) {
+  const book = getData('books').find(b => b.id === id);
+  if (!book) return;
+  logAnalyticsEvent('read', 'book', id, book.titleHe || '');
+  const lang = Lang.current;
+  const title = lang === 'he' ? book.titleHe : (book.titleEn || book.titleHe);
+  const overlay = document.getElementById('homeBookReaderOverlay');
+  const titleEl = document.getElementById('readerTitle');
+  const frameEl = document.getElementById('readerFrame');
+  const noFileEl = document.getElementById('readerNoFile');
+  if (titleEl) titleEl.textContent = title;
+  const fileUrl = resolveFileUrl(book.file);
+  if (frameEl) { frameEl.src = fileUrl || ''; }
+  if (noFileEl) noFileEl.style.display = fileUrl ? 'none' : 'flex';
+  if (overlay) { overlay.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+}
+
+function closeHomeBookReader() {
+  const overlay = document.getElementById('homeBookReaderOverlay');
+  const frameEl = document.getElementById('readerFrame');
+  if (frameEl) frameEl.src = '';
+  if (overlay) { overlay.style.display = 'none'; document.body.style.overflow = ''; }
 }
 </script>
 </body>

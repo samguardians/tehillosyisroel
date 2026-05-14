@@ -796,14 +796,14 @@
             <div class="form-group">
               <label class="form-label">English Name <span style="color:#e53e3e">*</span></label>
               <div style="position:relative">
-                <input type="text" class="form-control" id="catEnInput" placeholder="English name" style="padding-left:90px">
+                <input type="text" class="form-control" id="catEnInput" placeholder="English name" style="padding-left:90px" oninput="autoSlugFromEn(this.value)">
                 <button type="button" class="translate-btn" onclick="autoTranslate('catHeInput','catEnInput')"><i class="fas fa-language"></i> תרגם</button>
               </div>
             </div>
           </div>
           <div class="form-group">
             <label class="form-label">ID (slug) <span style="color:#e53e3e">*</span></label>
-            <input type="text" class="form-control" id="catIdInput" placeholder="e.g. parasha (lowercase, no spaces)" style="max-width:300px">
+            <input type="text" class="form-control" id="catIdInput" placeholder="e.g. parasha (lowercase, no spaces)" style="max-width:300px" oninput="this.dataset.userEdited=this.value?'1':'0'">
             <span style="font-size:.75rem;color:var(--text-muted)">Used internally to link content to categories. Cannot be changed after saving.</span>
           </div>
           <div style="display:flex;gap:10px;margin-top:4px">
@@ -2648,12 +2648,27 @@ function editCat(id, parentPath) {
 
 function cancelCatEdit() {
   editingCatId = null;
-  document.getElementById('catIdInput').value = '';
-  document.getElementById('catIdInput').disabled = false;
+  const catIdEl = document.getElementById('catIdInput');
+  catIdEl.value = '';
+  catIdEl.disabled = false;
+  catIdEl.dataset.userEdited = '0';
   document.getElementById('catHeInput').value = '';
   document.getElementById('catEnInput').value = '';
   document.getElementById('catFormTitle').innerHTML = '<i class="fas fa-plus-circle" style="color:var(--primary-mid)"></i> Add Category';
   document.getElementById('catCancelBtn').style.display = 'none';
+}
+
+function autoSlugFromEn(val) {
+  if (editingCatId) return; // don't overwrite when editing existing category
+  const idEl = document.getElementById('catIdInput');
+  if (!idEl || idEl.dataset.userEdited === '1') return;
+  const slug = val.trim().toLowerCase()
+    .replace(/[^a-z0-9\s_-]/g, '')   // remove non-alphanumeric (keep spaces, _ -)
+    .replace(/\s+/g, '_')             // spaces → underscore
+    .replace(/-+/g, '_')              // hyphens → underscore
+    .replace(/_+/g, '_')              // collapse multiple underscores
+    .replace(/^_|_$/g, '');           // trim leading/trailing underscores
+  idEl.value = slug;
 }
 
 function deleteCat(id) {

@@ -1289,6 +1289,43 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('input[type="date"]').forEach(d => { if (!d.value) d.value = today; });
   populateSelects();
   Storage.updateUploadHints();
+
+  // Restore session after page refresh
+  const savedSession = localStorage.getItem('ti_adminSession');
+  const lastActivity  = parseInt(localStorage.getItem('ti_lastActivity') || '0');
+  if (savedSession && (Date.now() - lastActivity < 60 * 60 * 1000)) {
+    try {
+      const sess = JSON.parse(savedSession);
+      const users = getData('users');
+      const user  = users.find(u => u.id === sess.id && u.active);
+      if (user) {
+        currentUser = user;
+        localStorage.setItem('ti_lastActivity', String(Date.now()));
+        clearInterval(window._sessionTimer);
+        window._sessionTimer = setInterval(() => {
+          const last = parseInt(localStorage.getItem('ti_lastActivity') || '0');
+          if (Date.now() - last > 60 * 60 * 1000) {
+            clearInterval(window._sessionTimer);
+            logout();
+            Toast.show('פסקת הזמן — נא להתחבר מחדש', 'error');
+          }
+        }, 60000);
+        document.addEventListener('click', () => localStorage.setItem('ti_lastActivity', String(Date.now())));
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('adminPortal').classList.remove('hidden');
+        document.getElementById('adminName').textContent   = user.name;
+        document.getElementById('adminRole').textContent   = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+        document.getElementById('adminAvatar').textContent = user.name.charAt(0).toUpperCase();
+        document.getElementById('dashName').textContent    = user.name;
+        if (user.role !== 'admin') {
+          document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+        }
+        renderDashboard();
+        renderUsersTable();
+        renderUpdatesTable();
+      }
+    } catch(e) { localStorage.removeItem('ti_adminSession'); }
+  }
 });
 
 function updateLessonSubCats(catId) {

@@ -105,6 +105,17 @@ const INITIAL_LESSONS = [
     tags: [], featured: false, downloads: 6, plays: 3,
     file: 'lessons/סש_פ_בהר_בחקותי_תשעג.MP3'
   },
+  {
+    id: 4, year: 2018,
+    titleHe: 'סעודת שלישית אמור תשע"ח',
+    titleEn:  'Seudas Shlishis Emor 5778',
+    category: 'shlishis', subcategory: 'vayikra',
+    duration: '2:48:38', language: 'yi',
+    descHe: 'דברי תורה שנאמרו בסעודת שלישית פרשת אמור תשע"ח',
+    descEn:  'Torah words said at Seudas Shlishis Parashas Emor 5778',
+    tags: [], featured: false, downloads: 0, plays: 0,
+    file: 'lessons/סש_פ_אמור_תשעח.MP3'
+  },
 ];
 
 const INITIAL_BOOKS = [
@@ -119,6 +130,18 @@ const INITIAL_BOOKS = [
     tags: [], featured: false,
     cover: '📖', downloads: 5,
     file: 'books/בהר-בחקתי תשפ.pdf'
+  },
+  {
+    id: 2,
+    titleHe: "גליון פרשת בהר בחקותי תשפ\"ו",
+    titleEn:  'Glion Parashas Behar Bechukosai 5786',
+    category: 'glionot', language: 'lh',
+    year: 2026, pages: 0,
+    descHe: "גליון לכבוד פרשת בהר בחקותי תשפ\"ו",
+    descEn:  'Weekly sheet for Parashas Behar Bechukosai 5786',
+    tags: [], featured: false,
+    cover: '📖', downloads: 0,
+    file: "books/גליון פרשת בהר בחקתי תשפ''ו.pdf"
   },
 ];
 
@@ -235,6 +258,12 @@ function initData() {
     localStorage.removeItem('ti_lessons');
     localStorage.removeItem('ti_books');
     localStorage.setItem('ti_schema_v5', '1');
+  }
+  // v6 migration: add missing lessons & books (Emor 5778, Behar-Bechukosai 5786 sheet)
+  if (!localStorage.getItem('ti_schema_v6')) {
+    localStorage.removeItem('ti_lessons');
+    localStorage.removeItem('ti_books');
+    localStorage.setItem('ti_schema_v6', '1');
   }
   if (!localStorage.getItem('ti_lessons'))  setData('lessons', INITIAL_LESSONS);
   if (!localStorage.getItem('ti_books'))    setData('books',   INITIAL_BOOKS);

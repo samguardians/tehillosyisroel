@@ -595,26 +595,41 @@ function renderBookCard(book, q = '') {
 const GeoTracker = {
   _cache: null,
   _pending: null,
+
+  _fetchTimeout(url, ms = 5000) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(t));
+  },
+
+  async _tryApis() {
+    const apis = [
+      { url: 'https://ipwho.is/',        parse: d => ({ code: d.country_code, name: d.country,      city: d.city }) },
+      { url: 'https://ipapi.co/json/',   parse: d => ({ code: d.country,      name: d.country_name, city: d.city }) },
+      { url: 'https://freeipapi.com/api/json', parse: d => ({ code: d.countryCode, name: d.countryName, city: d.cityName }) },
+    ];
+    for (const api of apis) {
+      try {
+        const r = await this._fetchTimeout(api.url, 5000);
+        if (!r.ok) continue;
+        const d = await r.json();
+        const g = api.parse(d);
+        if (g.code && /^[A-Z]{2}$/.test(g.code)) {
+          return { code: g.code, name: g.name || g.code, city: g.city || '', flag: _countryFlag(g.code) };
+        }
+      } catch(e) { /* try next */ }
+    }
+    return { code: '??', name: 'Unknown', city: '', flag: '🌍' };
+  },
+
   async getGeo() {
     if (this._cache) return this._cache;
     if (this._pending) return this._pending;
-    this._pending = fetch('https://ipapi.co/json/')
-      .then(r => r.json())
-      .then(d => {
-        this._cache = {
-          code: d.country || '??',
-          name: d.country_name || 'Unknown',
-          city: d.city || '',
-          flag: _countryFlag(d.country || '')
-        };
-        this._pending = null;
-        return this._cache;
-      })
-      .catch(() => {
-        this._cache = { code: '??', name: 'Unknown', city: '', flag: '🌍' };
-        this._pending = null;
-        return this._cache;
-      });
+    this._pending = this._tryApis().then(geo => {
+      this._cache = geo;
+      this._pending = null;
+      return geo;
+    });
     return this._pending;
   }
 };
@@ -844,6 +859,7 @@ function openBook(id) {
 function openBookReader(id) {
   const book = getData('books').find(b => b.id === id);
   if (!book) return;
+  logAnalyticsEvent('read', 'book', id, book.titleHe || '');
   const lang = Lang.current;
   const title = lang === 'he' ? book.titleHe : (book.titleEn||book.titleHe);
   const titleEl = document.getElementById('readerTitle');

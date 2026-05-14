@@ -591,6 +591,61 @@ function renderBookCard(book, q = '') {
     </div>`;
 }
 
+// ===== GEO ANALYTICS =====
+const GeoTracker = {
+  _cache: null,
+  _pending: null,
+  async getGeo() {
+    if (this._cache) return this._cache;
+    if (this._pending) return this._pending;
+    this._pending = fetch('https://ipapi.co/json/')
+      .then(r => r.json())
+      .then(d => {
+        this._cache = {
+          code: d.country || '??',
+          name: d.country_name || 'Unknown',
+          city: d.city || '',
+          flag: _countryFlag(d.country || '')
+        };
+        this._pending = null;
+        return this._cache;
+      })
+      .catch(() => {
+        this._cache = { code: '??', name: 'Unknown', city: '', flag: '🌍' };
+        this._pending = null;
+        return this._cache;
+      });
+    return this._pending;
+  }
+};
+
+function _countryFlag(code) {
+  if (!code || code.length !== 2) return '🌍';
+  try {
+    return [...code.toUpperCase()].map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join('');
+  } catch(e) { return '🌍'; }
+}
+
+function logAnalyticsEvent(type, contentType, contentId, title) {
+  GeoTracker.getGeo().then(geo => {
+    const events = getData('analytics');
+    events.push({
+      type,        // 'play' | 'download'
+      contentType, // 'lesson' | 'book'
+      contentId,
+      title,
+      country:     geo.code,
+      countryName: geo.name,
+      city:        geo.city,
+      flag:        geo.flag,
+      ts: new Date().toISOString()
+    });
+    // Keep last 2000 events to avoid storage bloat
+    if (events.length > 2000) events.splice(0, events.length - 2000);
+    setData('analytics', events);
+  });
+}
+
 // ===== ONEDRIVE / FILE URL RESOLVER =====
 /**
  * Converts a OneDrive share link to a direct-access URL via the OneDrive API.
@@ -619,13 +674,21 @@ function resolveFileUrl(fileRef) {
 function countDownload(id, type) {
   const items = getData(type);
   const item = items.find(i => i.id === id);
-  if (item) { item.downloads = (item.downloads||0) + 1; setData(type, items); }
+  if (item) {
+    item.downloads = (item.downloads||0) + 1;
+    setData(type, items);
+    logAnalyticsEvent('download', type === 'lessons' ? 'lesson' : 'book', id, item.titleHe || '');
+  }
 }
 
 function countPlay(id) {
   const items = getData('lessons');
   const item = items.find(i => i.id === id);
-  if (item) { item.plays = (item.plays||0) + 1; setData('lessons', items); }
+  if (item) {
+    item.plays = (item.plays||0) + 1;
+    setData('lessons', items);
+    logAnalyticsEvent('play', 'lesson', id, item.titleHe || '');
+  }
 }
 
 // Force-download a file instead of opening it in the browser.

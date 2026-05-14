@@ -263,6 +263,7 @@ function initData() {
   if (!localStorage.getItem('ti_login_attempts')) setData('login_attempts', []);
   if (!localStorage.getItem('ti_subscribers'))    setData('subscribers', []);
   if (!localStorage.getItem('ti_contacts'))       setData('contacts', []);
+  if (!localStorage.getItem('ti_analytics'))      setData('analytics', []);
 }
 
 function getCategories(type) {

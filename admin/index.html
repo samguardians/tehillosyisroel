@@ -2865,6 +2865,8 @@ function autoTranslate(heId, enId) {
   enEl.value = result;
   enEl.focus();
   Toast.show(isHe ? '✅ תועתק — ניתן לתקן לפי הצורך' : '✅ Transliterated — you may edit as needed', 'success');
+  // Auto-fill slug if this is the category English field
+  if (enId === 'catEnInput') autoSlugFromEn(result);
 }
 
 // ===== LANGUAGE MANAGEMENT =====

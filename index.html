@@ -185,13 +185,8 @@
     }
     .hlc:hover { transform:translateY(-3px) scale(1.015); box-shadow:0 12px 32px rgba(0,0,0,.35); }
 
-    /* light background per index */
-    .hlc[data-ci="0"] { background:linear-gradient(135deg,#e8f4fd,#c8e4f8); --tc:rgba(30,120,200,.25); }
-    .hlc[data-ci="1"] { background:linear-gradient(135deg,#fdf3e8,#f8dfc8); --tc:rgba(200,120,30,.22); }
-    .hlc[data-ci="2"] { background:linear-gradient(135deg,#edfaf3,#c8f0dc); --tc:rgba(16,160,90,.2); }
-    .hlc[data-ci="3"] { background:linear-gradient(135deg,#fdf6e8,#f8eac8); --tc:rgba(200,160,20,.22); }
-    .hlc[data-ci="4"] { background:linear-gradient(135deg,#fdedf0,#f8c8d0); --tc:rgba(200,40,70,.18); }
-    .hlc[data-ci="5"] { background:linear-gradient(135deg,#f3edfd,#dcc8f8); --tc:rgba(120,40,200,.18); }
+    /* single light color for all tiles */
+    .hlc { background:linear-gradient(145deg,#eef6ff,#ddeaf8); }
     .hlc::before {
       content:''; position:absolute; inset:0;
       background:radial-gradient(ellipse at 30% 30%, var(--tc,rgba(201,168,76,.15)), transparent 65%);
@@ -831,7 +826,7 @@ function renderHomeLessonCard(l, idx) {
     <div class="hlc-dur"><i class="fas fa-clock"></i> ${l.duration || '—'}</div>
     <div class="hlc-icon"><i class="fas fa-headphones"></i></div>
     <div class="hlc-play-wrap">
-      <button class="hlc-play" onclick="event.stopPropagation();countPlay(${l.id})"><i class="fas fa-play"></i></button>
+      <button class="hlc-play" onclick="event.stopPropagation();playLesson(${l.id})"><i class="fas fa-play"></i></button>
     </div>
     <div class="hlc-bottom">
       <div class="hlc-title">${title}</div>
@@ -867,7 +862,7 @@ function renderHomeBookCard(b, idx) {
       ${desc ? `<div class="hbc-desc">${desc}</div>` : ''}
     </div>
     <div class="hbc-foot">
-      <button class="hbc-btn hbc-btn-read" onclick="openBookModal(${b.id})"><i class="fas fa-book-open"></i> ${lang==='he'?'קרא':'Read'}</button>
+      <button class="hbc-btn hbc-btn-read" onclick="openBookReader(${b.id})"><i class="fas fa-book-open"></i> ${lang==='he'?'קרא':'Read'}</button>
       <button class="hbc-btn hbc-btn-dl" onclick="downloadBook(${b.id})"><i class="fas fa-download"></i> ${b.downloads||0}</button>
     </div>
   </div>`;

@@ -220,7 +220,7 @@
     /* play button — shows on hover */
     .hlc-play-wrap {
       position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-      opacity:0; transition:opacity .2s;
+      opacity:0; transition:opacity .2s; z-index:3;
     }
     .hlc:hover .hlc-play-wrap { opacity:1; }
     .hlc-play {
@@ -805,6 +805,25 @@
 <!-- BOOK MODAL -->
 <div class="modal-overlay" id="bookModal">
   <div class="modal"><div id="bookModalBody"></div></div>
+</div>
+<!-- BOOK READER MODAL -->
+<div class="modal-overlay" id="bookReaderModal">
+  <div class="modal" style="max-width:860px;width:95vw;height:80vh;display:flex;flex-direction:column;padding:0;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--border-light);background:var(--cream);flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:28px;height:28px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.78rem"><i class="fas fa-book-open"></i></div>
+        <span id="readerTitle" style="font-weight:700;color:var(--primary);font-size:.92rem"></span>
+      </div>
+      <button onclick="Modal.close('bookReaderModal')" style="background:rgba(220,38,38,.1);border:none;border-radius:8px;width:32px;height:32px;color:#dc2626;cursor:pointer;font-size:.85rem"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="flex:1;position:relative;min-height:0">
+      <iframe id="readerFrame" style="width:100%;height:100%;border:none;display:none"></iframe>
+      <div id="readerNoFile" style="display:none;height:100%;flex-direction:column;align-items:center;justify-content:center;color:var(--text-muted)">
+        <div style="font-size:48px;margin-bottom:16px">📄</div>
+        <p style="font-size:.95rem;font-weight:600">הקובץ אינו זמין לקריאה מקוונת</p>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="toast-container"></div>
 

@@ -772,6 +772,12 @@
 
 <!-- AUDIO PLAYER -->
 <div class="audio-player" id="audioPlayer">
+  <!-- Drag handle -->
+  <div class="player-handle" id="playerHandle">
+    <i class="fas fa-grip-lines" style="opacity:.4;font-size:.75rem"></i>
+    <span class="player-handle-title" data-he="גרור להזזה" data-en="Drag to move">גרור להזזה</span>
+    <button class="player-close-btn" title="סגור"><i class="fas fa-times"></i></button>
+  </div>
   <div class="player-track">
     <div class="player-thumb"><i class="fas fa-headphones"></i></div>
     <div>
@@ -795,7 +801,6 @@
       <input type="range" class="vol-slider" min="0" max="1" step="0.05" value="1">
     </div>
   </div>
-  <span class="player-close" onclick="Player.close()"><i class="fas fa-times"></i></span>
 </div>
 
 <!-- LESSON MODAL -->

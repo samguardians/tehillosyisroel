@@ -607,6 +607,19 @@
           </div>
         </div>
 
+        <!-- Content type tabs -->
+        <div style="display:flex;gap:0;margin-bottom:20px;background:#fff;border-radius:var(--r-lg);border:1px solid var(--border-light);overflow:hidden;box-shadow:var(--shadow-sm)">
+          <button id="aTabAll"     onclick="setAnalyticsContentTab('all')"    style="flex:1;padding:11px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;border-left:1px solid var(--border-light);background:var(--primary);color:#fff;transition:.2s">
+            <i class="fas fa-chart-bar" style="margin-left:6px"></i>הכל
+          </button>
+          <button id="aTabLesson" onclick="setAnalyticsContentTab('lesson')" style="flex:1;padding:11px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;border-left:1px solid var(--border-light);background:#fff;color:var(--text-med);transition:.2s">
+            <i class="fas fa-headphones" style="margin-left:6px"></i>שיעורים
+          </button>
+          <button id="aTabBook"   onclick="setAnalyticsContentTab('book')"   style="flex:1;padding:11px;font-size:.85rem;font-weight:700;border:none;cursor:pointer;background:#fff;color:var(--text-med);transition:.2s">
+            <i class="fas fa-book" style="margin-left:6px"></i>ספרים
+          </button>
+        </div>
+
         <!-- Summary cards -->
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:24px" id="analyticsCards"></div>
 
@@ -624,7 +637,7 @@
           <div style="background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-sm);border:1px solid var(--border-light);overflow:hidden">
             <div style="padding:14px 20px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:10px">
               <i class="fas fa-trophy" style="color:var(--gold-dark)"></i>
-              <span style="font-weight:700;font-size:.95rem">תוכן פופולרי</span>
+              <span style="font-weight:700;font-size:.95rem" id="analyticsTopLabel">תוכן פופולרי</span>
             </div>
             <div id="analyticsTopContent" style="padding:8px 0;max-height:320px;overflow-y:auto"></div>
           </div>
@@ -1447,6 +1460,25 @@ function showTab(name) {
 
 // ===== ANALYTICS =====
 let _analyticsFilter = 'all';
+let _analyticsContentTab = 'all'; // 'all' | 'lesson' | 'book'
+
+function setAnalyticsContentTab(tab) {
+  _analyticsContentTab = tab;
+  ['aTabAll','aTabLesson','aTabBook'].forEach(id => {
+    const b = document.getElementById(id);
+    if (!b) return;
+    b.style.background = '#fff';
+    b.style.color = 'var(--text-med)';
+  });
+  const activeMap = { all:'aTabAll', lesson:'aTabLesson', book:'aTabBook' };
+  const ab = document.getElementById(activeMap[tab]);
+  if (ab) { ab.style.background = 'var(--primary)'; ab.style.color = '#fff'; }
+
+  const topLabel = document.getElementById('analyticsTopLabel');
+  if (topLabel) topLabel.textContent = tab === 'lesson' ? 'שיעורים פופולריים' : tab === 'book' ? 'ספרים פופולריים' : 'תוכן פופולרי';
+
+  renderAnalytics();
+}
 
 function setAnalyticsFilter(f) {
   _analyticsFilter = f;
@@ -1486,7 +1518,11 @@ function _typeLabel(type) {
 }
 
 function renderAnalytics() {
-  const events = getData('analytics');
+  const allEvents = getData('analytics');
+  // filter by content tab
+  const events = _analyticsContentTab === 'all'
+    ? allEvents
+    : allEvents.filter(e => e.contentType === _analyticsContentTab);
 
   // ── Summary cards ──
   const plays     = events.filter(e => e.type === 'play').length;
@@ -1494,15 +1530,20 @@ function renderAnalytics() {
   const downloads = events.filter(e => e.type === 'download').length;
   const countries = new Set(events.map(e => e.country).filter(c => c && c !== '??')).size;
 
-  document.getElementById('analyticsCards').innerHTML = `
+  const isBooks   = _analyticsContentTab === 'book';
+  const isLessons = _analyticsContentTab === 'lesson';
+  const playsCard = !isBooks ? `
     <div style="background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:var(--r-lg);padding:18px 20px;color:#fff;text-align:center">
       <div style="font-size:1.9rem;font-weight:800">${plays.toLocaleString()}</div>
       <div style="opacity:.8;font-size:.78rem;margin-top:4px"><i class="fas fa-headphones"></i> שמיעות</div>
-    </div>
+    </div>` : '';
+  const readsCard = !isLessons ? `
     <div style="background:linear-gradient(135deg,#10b981,#059669);border-radius:var(--r-lg);padding:18px 20px;color:#fff;text-align:center">
       <div style="font-size:1.9rem;font-weight:800">${reads.toLocaleString()}</div>
       <div style="opacity:.8;font-size:.78rem;margin-top:4px"><i class="fas fa-book-open"></i> קריאות</div>
-    </div>
+    </div>` : '';
+
+  document.getElementById('analyticsCards').innerHTML = playsCard + readsCard + `
     <div style="background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:var(--r-lg);padding:18px 20px;color:var(--primary);text-align:center">
       <div style="font-size:1.9rem;font-weight:800">${downloads.toLocaleString()}</div>
       <div style="opacity:.7;font-size:.78rem;margin-top:4px"><i class="fas fa-download"></i> הורדות</div>
@@ -1585,6 +1626,15 @@ function renderAnalytics() {
     sel.value = cur;
   }
 
+  // update type filter buttons based on content tab
+  const playBtn = document.getElementById('aFilterPlay');
+  const readBtn = document.getElementById('aFilterRead');
+  if (playBtn) playBtn.style.display = _analyticsContentTab === 'book'   ? 'none' : '';
+  if (readBtn) readBtn.style.display = _analyticsContentTab === 'lesson' ? 'none' : '';
+  // reset filter if current type is hidden
+  if (_analyticsContentTab === 'book'   && _analyticsFilter === 'play')   setAnalyticsFilter('all');
+  if (_analyticsContentTab === 'lesson' && _analyticsFilter === 'read')   setAnalyticsFilter('all');
+
   _renderActivity();
   setAnalyticsFilter(_analyticsFilter);
 }
@@ -1592,8 +1642,11 @@ function renderAnalytics() {
 function _renderActivity() {
   const all = [...getData('analytics')].reverse(); // newest first
 
+  // Apply content tab filter first
+  let events = _analyticsContentTab === 'all' ? all : all.filter(e => e.contentType === _analyticsContentTab);
+
   // Apply type filter
-  let events = _analyticsFilter === 'all' ? all : all.filter(e => e.type === _analyticsFilter);
+  events = _analyticsFilter === 'all' ? events : events.filter(e => e.type === _analyticsFilter);
 
   // Apply search filters
   const q       = (document.getElementById('analyticsSearch')?.value || '').trim().toLowerCase();
